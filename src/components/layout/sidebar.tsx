@@ -1,0 +1,129 @@
+"use client"
+
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { cn } from "@/lib/utils"
+import {
+  LayoutDashboard, Building2, Users, UserCog, HeartPulse, GraduationCap,
+  HardHat, FileText, AlertTriangle, ClipboardCheck, Clock, Grid3x3,
+  History, MessageSquare, FileBarChart, MapPin, Settings, ShieldCheck,
+  HardDrive,
+  type LucideIcon,
+} from "lucide-react"
+
+type NavItem = { href: string; label: string; icon: LucideIcon; disabled?: boolean }
+type NavSection = { label?: string; items: NavItem[] }
+
+const sections: NavSection[] = [
+  {
+    items: [
+      { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+      { href: "/vencimentos", label: "Vencimentos", icon: Clock },
+    ],
+  },
+  {
+    label: "Cadastros",
+    items: [
+      { href: "/empresas", label: "Empresas", icon: Building2 },
+      { href: "/obras", label: "Obras", icon: HardDrive },
+      { href: "/cargos", label: "Cargos", icon: Users },
+      { href: "/colaboradores", label: "Colaboradores", icon: Users },
+      { href: "/epis", label: "EPIs", icon: HardHat },
+      { href: "/treinamentos", label: "Treinamentos", icon: GraduationCap },
+    ],
+  },
+  {
+    label: "Operação",
+    items: [
+      { href: "/exames", label: "Exames médicos", icon: HeartPulse },
+      { href: "/documentos", label: "Documentos SST", icon: FileText },
+      { href: "/dds", label: "DDS", icon: MessageSquare },
+      { href: "/ocorrencias", label: "Ocorrências", icon: AlertTriangle },
+      { href: "/inspecoes", label: "Inspeções", icon: ClipboardCheck },
+    ],
+  },
+  {
+    label: "Relatórios",
+    items: [
+      { href: "/matriz-treinamentos", label: "Matriz treinamentos", icon: Grid3x3 },
+      { href: "/relatorios/mensal", label: "Relatório mensal", icon: FileBarChart },
+      { href: "/relatorios/heatmap-ocorrencias", label: "Heatmap ocorrências", icon: MapPin },
+    ],
+  },
+  {
+    label: "Administração",
+    items: [
+      { href: "/usuarios", label: "Usuários", icon: UserCog },
+      { href: "/auditoria", label: "Auditoria", icon: History },
+      { href: "/configuracoes", label: "Configurações", icon: Settings, disabled: true },
+    ],
+  },
+]
+
+export function Sidebar() {
+  const pathname = usePathname()
+
+  return (
+    <aside className="hidden lg:flex lg:flex-col lg:w-64 lg:border-r lg:bg-background print:hidden">
+      <div className="flex h-16 items-center gap-2 border-b px-6">
+        <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
+          <ShieldCheck className="h-5 w-5" />
+        </div>
+        <div>
+          <div className="text-sm font-semibold leading-tight">SST Manager</div>
+          <div className="text-xs text-muted-foreground leading-tight">SISTENGE</div>
+        </div>
+      </div>
+      <nav className="flex-1 space-y-4 p-3 overflow-y-auto">
+        {sections.map((section, si) => (
+          <div key={si} className="space-y-0.5">
+            {section.label && (
+              <div className="px-3 pt-2 pb-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70">
+                {section.label}
+              </div>
+            )}
+            {section.items.map(({ href, label, icon: Icon, disabled }) => {
+              const active = pathname === href || pathname.startsWith(href + "/")
+              if (disabled) {
+                return (
+                  <div
+                    key={href}
+                    className="flex items-center gap-3 rounded-md px-3 py-2 text-sm text-muted-foreground/60 cursor-not-allowed"
+                    title="Em breve"
+                  >
+                    <Icon className="h-4 w-4" />
+                    {label}
+                    <span className="ml-auto text-[10px] uppercase tracking-wider">soon</span>
+                  </div>
+                )
+              }
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  className={cn(
+                    "flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors",
+                    active
+                      ? "bg-primary text-primary-foreground shadow-sm"
+                      : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
+                  )}
+                >
+                  <Icon className="h-4 w-4" />
+                  {label}
+                </Link>
+              )
+            })}
+          </div>
+        ))}
+      </nav>
+      <div className="border-t p-3 text-[10px] text-muted-foreground">
+        <div className="flex items-center justify-between">
+          <span>Pressione</span>
+          <kbd className="inline-flex items-center rounded border bg-background px-1.5 py-0.5 font-mono">
+            Ctrl + K
+          </kbd>
+        </div>
+      </div>
+    </aside>
+  )
+}

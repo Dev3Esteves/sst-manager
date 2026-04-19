@@ -1,0 +1,39 @@
+"use server"
+
+import { revalidatePath } from "next/cache"
+import { redirect } from "next/navigation"
+import { createClient } from "@/lib/supabase/server"
+import { epiEntregaSchema, type EpiEntregaInput } from "@/lib/validations/epi-entrega"
+
+export async function createEntrega(payload: EpiEntregaInput) {
+  const parsed = epiEntregaSchema.safeParse(payload)
+  if (!parsed.success) {
+    return { error: { _form: [parsed.error.errors[0]?.message || "Dados inválidos"] } }
+  }
+  const supabase = await createClient()
+
+  let assinaturaUrl: string | null = null
+  if (parsed.data.assinatura_data_url?.startsWith("data:image")) {
+    const base64 = parsed.data.assinatura_data_url.split(",")[1]
+    const buffer = Buffer.from(base64, "base64")
+    const fileName = `epi-${parsed.data.colaborador_id}/${Date.now()}.png`
+    const { error: upErr } = await supabase.storage
+      .from("assinaturas")
+      .upload(fileName, buffer, { contentType: "image/png", upsert: false })
+    if (!upErr) assinaturaUrl = fileName
+  }
+
+  const { error } = await supabase.from("epi_entregas").insert({
+    colaborador_id: parsed.data.colaborador_id,
+    epi_id: parsed.data.epi_id,
+    data_entrega: parsed.data.data_entrega,
+    quantidade: parsed.data.quantidade,
+    motivo: parsed.data.motivo,
+    observacoes: parsed.data.observacoes,
+    assinatura_url: assinaturaUrl,
+  })
+  if (error) return { error: { _form: [error.message] } }
+
+  revalidatePath("/epis/entregas")
+  redirect("/epis/entregas")
+}

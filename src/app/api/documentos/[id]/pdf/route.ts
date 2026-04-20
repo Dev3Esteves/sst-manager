@@ -5,6 +5,8 @@ import { renderAprPdf, type AprConteudo } from "@/lib/pdf/apr"
 import { renderAutorizacaoNrPdf, type AutorizacaoNrConteudo } from "@/lib/pdf/autorizacao-nr"
 import { renderPtPdf, type PtConteudo } from "@/lib/pdf/pt"
 import { renderDdsPdf, type DdsConteudo } from "@/lib/pdf/dds"
+import { renderOsNr01Pdf } from "@/lib/pdf/os-nr01"
+import { buildOsNr01Data } from "@/lib/pdf/os-nr01-builder"
 import { formatCNPJ } from "@/lib/validations/shared"
 import { formatDate } from "@/lib/utils/vencimento"
 
@@ -42,6 +44,36 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
     pdfElement = await renderPtPdf(meta, doc.conteudo as PtConteudo)
   } else if (doc.tipo === "dialogo_seguranca") {
     pdfElement = await renderDdsPdf(meta, doc.conteudo as DdsConteudo)
+  } else if (doc.tipo === "os_nr01") {
+    // OS NR-01 por função — re-monta o PDF a partir dos IDs salvos em `conteudo`.
+    // Usar IDs (em vez de snapshot completo) garante que o PDF sempre reflete
+    // o estado atual do cargo/obra/colaboradores, útil quando a função é editada
+    // após emissão. Se precisar imutabilidade estrita, expandir o conteudo.
+    const conteudo = (doc.conteudo ?? {}) as {
+      cargo_id?: string
+      numero_os?: string
+      revisao?: string
+      observacoes?: string | null
+    }
+    if (!conteudo.cargo_id || !doc.obra_id) {
+      return NextResponse.json(
+        { error: "Documento OS NR-01 sem cargo_id/obra_id. Re-emita o documento." },
+        { status: 422 },
+      )
+    }
+    const built = await buildOsNr01Data(supabase, {
+      empresa_id: doc.empresa_id,
+      cargo_id: conteudo.cargo_id,
+      obra_id: doc.obra_id,
+      numero_os: conteudo.numero_os ?? numero,
+      data_emissao: doc.data_emissao,
+      revisao: conteudo.revisao ?? "00",
+      observacoes: conteudo.observacoes ?? null,
+    })
+    if (!built.ok) {
+      return NextResponse.json({ error: built.error }, { status: built.status })
+    }
+    pdfElement = await renderOsNr01Pdf(built.data)
   } else {
     return NextResponse.json({ error: `Tipo não suportado ainda: ${doc.tipo}` }, { status: 400 })
   }

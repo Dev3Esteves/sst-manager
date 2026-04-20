@@ -7,6 +7,12 @@ e o versionamento segue [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Não lançado]
 
+_Mudanças em desenvolvimento na branch `master` ainda não publicadas numa tag._
+
+---
+
+## [0.5.0] — 2026-04-20
+
 ### Adicionado
 - **Logger estruturado JSON** (`src/lib/logger.ts`)
   - Emite `{ level, ts, msg, route, requestId, userId, empresaId, ... }` em JSON para Vercel Logs
@@ -40,7 +46,6 @@ e o versionamento segue [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - _(nenhum fix nesta versão — só adição de observabilidade)_
 
 ---
-
 ## [0.4.0] — 2026-04-20
 
 ### Adicionado
@@ -195,7 +200,8 @@ npm run release:major   # 0.4.0 → 1.0.0
 O script faz: bump no `package.json`, atualiza este `CHANGELOG.md`,
 cria commit de release e cria tag git anotada. Depois é só `git push --tags`.
 
-[Não lançado]: https://github.com/EvandroEstevesFerreira/sst-manager/compare/v0.4.0...HEAD
+[Não lançado]: https://github.com/EvandroEstevesFerreira/sst-manager/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/EvandroEstevesFerreira/sst-manager/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/EvandroEstevesFerreira/sst-manager/compare/v0.3.1...v0.4.0
 [0.3.1]: https://github.com/EvandroEstevesFerreira/sst-manager/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/EvandroEstevesFerreira/sst-manager/compare/v0.2.0...v0.3.0

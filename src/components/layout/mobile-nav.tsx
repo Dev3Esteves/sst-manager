@@ -9,9 +9,10 @@ import { cn } from "@/lib/utils"
 import {
   LayoutDashboard, Building2, Users, UserCog, HeartPulse, GraduationCap,
   HardHat, FileText, AlertTriangle, ClipboardCheck, Clock, Grid3x3,
-  History, MessageSquare, FileBarChart, MapPin, Settings, ShieldCheck, Menu, X,
+  History, MessageSquare, FileBarChart, MapPin, Settings, Menu, X,
   type LucideIcon,
 } from "lucide-react"
+import { SistengeLogo } from "@/components/sistenge-logo"
 
 type Item = { href: string; label: string; icon: LucideIcon; disabled?: boolean }
 
@@ -64,9 +65,7 @@ export function MobileNav() {
           <Drawer.Description className="sr-only">Navegação principal do sistema</Drawer.Description>
           <div className="flex h-16 items-center justify-between border-b px-4">
             <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
-                <ShieldCheck className="h-5 w-5" />
-              </div>
+              <SistengeLogo variant="icon" height={32} />
               <div>
                 <div className="text-sm font-semibold leading-tight">SST Manager</div>
                 <div className="text-xs text-muted-foreground leading-tight">SISTENGE</div>

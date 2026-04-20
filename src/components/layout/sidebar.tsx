@@ -6,10 +6,11 @@ import { cn } from "@/lib/utils"
 import {
   LayoutDashboard, Building2, Users, UserCog, HeartPulse, GraduationCap,
   HardHat, FileText, AlertTriangle, ClipboardCheck, Clock, Grid3x3,
-  History, MessageSquare, FileBarChart, MapPin, Settings, ShieldCheck,
+  History, MessageSquare, FileBarChart, MapPin, Settings,
   HardDrive,
   type LucideIcon,
 } from "lucide-react"
+import { SistengeLogo } from "@/components/sistenge-logo"
 
 type NavItem = { href: string; label: string; icon: LucideIcon; disabled?: boolean }
 type NavSection = { label?: string; items: NavItem[] }
@@ -65,10 +66,8 @@ export function Sidebar() {
 
   return (
     <aside className="hidden lg:flex lg:flex-col lg:w-64 lg:border-r lg:bg-background print:hidden">
-      <div className="flex h-16 items-center gap-2 border-b px-6">
-        <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
-          <ShieldCheck className="h-5 w-5" />
-        </div>
+      <div className="flex h-16 items-center gap-2 border-b px-4">
+        <SistengeLogo variant="icon" height={32} />
         <div>
           <div className="text-sm font-semibold leading-tight">SST Manager</div>
           <div className="text-xs text-muted-foreground leading-tight">SISTENGE</div>

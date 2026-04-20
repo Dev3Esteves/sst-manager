@@ -1,5 +1,6 @@
 import Link from "next/link"
-import { createClient } from "@/lib/supabase/server"
+import { redirect } from "next/navigation"
+import { checkRole } from "@/lib/auth/guards"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { Button } from "@/components/ui/button"
 import { Badge, type BadgeProps } from "@/components/ui/badge"
@@ -27,20 +28,9 @@ export default async function UsuariosPage({
   const sp = await searchParams
   const page = parsePageParam(sp.page)
 
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) {
-    return (
-      <div className="container py-8">
-        <Card><CardContent className="py-6 text-sm">Autenticação necessária.</CardContent></Card>
-      </div>
-    )
-  }
-
-  const { data: perfilNome } = await supabase.rpc("user_perfil_nome")
-  const ehAdmin = perfilNome === "admin"
-
-  if (!ehAdmin) {
+  const r = await checkRole(["admin"])
+  if (r.status === "unauth") redirect("/login")
+  if (r.status === "forbidden") {
     return (
       <div className="container py-8">
         <Card className="border-status-alerta">

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/server"
+import { requireAuth, authErrorToResponse } from "@/lib/auth/guards"
 import { inspecaoSchema, calcConformidade } from "@/lib/validations/inspecao"
 
 export async function POST(req: Request) {
@@ -14,9 +14,13 @@ export async function POST(req: Request) {
     )
   }
 
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return NextResponse.json({ error: "Não autenticado" }, { status: 401 })
+  let supabase, user
+  try {
+    ;({ supabase, user } = await requireAuth())
+  } catch (e) {
+    const resp = authErrorToResponse(e); if (resp) return resp
+    throw e
+  }
 
   const { data: link } = await supabase
     .from("usuarios").select("colaborador_id").eq("id", user.id).single()

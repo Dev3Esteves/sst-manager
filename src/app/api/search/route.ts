@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/server"
+import { requireAuth, authErrorToResponse } from "@/lib/auth/guards"
 
 /**
  * Global search — usado pela paleta de comandos ⌘K.
@@ -14,9 +14,14 @@ export async function GET(req: Request) {
     return NextResponse.json({ resultados: [] })
   }
 
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return NextResponse.json({ error: "Não autenticado" }, { status: 401 })
+  let supabase
+  try {
+    ;({ supabase } = await requireAuth())
+  } catch (e) {
+    const resp = authErrorToResponse(e)
+    if (resp) return resp
+    throw e
+  }
 
   const pattern = `%${q}%`
 

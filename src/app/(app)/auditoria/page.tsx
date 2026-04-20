@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server"
+import { getAuth } from "@/lib/auth/guards"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge, type BadgeProps } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
@@ -14,11 +14,8 @@ function acaoVariant(acao: string | null): BadgeProps["variant"] {
 }
 
 export default async function AuditoriaPage() {
-  const supabase = await createClient()
-
-  // Validação: só admin vê
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) {
+  const ctx = await getAuth()
+  if (!ctx) {
     return (
       <div className="container py-8">
         <Card>
@@ -31,8 +28,8 @@ export default async function AuditoriaPage() {
     )
   }
 
-  const { data: perfilRow } = await supabase.rpc("user_perfil_nome")
-  const ehAdmin = typeof perfilRow === "string" && perfilRow === "admin"
+  const { supabase, perfil } = ctx
+  const ehAdmin = perfil === "admin"
 
   const { data: logs } = await supabase
     .from("audit_log")

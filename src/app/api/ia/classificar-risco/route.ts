@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { z } from "zod"
-import { createClient } from "@/lib/supabase/server"
+import { requireAuth, authErrorToResponse } from "@/lib/auth/guards"
 import { classificarRisco, IAServiceUnavailable } from "@/lib/ia/classificar-risco"
 
 const bodySchema = z.object({
@@ -9,9 +9,12 @@ const bodySchema = z.object({
 })
 
 export async function POST(req: Request) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return NextResponse.json({ error: "Não autenticado" }, { status: 401 })
+  try {
+    await requireAuth()
+  } catch (e) {
+    const resp = authErrorToResponse(e); if (resp) return resp
+    throw e
+  }
 
   const body = await req.json().catch(() => null)
   const parsed = bodySchema.safeParse(body)

@@ -1,27 +1,20 @@
 "use server"
 
 import { revalidatePath } from "next/cache"
-import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
+import { requireAdmin, AuthError } from "@/lib/auth/guards"
 import {
   criarUsuarioSchema, editarUsuarioSchema, gerarSenhaForte,
   type CriarUsuarioInput, type EditarUsuarioInput,
 } from "@/lib/validations/usuario"
 
 /**
- * Verifica se o usuário autenticado é admin. Lança se não for.
- * Retorna o user_id do admin (para logs / auditoria).
+ * Helper: captura AuthError e converte para o shape `{ ok: false, error }`
+ * que as actions deste arquivo usam. Preserva outros erros.
  */
-async function requireAdmin(): Promise<string> {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error("Não autenticado")
-
-  const { data: perfilNome } = await supabase.rpc("user_perfil_nome")
-  if (perfilNome !== "admin") {
-    throw new Error("Apenas administradores podem gerenciar usuários")
-  }
-  return user.id
+function authErrorToResult(e: unknown): { ok: false; error: string } {
+  if (e instanceof AuthError) return { ok: false, error: e.message }
+  return { ok: false, error: e instanceof Error ? e.message : "Erro desconhecido" }
 }
 
 export async function criarUsuario(payload: CriarUsuarioInput): Promise<
@@ -30,7 +23,7 @@ export async function criarUsuario(payload: CriarUsuarioInput): Promise<
   try {
     await requireAdmin()
   } catch (e) {
-    return { ok: false, error: (e as Error).message }
+    return authErrorToResult(e)
   }
 
   const parsed = criarUsuarioSchema.safeParse(payload)
@@ -76,7 +69,7 @@ export async function editarUsuario(
   try {
     await requireAdmin()
   } catch (e) {
-    return { ok: false, error: (e as Error).message }
+    return authErrorToResult(e)
   }
 
   const parsed = editarUsuarioSchema.safeParse(payload)
@@ -105,7 +98,7 @@ export async function resetarSenha(id: string): Promise<
   try {
     await requireAdmin()
   } catch (e) {
-    return { ok: false, error: (e as Error).message }
+    return authErrorToResult(e)
   }
 
   const novaSenha = gerarSenhaForte()
@@ -122,13 +115,15 @@ export async function resetarSenha(id: string): Promise<
 export async function toggleAtivo(
   id: string, ativo: boolean,
 ): Promise<{ ok: true } | { ok: false; error: string }> {
+  let adminUserId: string
   try {
-    const adminUserId = await requireAdmin()
-    if (adminUserId === id && !ativo) {
-      return { ok: false, error: "Você não pode desativar a própria conta" }
-    }
+    const ctx = await requireAdmin()
+    adminUserId = ctx.user.id
   } catch (e) {
-    return { ok: false, error: (e as Error).message }
+    return authErrorToResult(e)
+  }
+  if (adminUserId === id && !ativo) {
+    return { ok: false, error: "Você não pode desativar a própria conta" }
   }
 
   const admin = createAdminClient()
@@ -143,13 +138,15 @@ export async function toggleAtivo(
 export async function excluirUsuario(
   id: string,
 ): Promise<{ ok: true } | { ok: false; error: string }> {
+  let adminUserId: string
   try {
-    const adminUserId = await requireAdmin()
-    if (adminUserId === id) {
-      return { ok: false, error: "Você não pode excluir a própria conta" }
-    }
+    const ctx = await requireAdmin()
+    adminUserId = ctx.user.id
   } catch (e) {
-    return { ok: false, error: (e as Error).message }
+    return authErrorToResult(e)
+  }
+  if (adminUserId === id) {
+    return { ok: false, error: "Você não pode excluir a própria conta" }
   }
 
   const admin = createAdminClient()

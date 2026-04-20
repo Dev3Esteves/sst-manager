@@ -1,16 +1,13 @@
-import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
+import { checkRole } from "@/lib/auth/guards"
 import { Card, CardContent } from "@/components/ui/card"
 import { ShieldAlert } from "lucide-react"
 import { NovoUsuarioForm } from "./novo-usuario-form"
 
 export default async function NovoUsuarioPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect("/login")
-
-  const { data: perfilNome } = await supabase.rpc("user_perfil_nome")
-  if (perfilNome !== "admin") {
+  const r = await checkRole(["admin"])
+  if (r.status === "unauth") redirect("/login")
+  if (r.status === "forbidden") {
     return (
       <div className="container py-8">
         <Card className="border-status-alerta">
@@ -23,6 +20,7 @@ export default async function NovoUsuarioPage() {
     )
   }
 
+  const { supabase } = r.ctx
   const [{ data: perfis }, { data: empresas }, { data: colaboradores }] = await Promise.all([
     supabase.from("perfis_acesso").select("id, nome, descricao").order("nome"),
     supabase.from("empresas").select("id, razao_social").eq("ativo", true).order("razao_social"),

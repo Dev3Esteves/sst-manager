@@ -3,23 +3,21 @@
 import { revalidatePath } from "next/cache"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { requireAdmin, AuthError } from "@/lib/auth/guards"
+import { ok, err, errFields, type Result } from "@/lib/result"
 import {
   criarUsuarioSchema, editarUsuarioSchema, gerarSenhaForte,
   type CriarUsuarioInput, type EditarUsuarioInput,
 } from "@/lib/validations/usuario"
 
-/**
- * Helper: captura AuthError e converte para o shape `{ ok: false, error }`
- * que as actions deste arquivo usam. Preserva outros erros.
- */
-function authErrorToResult(e: unknown): { ok: false; error: string } {
-  if (e instanceof AuthError) return { ok: false, error: e.message }
-  return { ok: false, error: e instanceof Error ? e.message : "Erro desconhecido" }
+/** Converte um AuthError lançado por `requireAdmin()` em Result<never>. */
+function authErrorToResult(e: unknown): Result<never> {
+  if (e instanceof AuthError) return err(e.message)
+  return err(e instanceof Error ? e.message : "Erro desconhecido")
 }
 
-export async function criarUsuario(payload: CriarUsuarioInput): Promise<
-  { ok: true; senha: string; userId: string } | { ok: false; error: string }
-> {
+export async function criarUsuario(
+  payload: CriarUsuarioInput,
+): Promise<Result<{ senha: string; userId: string }>> {
   try {
     await requireAdmin()
   } catch (e) {
@@ -28,7 +26,7 @@ export async function criarUsuario(payload: CriarUsuarioInput): Promise<
 
   const parsed = criarUsuarioSchema.safeParse(payload)
   if (!parsed.success) {
-    return { ok: false, error: parsed.error.errors[0]?.message ?? "Dados inválidos" }
+    return errFields(parsed.error.flatten().fieldErrors)
   }
 
   const admin = createAdminClient()
@@ -41,7 +39,7 @@ export async function criarUsuario(payload: CriarUsuarioInput): Promise<
   })
 
   if (authErr || !created.user) {
-    return { ok: false, error: authErr?.message ?? "Falha ao criar usuário em auth" }
+    return err(authErr?.message ?? "Falha ao criar usuário em auth")
   }
 
   // 2. Vincula em public.usuarios
@@ -56,16 +54,16 @@ export async function criarUsuario(payload: CriarUsuarioInput): Promise<
   if (linkErr) {
     // Rollback: tenta deletar o auth.user órfão
     await admin.auth.admin.deleteUser(created.user.id).catch(() => {})
-    return { ok: false, error: `Falha ao vincular usuário: ${linkErr.message}` }
+    return err(`Falha ao vincular usuário: ${linkErr.message}`)
   }
 
   revalidatePath("/usuarios")
-  return { ok: true, senha: parsed.data.senha, userId: created.user.id }
+  return ok({ senha: parsed.data.senha, userId: created.user.id })
 }
 
 export async function editarUsuario(
   id: string, payload: EditarUsuarioInput,
-): Promise<{ ok: true } | { ok: false; error: string }> {
+): Promise<Result<void>> {
   try {
     await requireAdmin()
   } catch (e) {
@@ -74,7 +72,7 @@ export async function editarUsuario(
 
   const parsed = editarUsuarioSchema.safeParse(payload)
   if (!parsed.success) {
-    return { ok: false, error: parsed.error.errors[0]?.message ?? "Dados inválidos" }
+    return errFields(parsed.error.flatten().fieldErrors)
   }
 
   const admin = createAdminClient()
@@ -85,16 +83,14 @@ export async function editarUsuario(
     ativo: parsed.data.ativo,
   }).eq("id", id)
 
-  if (error) return { ok: false, error: error.message }
+  if (error) return err(error.message)
 
   revalidatePath("/usuarios")
   revalidatePath(`/usuarios/${id}`)
-  return { ok: true }
+  return ok()
 }
 
-export async function resetarSenha(id: string): Promise<
-  { ok: true; senha: string } | { ok: false; error: string }
-> {
+export async function resetarSenha(id: string): Promise<Result<{ senha: string }>> {
   try {
     await requireAdmin()
   } catch (e) {
@@ -106,15 +102,13 @@ export async function resetarSenha(id: string): Promise<
   const { error } = await admin.auth.admin.updateUserById(id, {
     password: novaSenha,
   })
-  if (error) return { ok: false, error: error.message }
+  if (error) return err(error.message)
 
   revalidatePath(`/usuarios/${id}`)
-  return { ok: true, senha: novaSenha }
+  return ok({ senha: novaSenha })
 }
 
-export async function toggleAtivo(
-  id: string, ativo: boolean,
-): Promise<{ ok: true } | { ok: false; error: string }> {
+export async function toggleAtivo(id: string, ativo: boolean): Promise<Result<void>> {
   let adminUserId: string
   try {
     const ctx = await requireAdmin()
@@ -123,21 +117,19 @@ export async function toggleAtivo(
     return authErrorToResult(e)
   }
   if (adminUserId === id && !ativo) {
-    return { ok: false, error: "Você não pode desativar a própria conta" }
+    return err("Você não pode desativar a própria conta")
   }
 
   const admin = createAdminClient()
   const { error } = await admin.from("usuarios").update({ ativo }).eq("id", id)
-  if (error) return { ok: false, error: error.message }
+  if (error) return err(error.message)
 
   revalidatePath("/usuarios")
   revalidatePath(`/usuarios/${id}`)
-  return { ok: true }
+  return ok()
 }
 
-export async function excluirUsuario(
-  id: string,
-): Promise<{ ok: true } | { ok: false; error: string }> {
+export async function excluirUsuario(id: string): Promise<Result<void>> {
   let adminUserId: string
   try {
     const ctx = await requireAdmin()
@@ -146,15 +138,15 @@ export async function excluirUsuario(
     return authErrorToResult(e)
   }
   if (adminUserId === id) {
-    return { ok: false, error: "Você não pode excluir a própria conta" }
+    return err("Você não pode excluir a própria conta")
   }
 
   const admin = createAdminClient()
 
   // ON DELETE CASCADE em usuarios cuida do registro público
   const { error } = await admin.auth.admin.deleteUser(id)
-  if (error) return { ok: false, error: error.message }
+  if (error) return err(error.message)
 
   revalidatePath("/usuarios")
-  return { ok: true }
+  return ok()
 }

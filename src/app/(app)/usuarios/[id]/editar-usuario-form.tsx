@@ -65,7 +65,7 @@ export function EditarUsuarioForm({
         toast.error("Falha ao resetar senha", { description: r.error })
         return
       }
-      setNovaSenha(r.senha)
+      setNovaSenha(r.data.senha)
       toast.success("Nova senha gerada — anote antes de sair desta tela.", { duration: 30000 })
     })
   }

@@ -8,6 +8,7 @@ import { renderCertificadoPdf } from "@/lib/pdf/certificado"
 import { formatCNPJ, formatCPF } from "@/lib/validations/shared"
 import { formatDate } from "@/lib/utils/vencimento"
 import { buildDocFilename, MAX_LOTE, type LoteResultItem } from "@/lib/pdf/batch-utils"
+import { withRouteLogging } from "@/lib/logger"
 
 const ESCOPO_PADRAO: Record<string, string> = {
   "NR-10": "Autorizado a executar atividades em instalações elétricas energizadas e desenergizadas em BT e MT, dentro da zona controlada, conforme procedimentos da empresa e item 10.8 da NR-10.",
@@ -33,51 +34,70 @@ const bodySchema = z.discriminatedUnion("tipo", [
 ])
 
 export async function POST(req: Request) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return NextResponse.json({ error: "Não autenticado" }, { status: 401 })
+  return withRouteLogging("documentos/lote", req, async (log) => {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+      log.warn("unauthenticated")
+      return NextResponse.json({ error: "Não autenticado" }, { status: 401 })
+    }
 
-  const raw = await req.json().catch(() => null)
-  const parsed = bodySchema.safeParse(raw)
-  if (!parsed.success) {
-    return NextResponse.json(
-      { error: parsed.error.errors[0]?.message ?? "Payload inválido" },
-      { status: 400 },
-    )
-  }
+    const raw = await req.json().catch(() => null)
+    const parsed = bodySchema.safeParse(raw)
+    if (!parsed.success) {
+      log.warn("invalid payload", { issue: parsed.error.errors[0]?.message })
+      return NextResponse.json(
+        { error: parsed.error.errors[0]?.message ?? "Payload inválido" },
+        { status: 400 },
+      )
+    }
 
-  const zip = new JSZip()
-  const resultados: LoteResultItem[] = []
+    const scoped = log.child({
+      userId: user.id,
+      tipo: parsed.data.tipo,
+      count: parsed.data.colaborador_ids.length,
+    })
+    scoped.info("start")
 
-  if (parsed.data.tipo === "autorizacao_nr") {
-    await gerarAutorizacoesNr(supabase, parsed.data, zip, resultados, user.id)
-  } else {
-    await gerarCertificados(supabase, parsed.data, zip, resultados)
-  }
+    const zip = new JSZip()
+    const resultados: LoteResultItem[] = []
 
-  if (resultados.filter((r) => r.status === "gerado").length === 0) {
-    return NextResponse.json(
-      { error: "Nenhum documento pôde ser gerado.", resultados },
-      { status: 400 },
-    )
-  }
+    if (parsed.data.tipo === "autorizacao_nr") {
+      await gerarAutorizacoesNr(supabase, parsed.data, zip, resultados, user.id)
+    } else {
+      await gerarCertificados(supabase, parsed.data, zip, resultados)
+    }
 
-  const relatorio = buildRelatorio(resultados, parsed.data)
-  zip.file("_relatorio.txt", relatorio)
+    const gerados = resultados.filter((r) => r.status === "gerado").length
+    const pulados = resultados.filter((r) => r.status === "pulado").length
 
-  const buffer = await zip.generateAsync({ type: "nodebuffer", compression: "DEFLATE" })
-  const zipName = parsed.data.tipo === "autorizacao_nr"
-    ? `Autorizacoes_${parsed.data.nr}_${new Date().toISOString().slice(0, 10)}.zip`
-    : `Certificados_${new Date().toISOString().slice(0, 10)}.zip`
+    if (gerados === 0) {
+      scoped.warn("all skipped", { pulados })
+      return NextResponse.json(
+        { error: "Nenhum documento pôde ser gerado.", resultados },
+        { status: 400 },
+      )
+    }
 
-  return new NextResponse(new Uint8Array(buffer), {
-    status: 200,
-    headers: {
-      "Content-Type": "application/zip",
-      "Content-Disposition": `attachment; filename="${zipName}"`,
-      "X-Lote-Gerado": String(resultados.filter((r) => r.status === "gerado").length),
-      "X-Lote-Pulado": String(resultados.filter((r) => r.status === "pulado").length),
-    },
+    const relatorio = buildRelatorio(resultados, parsed.data)
+    zip.file("_relatorio.txt", relatorio)
+
+    const buffer = await zip.generateAsync({ type: "nodebuffer", compression: "DEFLATE" })
+    const zipName = parsed.data.tipo === "autorizacao_nr"
+      ? `Autorizacoes_${parsed.data.nr}_${new Date().toISOString().slice(0, 10)}.zip`
+      : `Certificados_${new Date().toISOString().slice(0, 10)}.zip`
+
+    scoped.info("lote finalizado", { gerados, pulados, zipBytes: buffer.length })
+
+    return new NextResponse(new Uint8Array(buffer), {
+      status: 200,
+      headers: {
+        "Content-Type": "application/zip",
+        "Content-Disposition": `attachment; filename="${zipName}"`,
+        "X-Lote-Gerado": String(gerados),
+        "X-Lote-Pulado": String(pulados),
+      },
+    })
   })
 }
 

@@ -4,6 +4,8 @@ import { useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { AlertOctagon, RotateCcw } from "lucide-react"
+import { logger } from "@/lib/logger"
+import { reportClientError } from "@/lib/client-error-report"
 
 export default function GlobalError({
   error, reset,
@@ -12,7 +14,18 @@ export default function GlobalError({
   reset: () => void
 }) {
   useEffect(() => {
-    console.error("[app-error]", error)
+    // Log estruturado local (browser devtools) + envio ao backend (Vercel Logs)
+    logger.exception("app-error boundary", error, {
+      digest: error.digest,
+      path: typeof window !== "undefined" ? window.location.pathname : null,
+    })
+    reportClientError({
+      source: "error-boundary",
+      message: error.message,
+      stack: error.stack ?? null,
+      digest: error.digest ?? null,
+      path: typeof window !== "undefined" ? window.location.pathname : null,
+    })
   }, [error])
 
   return (

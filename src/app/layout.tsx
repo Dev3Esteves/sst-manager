@@ -4,6 +4,7 @@ import "./globals.css"
 import { PwaRegister } from "@/components/pwa-register"
 import { ThemeProvider } from "@/components/theme-provider"
 import { CommandPalette } from "@/components/command-palette"
+import { ErrorCapture } from "@/components/error-capture"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
 
@@ -35,6 +36,7 @@ export default function RootLayout({
     <html lang="pt-BR" suppressHydrationWarning>
       <body className={`${inter.variable} font-sans antialiased`}>
         <ThemeProvider>
+          <ErrorCapture />
           {children}
           <CommandPalette />
           <PwaRegister />

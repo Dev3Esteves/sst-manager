@@ -7,7 +7,37 @@ e o versionamento segue [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Não lançado]
 
-_Mudanças em desenvolvimento na branch `master` ainda não publicadas numa tag._
+### Adicionado
+- **Logger estruturado JSON** (`src/lib/logger.ts`)
+  - Emite `{ level, ts, msg, route, requestId, userId, empresaId, ... }` em JSON para Vercel Logs
+  - Formato `pretty` legível em dev (`NODE_ENV !== "production"`), JSON em prod — controlável via `LOG_FORMAT`
+  - **Redação automática de PII** (cpf, cnpj, email, senha, token, authorization, cookie, access_token, refresh_token, secret) — recursiva até 6 níveis
+  - `logger.child({ requestId, route })` cria escopo herdado por todas as chamadas daquele contexto
+  - `logger.time("label")` retorna função `end()` que loga `durationMs` automaticamente — usado para timing de spans (build-data, render-pdf, etc)
+  - `logger.exception(msg, err)` serializa Error com `name`, `message`, `stack` (truncado a 10 linhas) e `cause` recursivo
+  - `newRequestId()` gera 8 chars hex via `crypto.getRandomValues` — portável, suficiente para correlação dentro de janelas razoáveis
+  - **18 testes** cobrindo shape JSON, níveis, redação PII recursiva, propagação de contexto via `.child()`, timing, e propagação de `x-request-id`
+- **Helper `withRouteLogging(route, req, handler)`** em `src/lib/logger.ts`
+  - Gera/reaproveita `x-request-id` do request (valida hex 4-32 chars) e injeta no response
+  - Mede duração total da handler, loga `start`/`done`/`threw`
+  - Captura e re-lança exceções com log de `exception` já serializado
+- **Captura global de erros no client**
+  - `src/components/error-capture.tsx` — hook no `RootLayout` que escuta `window.error` e `unhandledrejection`, com dedup de 5s por `(message, stack[0:200])` pra não inundar o backend em loops
+  - `src/lib/client-error-report.ts` — envia via `navigator.sendBeacon` (fallback `fetch` com keepalive) pra sobreviver a unload
+  - `src/app/api/log/client/route.ts` — recebe report, limita payload a 32 KB, trunca stack a 4000 chars, e reemite via `logger.warn` (capturável no Vercel Logs)
+  - `src/app/error.tsx` e novo `src/app/global-error.tsx` reportam ao endpoint automaticamente
+- **Rotas críticas instrumentadas** (todas ganharam requestId, spans de tempo e logs de start/done/skip):
+  - `POST /api/documentos/lote` — loga `tipo`, `count`, `gerados`, `pulados`, `zipBytes`
+  - `POST /api/documentos/os-nr01/gerar` — spans `build-data` + `render-pdf`, loga `colaboradores` e `bytes` do PDF
+  - `GET /api/colaboradores/[id]/ficha-epi/pdf` — span `render-ficha-epi`, loga `entregas` e `bytes`
+  - `POST /api/sync/inspecoes` — loga `templateId`, `empresaId`, `percentual`, captura exception em insert
+
+### Mudado
+- `vitest.config.ts` — `testTimeout` elevado para 20s. Em Windows, o primeiro render por worker do `@react-pdf/renderer` (carregando fontes embutidas) em paralelo com outros testes às vezes estourava o default de 5s, causando flake no CI
+- `src/app/layout.tsx` — monta `<ErrorCapture />` uma única vez dentro do `ThemeProvider` para instalar os listeners globais
+
+### Corrigido
+- _(nenhum fix nesta versão — só adição de observabilidade)_
 
 ---
 

@@ -9,6 +9,12 @@ export default defineConfig({
     environment: "node",
     globals: true,
     include: ["src/**/*.test.ts", "src/**/*.test.tsx"],
+    // Render de PDFs cumulativos com @react-pdf/renderer pode demorar
+    // ~1-4s por caso em Windows — rodando em paralelo com outros workers,
+    // o primeiro render de cada arquivo (que carrega as fontes embutidas)
+    // já pode bater nos 5s do default. Subimos o timeout pra eliminar
+    // flakes sem esconder testes genuinamente travados.
+    testTimeout: 20000,
   },
   resolve: {
     alias: {

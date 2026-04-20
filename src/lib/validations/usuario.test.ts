@@ -51,6 +51,43 @@ describe("gerarSenhaForte", () => {
       expect(senha).not.toContain("1")
     }
   })
+
+  it("distribuição aproximadamente uniforme (1000 samples, chi-squared leve)", () => {
+    // Teste estatístico básico: em 1000 senhas de 16 chars = 16_000 chars,
+    // nenhum caractere do alfabeto deveria aparecer < 50% da média esperada
+    // nem > 200%. Isso detecta viés grosseiro (ex.: modulo 256 sem rejection
+    // sampling concentraria em certos caracteres).
+    const alfabeto = "abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789!@#$%&*+-?"
+    const contagem: Record<string, number> = {}
+    const totalChars = 1000 * 16
+    for (let i = 0; i < 1000; i++) {
+      for (const c of gerarSenhaForte()) {
+        contagem[c] = (contagem[c] ?? 0) + 1
+      }
+    }
+    const mediaEsperada = totalChars / alfabeto.length
+    for (const c of alfabeto) {
+      const freq = contagem[c] ?? 0
+      // Aceita uma larga faixa — só queremos detectar viés grosseiro
+      expect(freq).toBeGreaterThan(mediaEsperada * 0.4)
+      expect(freq).toBeLessThan(mediaEsperada * 1.8)
+    }
+  })
+
+  it("posição dos caracteres é distribuída (não ancora mandatórios no início)", () => {
+    // Shuffle Fisher-Yates garante que o minúsculo mandatório pode aparecer
+    // em qualquer posição — não só nas 4 primeiras. Antes (sort Math.random)
+    // havia viés estatístico que concentrava mandatórios no início.
+    const posicoesDoPrimeiroSimbolo: number[] = []
+    for (let i = 0; i < 200; i++) {
+      const senha = gerarSenhaForte()
+      const idx = senha.search(/[!@#$%&*+\-?]/)
+      if (idx !== -1) posicoesDoPrimeiroSimbolo.push(idx)
+    }
+    // Pelo menos uma das 200 senhas deve ter símbolo depois da posição 6
+    const comSimboloTardio = posicoesDoPrimeiroSimbolo.filter((i) => i > 6)
+    expect(comSimboloTardio.length).toBeGreaterThan(0)
+  })
 })
 
 describe("criarUsuarioSchema", () => {

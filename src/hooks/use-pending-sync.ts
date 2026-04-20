@@ -1,21 +1,41 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { countPending, listMutations } from "@/lib/offline/db"
+import { countByStatus, listMutations, type QueuedMutation } from "@/lib/offline/db"
 
-export function usePendingSync(pollMs = 3000) {
-  const [count, setCount] = useState<number>(0)
-  const [failed, setFailed] = useState<number>(0)
+type Counts = {
+  pending: number
+  failed: number
+  poison: number
+  items: QueuedMutation[]
+}
+
+/**
+ * Monitora a fila offline em polling curto. Expõe contadores por status +
+ * a lista completa (para UI expansível). A lista é útil para mostrar ao
+ * usuário o que está falhando e permitir ações individuais.
+ */
+export function usePendingSync(pollMs = 3000): Counts {
+  const [state, setState] = useState<Counts>({ pending: 0, failed: 0, poison: 0, items: [] })
 
   useEffect(() => {
     let active = true
     async function refresh() {
       try {
-        const c = await countPending()
-        const f = await listMutations("failed")
+        const [pending, failed, poison, all] = await Promise.all([
+          countByStatus("pending"),
+          countByStatus("failed"),
+          countByStatus("poison"),
+          listMutations(),
+        ])
         if (!active) return
-        setCount(c)
-        setFailed(f.length)
+        setState({
+          pending,
+          failed,
+          poison,
+          // Filtra `syncing` transiente — não queremos mostrar "in-flight" na lista
+          items: all.filter((m) => m.status !== "syncing"),
+        })
       } catch {
         // IndexedDB indisponível (SSR ou Safari privado) — ignora
       }
@@ -25,5 +45,5 @@ export function usePendingSync(pollMs = 3000) {
     return () => { active = false; clearInterval(id) }
   }, [pollMs])
 
-  return { pending: count, failed }
+  return state
 }

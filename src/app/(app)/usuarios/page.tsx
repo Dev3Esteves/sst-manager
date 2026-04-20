@@ -5,7 +5,10 @@ import { Button } from "@/components/ui/button"
 import { Badge, type BadgeProps } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Pagination, parsePageParam } from "@/components/pagination"
 import { Plus, Pencil, ShieldAlert, UserCog } from "lucide-react"
+
+const PER_PAGE = 25
 
 function perfilVariant(nome: string | null): BadgeProps["variant"] {
   if (!nome) return "secondary"
@@ -16,7 +19,14 @@ function perfilVariant(nome: string | null): BadgeProps["variant"] {
   return "outline"
 }
 
-export default async function UsuariosPage() {
+export default async function UsuariosPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>
+}) {
+  const sp = await searchParams
+  const page = parsePageParam(sp.page)
+
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) {
@@ -48,17 +58,30 @@ export default async function UsuariosPage() {
     )
   }
 
-  // Admin — busca lista via service role para ter acesso a auth.users
+  // Admin — paginação server-side em `usuarios` via `.range()` + `count: "exact"`.
+  // Para `auth.users`, buscamos uma janela grande (1000) em 1 chamada — suficiente
+  // para as primeiras páginas; crescer para paginação dedicada do auth quando
+  // passar de 1000 usuários (ainda longe).
   const admin = createAdminClient()
-  const [{ data: usuariosRows }, { data: authList }] = await Promise.all([
+  const from = (page - 1) * PER_PAGE
+  const to = from + PER_PAGE - 1
+
+  const [usuariosResult, authResult] = await Promise.all([
     admin.from("usuarios")
-      .select("id, ativo, ultimo_acesso, created_at, perfis_acesso(nome, descricao), empresas(razao_social), colaboradores(nome_completo)")
-      .order("created_at", { ascending: false }),
-    admin.auth.admin.listUsers(),
+      .select(
+        "id, ativo, ultimo_acesso, created_at, perfis_acesso(nome, descricao), empresas(razao_social), colaboradores(nome_completo)",
+        { count: "exact" },
+      )
+      .order("created_at", { ascending: false })
+      .range(from, to),
+    admin.auth.admin.listUsers({ page: 1, perPage: 1000 }),
   ])
 
+  const usuariosRows = usuariosResult.data
+  const totalUsuarios = usuariosResult.count ?? 0
+
   const emailPorId = new Map<string, { email?: string; last_sign_in_at?: string | null }>()
-  for (const u of authList?.users ?? []) {
+  for (const u of authResult?.data?.users ?? []) {
     emailPorId.set(u.id, { email: u.email, last_sign_in_at: u.last_sign_in_at })
   }
 
@@ -81,7 +104,7 @@ export default async function UsuariosPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">{usuariosRows?.length ?? 0} usuário(s)</CardTitle>
+          <CardTitle className="text-base">{totalUsuarios} usuário(s)</CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
@@ -139,12 +162,20 @@ export default async function UsuariosPage() {
               {(!usuariosRows || usuariosRows.length === 0) && (
                 <TableRow>
                   <TableCell colSpan={7} className="text-center text-muted-foreground py-10">
-                    Nenhum usuário cadastrado.
+                    {page > 1 ? "Nenhum usuário nesta página." : "Nenhum usuário cadastrado."}
                   </TableCell>
                 </TableRow>
               )}
             </TableBody>
           </Table>
+
+          <Pagination
+            baseHref="/usuarios"
+            currentPage={page}
+            totalItems={totalUsuarios}
+            perPage={PER_PAGE}
+            label="usuário(s)"
+          />
         </CardContent>
       </Card>
     </div>

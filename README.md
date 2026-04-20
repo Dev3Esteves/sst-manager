@@ -1,5 +1,7 @@
 # SST Manager — SISTENGE
 
+[![CI](https://github.com/EvandroEstevesFerreira/sst-manager/actions/workflows/ci.yml/badge.svg)](https://github.com/EvandroEstevesFerreira/sst-manager/actions/workflows/ci.yml)
+
 Sistema de Gestão de Segurança e Saúde do Trabalho para engenharias e data
 centers. Next.js 14 + Supabase + shadcn/ui.
 

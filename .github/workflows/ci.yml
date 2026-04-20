@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+
+concurrency:
+  # Cancela jobs antigos no mesmo branch/PR ao surgir novo push
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Lint · Test · TypeCheck · Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      # Lint — separado de build para feedback mais rápido
+      - name: ESLint
+        run: npm run lint
+
+      # Tipos — checagem estrita, independente do build (mais rápido pra errar)
+      - name: TypeScript type-check
+        run: npx tsc --noEmit
+
+      # Unit + PDF smoke tests
+      - name: Vitest
+        run: npm test -- --run --reporter=verbose
+
+      # Build de produção — o webpack/Next exercita imports em todos os path
+      # (que `tsc --noEmit` sozinho não pega, como ESM subpaths ausentes).
+      # Usa dummies para as envs que só são necessárias em runtime.
+      - name: Build (Next.js production)
+        run: npm run build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: dummy-anon-key-for-build-time
+          SUPABASE_SERVICE_ROLE_KEY: dummy-service-role-key-for-build-time

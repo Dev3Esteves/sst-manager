@@ -7,7 +7,49 @@ e o versionamento segue [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Não lançado]
 
-_Mudanças em desenvolvimento na branch `master` ainda não publicadas numa tag._
+### Adicionado
+- **Fila assíncrona de jobs** (`src/lib/jobs/`, migration `0010`)
+  - Nova tabela `jobs` com FSM `queued → processing → completed|failed`, retry (max_attempts=3 por padrão), `claimed_by`/`claimed_at` pra rastrear worker, `progress_current`/`progress_total` pra progresso incremental
+  - **Função SQL `claim_next_job(worker_id)`** com `SKIP LOCKED` — garante que N workers concorrentes pegam N jobs diferentes sem deadlock
+  - Índices dedicados: `(created_at) WHERE status='queued'` pra pickup rápido, `(user_id, created_at DESC)` pra listagem
+  - RLS por empresa (mesmo padrão das outras tabelas); insert exige `user_id = auth.uid()`
+  - Bucket `job-results` privado (50MB, zip/pdf) + policy de leitura authenticated
+- **`src/lib/jobs/queue.ts`** — helpers `enqueueJob`, `claimNextJob`, `updateProgress`, `markJobCompleted`, `markJobFailed`, `getJob`, `listJobs`, `makeWorkerId`
+  - Política de retry em `markJobFailed`: se `attempts < max_attempts`, volta pra `queued` limpando `claimed_*`; senão finaliza como `failed`
+  - Stack truncado a 10 linhas em `error_detail`; mensagem a 2000 chars na coluna `error_message`
+  - Normaliza resposta da RPC (postgrest às vezes devolve array de 1)
+  - **18 testes** cobrindo enqueue, claim (array vs objeto vs null), política de retry, truncamento, progresso, listagem
+- **Worker `/api/cron/process-jobs`** protegido por `CRON_SECRET`
+  - Claim atômico → dispatch → `markJobCompleted`/`markJobFailed`
+  - Apenas 1 job por invocação (respeita timeout do Vercel; cron dispara cada minuto)
+  - Tudo logado via logger estruturado (#8): `jobId, workerId, jobType, attempts, outcome, bytes, summary`
+- **Endpoints REST**
+  - `POST /api/jobs/documentos-lote` — enfileira e retorna `{ jobId }` em `202 Accepted`
+  - `GET /api/jobs` — lista paginada (RLS filtra por empresa)
+  - `GET /api/jobs/[id]` — status com `{ status, progress: {current, total, pct}, error_message, result_summary, ... }`
+  - `GET /api/jobs/[id]/download` — gera signed URL de 1h e redireciona 302 pro Storage (evita proxy de bytes pela função serverless)
+- **Processor `documentos_lote`** (`src/lib/jobs/processors/documentos-lote.ts`)
+  - Reimplementa a geração de `autorizacao_nr` e `certificado` com callback `onProgress` incremental
+  - Upload do ZIP pro bucket `job-results` no path `<jobId>/<filename>`
+  - Retorna `JobResult` com storage_path, filename, content_type, bytes e summary (gerados/pulados/resultados)
+- **Dispatcher** (`src/lib/jobs/dispatch.ts`) com exhaustiveness check TS
+- **UI `/jobs`** (`src/app/(app)/jobs/`)
+  - Server component faz SSR inicial (sem flicker) + client component `JobsListLive` com polling 3s
+  - Polling auto-stop quando todos jobs chegam a `completed|failed`
+  - Barra de progresso animada, badges por status, botão de download via `<a target="_blank">` (signed URL redirect)
+  - Link "Fila de jobs" adicionado à sidebar (grupo Administração)
+- **Botão "Enviar para fila"** em `/documentos/lote` — caminho assíncrono recomendado pra lotes grandes (>10 colaboradores), enfileira e redireciona pra `/jobs`. O botão síncrono continua como "Gerar ZIP agora" pra lotes pequenos
+- **`vercel.json`** — cron registrado em `* * * * *` (minuto em minuto) para `/api/cron/process-jobs`
+
+### Mudado
+- `README.md` — documenta nova env var `CRON_SECRET` necessária para o worker
+- `src/components/layout/sidebar.tsx` — novo item "Fila de jobs" com ícone `ListTodo` (após "Usuários", antes de "Auditoria")
+
+### Corrigido
+- _(nenhum fix — só feature nova)_
+
+### Dependências
+- _(nenhuma adicionada — Vercel Cron é configuração, JSZip e @react-pdf/renderer já existiam)_
 
 ---
 

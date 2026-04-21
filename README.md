@@ -18,6 +18,7 @@ Abra <http://localhost:3000>. `.env.local` precisa ter:
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - `SUPABASE_SERVICE_ROLE_KEY` (apenas server-side)
+- `CRON_SECRET` (string aleatória — usada pelo worker `/api/cron/process-jobs`; em produção, configure igual ao secret que o Vercel Cron injeta automaticamente)
 
 ---
 

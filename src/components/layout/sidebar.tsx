@@ -7,7 +7,7 @@ import {
   LayoutDashboard, Building2, Users, UserCog, HeartPulse, GraduationCap,
   HardHat, FileText, AlertTriangle, ClipboardCheck, Clock, Grid3x3,
   History, MessageSquare, FileBarChart, MapPin, Settings,
-  HardDrive,
+  HardDrive, ListTodo,
   type LucideIcon,
 } from "lucide-react"
 import { SistengeLogo } from "@/components/sistenge-logo"
@@ -55,6 +55,7 @@ const sections: NavSection[] = [
     label: "Administração",
     items: [
       { href: "/usuarios", label: "Usuários", icon: UserCog },
+      { href: "/jobs", label: "Fila de jobs", icon: ListTodo },
       { href: "/auditoria", label: "Auditoria", icon: History },
       { href: "/configuracoes", label: "Configurações", icon: Settings, disabled: true },
     ],

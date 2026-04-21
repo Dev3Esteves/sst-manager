@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { useState, useTransition, useMemo } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -9,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { toast } from "sonner"
-import { Loader2, Package, Search, Users, AlertTriangle, CheckCircle2, ArrowLeft, FileArchive } from "lucide-react"
+import { Loader2, Package, Search, Users, AlertTriangle, CheckCircle2, ArrowLeft, FileArchive, ListTodo } from "lucide-react"
 import { MAX_LOTE } from "@/lib/pdf/batch-utils"
 import { formatCPF } from "@/lib/validations/shared"
 
@@ -37,6 +38,7 @@ export function LoteForm({
   const [filtroEmpresa, setFiltroEmpresa] = useState("")
   const [selecionados, setSelecionados] = useState<Set<string>>(new Set())
   const [pending, startTransition] = useTransition()
+  const router = useRouter()
 
   const cargosUnicos = useMemo(() => {
     const set = new Set<string>()
@@ -157,6 +159,66 @@ export function LoteForm({
             ? `${pulados} pulado(s) — veja _relatorio.txt no ZIP.`
             : "Todos OK. Baixando ZIP...",
         })
+      } catch (err) {
+        toast.error("Erro de rede", {
+          description: err instanceof Error ? err.message : String(err),
+        })
+      }
+    })
+  }
+
+  /**
+   * Caminho assíncrono: enfileira o job e redireciona pra /jobs onde o
+   * usuário acompanha progresso e baixa quando pronto. Recomendado pra
+   * lotes > 10 colaboradores (evita estourar timeout do Vercel).
+   */
+  async function handleGerarAsync() {
+    if (selecionados.size === 0) {
+      toast.warning("Selecione ao menos 1 colaborador.")
+      return
+    }
+    if (tipo === "certificado" && !treinamentoId) {
+      toast.warning("Escolha o treinamento do certificado.")
+      return
+    }
+    if (tipo === "autorizacao_nr" && !responsavelNome) {
+      toast.warning("Informe o nome do responsável pela emissão.")
+      return
+    }
+
+    const ids = Array.from(selecionados)
+    const body = tipo === "autorizacao_nr"
+      ? {
+          tipo,
+          nr,
+          empresa_id: empresaId,
+          colaborador_ids: ids,
+          registrar,
+          responsavel_nome: responsavelNome,
+          responsavel_cargo: responsavelCargo,
+        }
+      : {
+          tipo,
+          treinamento_id: treinamentoId,
+          colaborador_ids: ids,
+        }
+
+    startTransition(async () => {
+      try {
+        const res = await fetch("/api/jobs/documentos-lote", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        })
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({ error: "Erro desconhecido" }))
+          toast.error(data.error || "Falha ao enfileirar job")
+          return
+        }
+        toast.success(`Job na fila — ${ids.length} colaborador(es)`, {
+          description: "Você será redirecionado para acompanhar o progresso.",
+        })
+        router.push("/jobs")
       } catch (err) {
         toast.error("Erro de rede", {
           description: err instanceof Error ? err.message : String(err),
@@ -379,14 +441,20 @@ export function LoteForm({
         </CardContent>
       </Card>
 
-      <div className="flex gap-2 justify-end sticky bottom-0 bg-background/95 backdrop-blur py-3 border-t -mx-6 px-6">
+      <div className="flex gap-2 justify-end sticky bottom-0 bg-background/95 backdrop-blur py-3 border-t -mx-6 px-6 flex-wrap">
         <Button type="button" variant="outline" asChild>
           <Link href="/documentos">Cancelar</Link>
+        </Button>
+        <Button type="button" variant="outline" onClick={handleGerarAsync} disabled={pending || total === 0}>
+          {pending
+            ? <><Loader2 className="h-4 w-4 animate-spin" />Enfileirando...</>
+            : <><ListTodo className="h-4 w-4" />Enviar para fila (recomendado, lotes grandes)</>
+          }
         </Button>
         <Button type="button" onClick={handleGerar} disabled={pending || total === 0}>
           {pending
             ? <><Loader2 className="h-4 w-4 animate-spin" />Gerando...</>
-            : <><FileArchive className="h-4 w-4" />Gerar {total} documento(s) em ZIP</>
+            : <><FileArchive className="h-4 w-4" />Gerar ZIP agora ({total})</>
           }
         </Button>
       </div>

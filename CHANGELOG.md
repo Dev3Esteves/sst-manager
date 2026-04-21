@@ -7,6 +7,12 @@ e o versionamento segue [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Não lançado]
 
+_Mudanças em desenvolvimento na branch `master` ainda não publicadas numa tag._
+
+---
+
+## [0.6.0] — 2026-04-21
+
 ### Adicionado
 - **Fila assíncrona de jobs** (`src/lib/jobs/`, migration `0010`)
   - Nova tabela `jobs` com FSM `queued → processing → completed|failed`, retry (max_attempts=3 por padrão), `claimed_by`/`claimed_at` pra rastrear worker, `progress_current`/`progress_total` pra progresso incremental
@@ -52,7 +58,6 @@ e o versionamento segue [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - _(nenhuma adicionada — Vercel Cron é configuração, JSZip e @react-pdf/renderer já existiam)_
 
 ---
-
 ## [0.5.0] — 2026-04-20
 
 ### Adicionado
@@ -242,7 +247,8 @@ npm run release:major   # 0.4.0 → 1.0.0
 O script faz: bump no `package.json`, atualiza este `CHANGELOG.md`,
 cria commit de release e cria tag git anotada. Depois é só `git push --tags`.
 
-[Não lançado]: https://github.com/EvandroEstevesFerreira/sst-manager/compare/v0.5.0...HEAD
+[Não lançado]: https://github.com/EvandroEstevesFerreira/sst-manager/compare/v0.6.0...HEAD
+[0.6.0]: https://github.com/EvandroEstevesFerreira/sst-manager/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/EvandroEstevesFerreira/sst-manager/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/EvandroEstevesFerreira/sst-manager/compare/v0.3.1...v0.4.0
 [0.3.1]: https://github.com/EvandroEstevesFerreira/sst-manager/compare/v0.3.0...v0.3.1

@@ -1,9 +1,39 @@
+import Link from "next/link"
 import { notFound } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Pencil, Plus } from "lucide-react"
 import { GheForm } from "../ghe-form"
 import { updateGhe, deleteGhe } from "../actions"
 import { CargosEditor } from "./cargos-editor"
+import {
+  RISCO_CATEGORIA_LABEL,
+  CATEGORIA_RISCO_LABEL,
+  type RiscoCategoria,
+  type CategoriaRisco,
+} from "@/lib/validations/pgr"
+
+type RiscoRow = {
+  id: string
+  categoria: RiscoCategoria
+  agente_ambiental: string
+  codigo_esocial: string | null
+  tipo_exposicao: string | null
+  categoria_risco: CategoriaRisco | null
+  ordem: number
+}
+
+function categoriaRiscoVariant(c: CategoriaRisco | null): "default" | "outline" | "alerta" | "critico" {
+  switch (c) {
+    case "muito_alto": return "critico"
+    case "alto": return "alerta"
+    case "medio": return "default"
+    default: return "outline"
+  }
+}
 
 export default async function EditGhePage({
   params,
@@ -13,7 +43,7 @@ export default async function EditGhePage({
   const { id: pgrId, gheId } = await params
   const supabase = await createClient()
 
-  const [{ data: ghe }, { data: cargos }, { data: pgr }] = await Promise.all([
+  const [{ data: ghe }, { data: cargos }, { data: pgr }, { data: riscos }] = await Promise.all([
     supabase.from("pgr_ghe").select("*").eq("id", gheId).single(),
     supabase
       .from("pgr_ghe_cargo")
@@ -26,11 +56,19 @@ export default async function EditGhePage({
       .select("numero_revisao, obras(nome)")
       .eq("id", pgrId)
       .single(),
+    supabase
+      .from("pgr_risco")
+      .select("id, categoria, agente_ambiental, codigo_esocial, tipo_exposicao, categoria_risco, ordem")
+      .eq("pgr_ghe_id", gheId)
+      .order("ordem")
+      .order("agente_ambiental")
+      .returns<RiscoRow[]>(),
   ])
 
   if (!ghe || !pgr) notFound()
 
   const obra = Array.isArray(pgr.obras) ? pgr.obras[0] : pgr.obras
+  const riscosList = riscos ?? []
 
   async function handleDelete() {
     "use server"
@@ -63,6 +101,80 @@ export default async function EditGhePage({
             adicione e remova sem precisar salvar o formulário.
           </p>
           <CargosEditor gheId={gheId} pgrId={pgrId} cargos={cargos ?? []} />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0">
+          <CardTitle className="text-base">
+            Riscos inventariados ({riscosList.length})
+          </CardTitle>
+          <Button size="sm" asChild>
+            <Link href={`/pgr/${pgrId}/ghe/${gheId}/risco/new`}>
+              <Plus className="h-4 w-4" />
+              Novo risco
+            </Link>
+          </Button>
+        </CardHeader>
+        <CardContent>
+          {riscosList.length === 0 ? (
+            <p className="text-sm text-muted-foreground text-center py-6">
+              Nenhum risco inventariado para este GHE. Adicione os agentes ambientais
+              (Anexo III) clicando em <strong>Novo risco</strong>.
+            </p>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-24">Categoria</TableHead>
+                  <TableHead>Agente</TableHead>
+                  <TableHead className="w-28 font-mono">Cód. eSocial</TableHead>
+                  <TableHead className="w-24">Exposição</TableHead>
+                  <TableHead className="w-24">Risco final</TableHead>
+                  <TableHead className="w-12"></TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {riscosList.map((r) => (
+                  <TableRow key={r.id} className="hover:bg-accent/50">
+                    <TableCell>
+                      <Badge variant="outline" className="text-[10px]">
+                        {RISCO_CATEGORIA_LABEL[r.categoria]}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="font-medium">
+                      <Link
+                        href={`/pgr/${pgrId}/ghe/${gheId}/risco/${r.id}`}
+                        className="hover:underline"
+                      >
+                        {r.agente_ambiental}
+                      </Link>
+                    </TableCell>
+                    <TableCell className="font-mono text-xs">
+                      {r.codigo_esocial ?? "—"}
+                    </TableCell>
+                    <TableCell className="text-xs">{r.tipo_exposicao ?? "—"}</TableCell>
+                    <TableCell>
+                      {r.categoria_risco ? (
+                        <Badge variant={categoriaRiscoVariant(r.categoria_risco)} className="text-[10px]">
+                          {CATEGORIA_RISCO_LABEL[r.categoria_risco]}
+                        </Badge>
+                      ) : (
+                        <span className="text-xs text-muted-foreground">—</span>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      <Button variant="ghost" size="icon" asChild>
+                        <Link href={`/pgr/${pgrId}/ghe/${gheId}/risco/${r.id}`}>
+                          <Pencil className="h-3.5 w-3.5" />
+                        </Link>
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
         </CardContent>
       </Card>
     </div>

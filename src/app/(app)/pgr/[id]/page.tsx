@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { ArrowLeft, Pencil, FileDown, Users } from "lucide-react"
+import { ArrowLeft, Pencil, FileDown, Users, Plus } from "lucide-react"
 import {
   PGR_STATUS_LABEL,
   RISCO_CATEGORIA_LABEL,
@@ -287,16 +287,23 @@ export default async function PgrDetailPage({ params }: { params: Promise<{ id: 
       </div>
 
       <Card>
-        <CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0">
           <CardTitle className="text-base flex items-center gap-2">
             <Users className="h-4 w-4" />
             Grupos Homogêneos de Exposição (GHE)
           </CardTitle>
+          <Button size="sm" asChild>
+            <Link href={`/pgr/${pgr.id}/ghe/new`}>
+              <Plus className="h-4 w-4" />
+              Novo GHE
+            </Link>
+          </Button>
         </CardHeader>
         <CardContent>
           {ghesList.length === 0 ? (
             <p className="text-sm text-muted-foreground text-center py-6">
-              Nenhum GHE cadastrado. O editor de GHEs é o próximo passo do módulo.
+              Nenhum GHE cadastrado. Clique em <strong>Novo GHE</strong> para começar
+              (entidade central do PGR — riscos, cargos e EPIs se vinculam a ele).
             </p>
           ) : (
             <Table>
@@ -308,20 +315,36 @@ export default async function PgrDetailPage({ params }: { params: Promise<{ id: 
                   <TableHead>Local</TableHead>
                   <TableHead className="w-24 text-right">Expostos</TableHead>
                   <TableHead className="w-20 text-right">Riscos</TableHead>
+                  <TableHead className="w-12"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {ghesList.map((g) => {
                   const riscosGhe = riscosList.filter((r) => r.pgr_ghe_id === g.id).length
                   return (
-                    <TableRow key={g.id}>
-                      <TableCell className="font-mono font-medium">{g.codigo}</TableCell>
-                      <TableCell>{g.descricao}</TableCell>
+                    <TableRow key={g.id} className="cursor-pointer hover:bg-accent/50">
+                      <TableCell className="font-mono font-medium">
+                        <Link href={`/pgr/${pgr.id}/ghe/${g.id}`} className="block">
+                          {g.codigo}
+                        </Link>
+                      </TableCell>
+                      <TableCell>
+                        <Link href={`/pgr/${pgr.id}/ghe/${g.id}`} className="block">
+                          {g.descricao}
+                        </Link>
+                      </TableCell>
                       <TableCell className="text-sm">{g.funcao_posicao ?? "—"}</TableCell>
                       <TableCell className="text-sm">{g.local_trabalho ?? "—"}</TableCell>
                       <TableCell className="text-right">{g.num_empregados_expostos ?? "—"}</TableCell>
                       <TableCell className="text-right">
                         <Badge variant="outline" className="text-[10px]">{riscosGhe}</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Button variant="ghost" size="icon" asChild>
+                          <Link href={`/pgr/${pgr.id}/ghe/${g.id}`}>
+                            <Pencil className="h-3.5 w-3.5" />
+                          </Link>
+                        </Button>
                       </TableCell>
                     </TableRow>
                   )

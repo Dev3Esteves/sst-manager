@@ -388,13 +388,20 @@ export default async function PgrDetailPage({ params }: { params: Promise<{ id: 
       )}
 
       <Card>
-        <CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0">
           <CardTitle className="text-base">Plano de Ação (5W1H — Anexo I)</CardTitle>
+          <Button size="sm" asChild>
+            <Link href={`/pgr/${pgr.id}/acao/new`}>
+              <Plus className="h-4 w-4" />
+              Nova ação
+            </Link>
+          </Button>
         </CardHeader>
         <CardContent>
           {acoesList.length === 0 ? (
             <p className="text-sm text-muted-foreground text-center py-6">
-              Nenhuma ação cadastrada.
+              Nenhuma ação cadastrada. Clique em <strong>Nova ação</strong> para
+              começar o cronograma (Anexo I).
             </p>
           ) : (
             <Table>
@@ -404,18 +411,33 @@ export default async function PgrDetailPage({ params }: { params: Promise<{ id: 
                   <TableHead>O que fazer</TableHead>
                   <TableHead className="w-32">Quem</TableHead>
                   <TableHead className="w-32">Status</TableHead>
+                  <TableHead className="w-12"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {acoesList.map((a) => (
-                  <TableRow key={a.id}>
+                  <TableRow key={a.id} className="hover:bg-accent/50">
                     <TableCell className="font-mono text-xs">{a.numero_item}</TableCell>
-                    <TableCell className="text-sm">{a.o_que}</TableCell>
+                    <TableCell className="text-sm">
+                      <Link
+                        href={`/pgr/${pgr.id}/acao/${a.id}`}
+                        className="hover:underline"
+                      >
+                        {a.o_que}
+                      </Link>
+                    </TableCell>
                     <TableCell className="text-sm">{a.quem ?? "—"}</TableCell>
                     <TableCell>
                       <Badge variant="outline" className="text-[10px]">
                         {ACAO_STATUS_LABEL[a.status]}
                       </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <Button variant="ghost" size="icon" asChild>
+                        <Link href={`/pgr/${pgr.id}/acao/${a.id}`}>
+                          <Pencil className="h-3.5 w-3.5" />
+                        </Link>
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}

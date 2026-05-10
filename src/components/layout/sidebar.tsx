@@ -7,7 +7,7 @@ import {
   LayoutDashboard, Building2, Users, UserCog, HeartPulse, GraduationCap,
   HardHat, FileText, AlertTriangle, ClipboardCheck, Clock, Grid3x3,
   History, MessageSquare, FileBarChart, MapPin, Settings,
-  HardDrive, ListTodo,
+  HardDrive, ListTodo, BookMarked,
   type LucideIcon,
 } from "lucide-react"
 import { SistengeLogo } from "@/components/sistenge-logo"
@@ -49,6 +49,12 @@ const sections: NavSection[] = [
       { href: "/matriz-treinamentos", label: "Matriz treinamentos", icon: Grid3x3 },
       { href: "/relatorios/mensal", label: "Relatório mensal", icon: FileBarChart },
       { href: "/relatorios/heatmap-ocorrencias", label: "Heatmap ocorrências", icon: MapPin },
+    ],
+  },
+  {
+    label: "Referências",
+    items: [
+      { href: "/referencias/nrs", label: "Normas Regulamentadoras", icon: BookMarked },
     ],
   },
   {

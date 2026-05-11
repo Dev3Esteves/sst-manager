@@ -6,9 +6,10 @@ import { Badge, type BadgeProps } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { formatDate } from "@/lib/utils/vencimento"
 import { OCORRENCIA_TIPOS, GRAVIDADE_LABEL, type AcaoCorretiva, type InvestigacaoInput } from "@/lib/validations/ocorrencia"
-import { ArrowLeft, AlertTriangle, FileCode, FileText } from "lucide-react"
+import { ArrowLeft, AlertTriangle, FileCode, FileText, ShieldCheck } from "lucide-react"
 import { InvestigacaoForm } from "./investigacao-form"
 import { saveInvestigacao } from "../actions"
+import { promoverOcorrenciaParaNc } from "../../nao-conformidades/actions"
 
 function gravidadeVariant(g: string | null): BadgeProps["variant"] {
   switch (g) {
@@ -33,7 +34,17 @@ export default async function OcorrenciaViewPage({ params }: { params: Promise<{
   const investigacao = oc.investigacao as InvestigacaoInput | null
   const acoes = (oc.acoes_corretivas as AcaoCorretiva[] | null) ?? []
 
+  const { data: ncLinked } = await supabase
+    .from("nao_conformidades")
+    .select("id, numero_sequencial, status")
+    .eq("ocorrencia_id", id)
+    .maybeSingle<{ id: string; numero_sequencial: number; status: string }>()
+
   const bindSave = saveInvestigacao.bind(null, id)
+  async function bindPromover() {
+    "use server"
+    await promoverOcorrenciaParaNc(id)
+  }
   const ehAcidente = ["acidente_tipico", "acidente_trajeto", "doenca_ocupacional"].includes(oc.tipo)
 
   return (
@@ -56,6 +67,21 @@ export default async function OcorrenciaViewPage({ params }: { params: Promise<{
                 </Link>
               </Button>
             </>
+          )}
+          {ncLinked ? (
+            <Button variant="outline" size="sm" asChild>
+              <Link href={`/nao-conformidades/${ncLinked.id}`}>
+                <ShieldCheck className="h-4 w-4" />
+                NC-{String(ncLinked.numero_sequencial).padStart(4, "0")}
+              </Link>
+            </Button>
+          ) : (
+            <form action={bindPromover}>
+              <Button variant="outline" size="sm" type="submit">
+                <ShieldCheck className="h-4 w-4" />
+                Abrir NC formal
+              </Button>
+            </form>
           )}
           <Badge variant="outline" className="capitalize">{oc.status}</Badge>
         </div>

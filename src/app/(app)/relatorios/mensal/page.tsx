@@ -5,6 +5,7 @@ import { Badge, type BadgeProps } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { listarMeses, parseMesRef, mesAnterior, variacaoPct } from "@/lib/utils/relatorio-mensal"
+import { calcularHHT, calcularTF, calcularTG, diasParaHoras } from "@/lib/indicadores/sst"
 import { OCORRENCIA_TIPOS, GRAVIDADE_LABEL } from "@/lib/validations/ocorrencia"
 import { formatDate, urgenciaBadgeVariant, urgenciaLabel, type Urgencia } from "@/lib/utils/vencimento"
 import {
@@ -13,8 +14,6 @@ import {
 } from "lucide-react"
 import { PrintButton } from "./print-button"
 import { SubmitOnChangeSelect } from "@/components/ui/submit-on-change-select"
-
-const HHT_MENSAL_ESTIMADO = 66_000 // 300 colab × 220h/mês
 
 export default async function RelatorioMensalPage({
   searchParams,
@@ -80,9 +79,14 @@ export default async function RelatorioMensalPage({
   const acidentesComAfastMes = acidentesMes.filter(o => (o.dias_afastamento ?? 0) > 0).length
   const diasPerdidosMes = ocorrencias.reduce((acc, o) => acc + (o.dias_afastamento ?? 0), 0)
 
-  // TF/TG do mês
-  const tfMes = HHT_MENSAL_ESTIMADO > 0 ? ((acidentesComAfastMes * 1_000_000) / HHT_MENSAL_ESTIMADO) : 0
-  const tgMes = HHT_MENSAL_ESTIMADO > 0 ? ((diasPerdidosMes * 1_000_000) / HHT_MENSAL_ESTIMADO) : 0
+  // HHT estimado: colaboradores ativos × jornada mensal padrão − horas afastadas.
+  // Sem integração com folha; dias_debitados (NBR 14280) ainda não catalogados.
+  const hhtMes = calcularHHT({
+    colaboradoresAtivos: colabAtivos.count ?? 0,
+    horasAfastadas: diasParaHoras(diasPerdidosMes),
+  })
+  const tfMes = calcularTF(acidentesComAfastMes, hhtMes)
+  const tgMes = calcularTG(diasPerdidosMes, 0, hhtMes)
 
   // Dias sem acidentes
   const diasSemAcidentes = (() => {
@@ -214,7 +218,7 @@ export default async function RelatorioMensalPage({
           <KpiCard
             label="Taxa de Frequência (TF)"
             value={tfMes.toFixed(2)}
-            subtitle={`${acidentesComAfastMes} × 10⁶ / ${HHT_MENSAL_ESTIMADO.toLocaleString("pt-BR")} HHT`}
+            subtitle={`${acidentesComAfastMes} × 10⁶ / ${hhtMes.toLocaleString("pt-BR")} HHT (estimado)`}
           />
           <KpiCard
             label="Taxa de Gravidade (TG)"

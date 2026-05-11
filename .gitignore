@@ -42,3 +42,8 @@ supabase/.temp/
 supabase/.branches/
 
 .vercel
+
+# Documentos proprietários SISTENGE (PGR/PAE/templates internos) usados como
+# referência para o design das features. Não devem ir pro git — contêm CNPJ,
+# contatos pessoais, redes referenciadas, etc.
+data/sistenge-docs/

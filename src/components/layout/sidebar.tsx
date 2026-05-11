@@ -7,7 +7,7 @@ import {
   LayoutDashboard, Building2, Users, UserCog, HeartPulse, GraduationCap,
   HardHat, FileText, AlertTriangle, ClipboardCheck, Clock, Grid3x3,
   History, MessageSquare, FileBarChart, MapPin, Settings,
-  HardDrive, ListTodo,
+  HardDrive, ListTodo, BookMarked, ShieldCheck,
   type LucideIcon,
 } from "lucide-react"
 import { SistengeLogo } from "@/components/sistenge-logo"
@@ -37,6 +37,7 @@ const sections: NavSection[] = [
     label: "Operação",
     items: [
       { href: "/exames", label: "Exames médicos", icon: HeartPulse },
+      { href: "/pgr", label: "PGR", icon: ShieldCheck },
       { href: "/documentos", label: "Documentos SST", icon: FileText },
       { href: "/dds", label: "DDS", icon: MessageSquare },
       { href: "/ocorrencias", label: "Ocorrências", icon: AlertTriangle },
@@ -47,8 +48,16 @@ const sections: NavSection[] = [
     label: "Relatórios",
     items: [
       { href: "/matriz-treinamentos", label: "Matriz treinamentos", icon: Grid3x3 },
+      { href: "/nao-conformidades", label: "Não-Conformidades", icon: ShieldCheck },
       { href: "/relatorios/mensal", label: "Relatório mensal", icon: FileBarChart },
       { href: "/relatorios/heatmap-ocorrencias", label: "Heatmap ocorrências", icon: MapPin },
+    ],
+  },
+  {
+    label: "Referências",
+    items: [
+      { href: "/referencias/nrs", label: "Normas Regulamentadoras", icon: BookMarked },
+      { href: "/referencias/esocial", label: "Tabela 22 eSocial", icon: BookMarked },
     ],
   },
   {

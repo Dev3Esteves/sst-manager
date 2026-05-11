@@ -1,0 +1,697 @@
+[
+  {
+    "numero": "01",
+    "titulo": "Disposições Gerais e Gerenciamento de Riscos Ocupacionais",
+    "status": "vigente",
+    "data_atualizacao": "2024-08-27",
+    "fonte_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/nr-1",
+    "pdf_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/nr-01-atualizada-2025-i-3.pdf",
+    "ementa": "Estabelece as disposições gerais sobre segurança e saúde no trabalho, regulamentando os artigos 154 a 159 da CLT. Define os requisitos para o Gerenciamento de Riscos Ocupacionais (GRO) e o Programa de Gerenciamento de Riscos (PGR), abrangendo a identificação e avaliação de fatores de riscos físicos, químicos, biológicos e psicossociais relacionados ao trabalho. Estabelece também direitos e deveres do empregador e dos trabalhadores, com disposições específicas para microempresas e empresas de pequeno porte conforme os graus de risco.",
+    "campo_aplicacao": "Aplica-se a todas as empresas e estabelecimentos de trabalho que admitam empregados regidos pela CLT, com tratamento diferenciado para microempresas e empresas de pequeno porte conforme o grau de risco da atividade econômica.",
+    "portarias_recentes": [
+      "Portaria MTE nº 1.419, de 27/08/2024",
+      "Portaria MTE nº 344, de 25/03/2024",
+      "Portaria SEPRT nº 6.730, de 09/03/2020"
+    ],
+    "manuais_relacionados": [
+      {
+        "titulo": "Guia de Elaboração e Revisão de Normas (2018)",
+        "url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/arquivos/normas-regulamentadoras/guia_de_elaboracao_e_revisao_de_normas.pdf"
+      }
+    ]
+  },
+  {
+    "numero": "02",
+    "titulo": "Inspeção Prévia",
+    "status": "revogada",
+    "data_atualizacao": "2019-07-30",
+    "fonte_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/norma-regulamentadora-no-2-nr-2",
+    "pdf_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/arquivos/normas-regulamentadoras/nr-02_atualizada_2019.pdf",
+    "ementa": "Norma revogada pela Portaria SEPRT nº 915, de 30 de julho de 2019. Estabelecia procedimentos referentes à inspeção prévia em novos estabelecimentos antes do início das atividades, com o objetivo de eliminar riscos ocupacionais potenciais durante a elaboração de projetos e construção de instalações. Caracterizada como Norma Geral pela Portaria SIT nº 787/2018.",
+    "campo_aplicacao": "Aplicava-se a novos estabelecimentos e à instalação de máquinas e equipamentos antes do início das atividades operacionais.",
+    "portarias_recentes": [
+      "Portaria SEPRT nº 915, de 30/07/2019 (revogação)",
+      "Portaria SIT nº 787, de 28/11/2018",
+      "Portaria SSMT nº 35, de 28/12/1983"
+    ],
+    "manuais_relacionados": []
+  },
+  {
+    "numero": "03",
+    "titulo": "Embargo e Interdição",
+    "status": "vigente",
+    "data_atualizacao": "2019-09-23",
+    "fonte_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/norma-regulamentadora-no-3-nr-3",
+    "pdf_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/arquivos/normas-regulamentadoras/nr-03_atualizada_2019.pdf",
+    "ementa": "Estabelece os procedimentos administrativos para embargo e interdição em situações de Grave e Iminente Risco (GIR) à vida e à saúde dos trabalhadores. Define critérios técnicos objetivos para avaliação de consequências e probabilidade de ocorrência de acidentes ou doenças ocupacionais. Estas medidas cautelares têm natureza preventiva e não constituem penalidade às organizações, sendo aplicadas pela Auditoria-Fiscal do Trabalho.",
+    "campo_aplicacao": "Aplica-se aos procedimentos adotados pela Auditoria-Fiscal do Trabalho para caracterização e aplicação de medidas de embargo e interdição em atividades, máquinas, equipamentos, setores de serviço, estabelecimentos ou obras que apresentem Grave e Iminente Risco aos trabalhadores.",
+    "portarias_recentes": [
+      "Portaria SEPRT nº 1.068, de 23/09/2019",
+      "Portaria SIT nº 787, de 28/11/2018",
+      "Lei nº 6.514, de 22/12/1977"
+    ],
+    "manuais_relacionados": []
+  },
+  {
+    "numero": "04",
+    "titulo": "Serviços Especializados em Segurança e em Medicina do Trabalho",
+    "status": "vigente",
+    "data_atualizacao": "2022-08-03",
+    "fonte_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/norma-regulamentadora-no-4-nr-4",
+    "pdf_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/nr-04-atualizada-2023.pdf",
+    "ementa": "Estabelece a obrigatoriedade de manutenção, pelas empresas privadas e públicas, de Serviços Especializados em Engenharia de Segurança e em Medicina do Trabalho (SESMT), com a finalidade de promover a saúde e proteger a integridade do trabalhador no local de trabalho. O dimensionamento do SESMT é vinculado à gradação do risco da atividade principal e ao número total de empregados do estabelecimento. Os profissionais do SESMT são responsáveis pela elaboração, planejamento e aplicação de conhecimentos de engenharia de segurança e medicina do trabalho.",
+    "campo_aplicacao": "Aplica-se a empresas privadas e públicas que possuam empregados regidos pela CLT, regulando a constituição obrigatória do SESMT conforme o grau de risco e o número de empregados.",
+    "portarias_recentes": [
+      "Portaria MTP nº 2.318, de 03/08/2022",
+      "Portaria MTPS nº 510, de 29/04/2016",
+      "Portaria MTE nº 2.018, de 23/12/2014"
+    ],
+    "manuais_relacionados": [
+      {
+        "titulo": "Manual do Usuário - Registro do SESMT",
+        "url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/manualusuarioregistrodesesmtversao4fev26.pdf"
+      }
+    ]
+  },
+  {
+    "numero": "05",
+    "titulo": "Comissão Interna de Prevenção de Acidentes e de Assédio - CIPA",
+    "status": "vigente",
+    "data_atualizacao": "2022-12-20",
+    "fonte_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/norma-regulamentadora-no-5-nr-5",
+    "pdf_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/NR05atualizada2023.pdf",
+    "ementa": "Regulamenta a Comissão Interna de Prevenção de Acidentes e de Assédio (CIPA), que tem como objetivo a prevenção de acidentes e doenças decorrentes do trabalho, de modo a tornar compatível, de forma permanente, o trabalho com a preservação da vida e a promoção da saúde do trabalhador. Constituída por representantes do empregador e dos empregados, sua dimensão varia conforme número de funcionários e o grau de risco da atividade econômica. Regulamenta os artigos 163 a 165 da CLT.",
+    "campo_aplicacao": "Aplica-se aos estabelecimentos que devem constituir CIPA conforme o dimensionamento previsto no Quadro I da norma, baseado em atividades econômicas e número de empregados.",
+    "portarias_recentes": [
+      "Portaria MTP nº 4.219, de 20/12/2022",
+      "Portaria SEPRT nº 915, de 30/07/2019",
+      "Portaria SIT nº 247, de 12/07/2011"
+    ],
+    "manuais_relacionados": []
+  },
+  {
+    "numero": "06",
+    "titulo": "Equipamento de Proteção Individual - EPI",
+    "status": "vigente",
+    "data_atualizacao": "2025-01-16",
+    "fonte_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/norma-regulamentadora-no-6-nr-6",
+    "pdf_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/nr-06-atualizada-2025-ii.pdf",
+    "ementa": "Regula a execução do trabalho com uso de Equipamentos de Proteção Individual (EPI), estabelecendo obrigações para empregadores, fabricantes e importadores. A norma classifica os EPIs aplicáveis, define procedimentos para emissão de Certificado de Aprovação (CA) e apresenta diretrizes sobre fornecimento, uso, conservação, higienização e manutenção desses equipamentos pelos trabalhadores. Considera-se EPI todo dispositivo ou produto, de uso individual, destinado à proteção contra riscos capazes de ameaçar a segurança e a saúde no trabalho.",
+    "campo_aplicacao": "Aplica-se a todas as atividades econômicas e ocupações em que o uso de EPI seja necessário, sem estar condicionada a setores ou atividades específicas, abrangendo qualquer situação de risco ocupacional que demande proteção individual.",
+    "portarias_recentes": [
+      "Portaria MTE nº 57, de 16/01/2025",
+      "Portaria MTb nº 877, de 24/10/2018",
+      "Portaria SIT nº 292, de 08/12/2011"
+    ],
+    "manuais_relacionados": [
+      {
+        "titulo": "Manual de Orientação para Especificação das Vestimentas de Proteção de Arco Elétrico e Fogo Repentino",
+        "url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/arquivos/normas-regulamentadoras/nr-06_manual_de_orientacao_para_especificacao_das_vestimentas_de_protecao_de_arco_eletrico_e_fogo_repentino.pdf"
+      }
+    ]
+  },
+  {
+    "numero": "07",
+    "titulo": "Programa de Controle Médico de Saúde Ocupacional",
+    "status": "vigente",
+    "data_atualizacao": "2021-07-23",
+    "fonte_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/norma-regulamentadora-no-7-nr-7",
+    "pdf_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/nr-07-atualizada-2022-1.pdf",
+    "ementa": "Regulamenta os artigos 168 e 169 da Consolidação das Leis do Trabalho, estabelecendo parâmetros e diretrizes para a elaboração e implementação do Programa de Controle Médico de Saúde Ocupacional (PCMSO). O programa objetiva a promoção e preservação da saúde dos trabalhadores mediante exames médicos ocupacionais planejados e integrados, considerando riscos identificados nos ambientes laborais conforme as demais normas regulamentadoras. Caracterizada como Norma Geral, regulamenta a saúde do trabalhador sem estar condicionada a setores econômicos específicos.",
+    "campo_aplicacao": "Aplica-se a empresas de qualquer porte que possuam empregados, sendo norma de aplicação geral independentemente de atividades, instalações ou setores econômicos específicos.",
+    "portarias_recentes": [
+      "Portaria SEPRT nº 8.873, de 23/07/2021",
+      "Portaria SEPRT nº 6.734, de 09/03/2020",
+      "Portaria MTb nº 1.031, de 06/12/2018"
+    ],
+    "manuais_relacionados": []
+  },
+  {
+    "numero": "08",
+    "titulo": "Edificações",
+    "status": "vigente",
+    "data_atualizacao": "2022-07-28",
+    "fonte_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/norma-regulamentadora-no-8-nr-8",
+    "pdf_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/arquivos/normas-regulamentadoras/nr-08-atualizada-2022.pdf",
+    "ementa": "Estabelece requisitos técnicos mínimos de segurança que devem ser observados nas edificações onde se realizam trabalhos, regulamentando o artigo 170 da CLT. Aborda aspectos como piso, escadas, rampas, passarelas, proteção contra intempéries e estabilidade estrutural das edificações ocupadas por trabalhadores. Norma especial originalmente publicada em 1978 e atualizada com base na evolução dos métodos construtivos e avanço tecnológico.",
+    "campo_aplicacao": "Aplica-se às edificações de qualquer natureza onde se realizam atividades de trabalho, considerando aspectos relacionados à execução do trabalho independentemente de setores econômicos específicos.",
+    "portarias_recentes": [
+      "Portaria MTP nº 2.188, de 28/07/2022",
+      "Portaria SIT nº 222, de 06/05/2011",
+      "Portaria SIT nº 23, de 09/10/2001"
+    ],
+    "manuais_relacionados": []
+  },
+  {
+    "numero": "09",
+    "titulo": "Avaliação e Controle das Exposições Ocupacionais a Agentes Físicos, Químicos e Biológicos",
+    "status": "vigente",
+    "data_atualizacao": "2026-01-29",
+    "fonte_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/norma-regulamentadora-no-9-nr-9",
+    "pdf_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/nr-09-atualizada-2026.pdf",
+    "ementa": "Estabelece a sistemática de avaliação e controle das exposições ocupacionais aos agentes físicos, químicos e biológicos, com foco na prevenção de doenças ocupacionais. Estruturada em corpo normativo que define requisitos gerais de avaliação e controle, complementada por anexos específicos para agentes particularizados como vibrações, benzeno em postos revendedores de combustíveis e exposição ao calor. Orienta a utilização subsidiária de critérios da NR-15 e da ACGIH enquanto anexos específicos estão em desenvolvimento.",
+    "campo_aplicacao": "Aplica-se a todas as empresas que possuem empregados expostos a riscos ocupacionais decorrentes de agentes físicos, químicos e biológicos nas atividades laborais, com requisitos específicos conforme o agente identificado.",
+    "portarias_recentes": [
+      "Portaria MTE nº 105, de 29/01/2026",
+      "Portaria SEPRT nº 6.735, de 10/03/2020",
+      "Decreto nº 9.944, de 30/07/2019"
+    ],
+    "manuais_relacionados": []
+  },
+  {
+    "numero": "10",
+    "titulo": "Segurança em Instalações e Serviços em Eletricidade",
+    "status": "vigente",
+    "data_atualizacao": "2019-07-30",
+    "fonte_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/norma-regulamentadora-no-10-nr-10",
+    "pdf_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/arquivos/normas-regulamentadoras/nr-10.pdf",
+    "ementa": "Estabelece os requisitos e condições mínimas objetivando a implementação de medidas de controle e sistemas preventivos, de forma a garantir a segurança e a saúde dos trabalhadores que, direta ou indiretamente, interajam em instalações elétricas e serviços com eletricidade. Abrange diversas etapas, incluindo geração, transmissão, distribuição e consumo, em quaisquer das fases de projeto, execução, operação, manutenção, reforma e ampliação. Aplica-se também a atividades realizadas em suas proximidades.",
+    "campo_aplicacao": "Aplica-se a todas as fases de geração, transmissão, distribuição e consumo de energia elétrica, incluindo projeto, execução, reforma, ampliação, operação e manutenção, bem como a atividades adjacentes que apresentem riscos associados à eletricidade.",
+    "portarias_recentes": [
+      "Portaria SEPRT nº 915, de 30/07/2019",
+      "Portaria MTPS nº 508, de 29/04/2016",
+      "Portaria MTb nº 598, de 07/12/2004"
+    ],
+    "manuais_relacionados": [
+      {
+        "titulo": "Manual de Auxílio na Interpretação e Aplicação da NR-10 (2010)",
+        "url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/arquivos/normas-regulamentadoras/nr-10_manual_de_auxilio_na_interpretacao_e_aplicacao_da_nr_10.pdf"
+      }
+    ]
+  },
+  {
+    "numero": "11",
+    "titulo": "Transporte, Movimentação, Armazenagem e Manuseio de Materiais",
+    "status": "vigente",
+    "data_atualizacao": "2016-04-29",
+    "fonte_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/norma-regulamentadora-no-11-nr-11",
+    "pdf_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/nr-11-atualizada-2016.pdf",
+    "ementa": "Estabelece os requisitos de segurança a serem observados nas operações de transporte, movimentação, armazenagem e manuseio de materiais, tanto de forma mecânica quanto manual, regulamentando os artigos 182 e 183 da CLT. Define critérios para operação de equipamentos como elevadores, guindastes, transportadores industriais e máquinas transportadoras. Inclui também o Anexo I com regulamento técnico para chapas de rochas ornamentais.",
+    "campo_aplicacao": "Aplica-se a todas as atividades de transporte, movimentação, armazenagem e manuseio de materiais em estabelecimentos, sem restrição a setores econômicos específicos.",
+    "portarias_recentes": [
+      "Portaria MTPS nº 505, de 29/04/2016",
+      "Portaria SIT nº 787, de 28/11/2018",
+      "Decreto nº 9.944, de 30/07/2019"
+    ],
+    "manuais_relacionados": []
+  },
+  {
+    "numero": "12",
+    "titulo": "Segurança no Trabalho em Máquinas e Equipamentos",
+    "status": "vigente",
+    "data_atualizacao": "2024-03-21",
+    "fonte_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/norma-regulamentadora-no-12-nr-12",
+    "pdf_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/nr-12-atualizada-2025.pdf",
+    "ementa": "Estabelece os requisitos mínimos para a prevenção de acidentes e doenças do trabalho nas fases de projeto, utilização, fabricação, importação, comercialização, exposição e cessão a qualquer título, em todas as atividades econômicas, de máquinas e equipamentos, novos e usados. Estabelece medidas de proteção fundamentadas em normas técnicas nacionais e internacionais, com disposições específicas para máquinas novas e usadas, e simplificações para micro e pequenas empresas.",
+    "campo_aplicacao": "Aplica-se a máquinas e equipamentos em operação nas empresas de qualquer setor econômico, abrangendo aspectos de projeto, fabricação, importação, comercialização e utilização.",
+    "portarias_recentes": [
+      "Portaria MTE nº 344, de 21/03/2024",
+      "Portaria SEPRT nº 916, de 30/07/2019",
+      "Portaria MTb nº 252, de 10/04/2018"
+    ],
+    "manuais_relacionados": [
+      {
+        "titulo": "Manual de Aplicação da NR-12",
+        "url": "https://www.gov.br/trabalho-e-emprego/pt-br/assuntos/inspecao-do-trabalho/manuais-e-publicacoes/manual-de-aplicacao-da-nr-12.pdf"
+      },
+      {
+        "titulo": "Cartilha NR-12 Segurança em Máquinas para Couro e Tratamento de Efluentes",
+        "url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/arquivos/normas-regulamentadoras/nr-12_cartilha_nr_12_segurana_em_mquinas_para_couro_e_tratamento_de_efluentes.pdf"
+      },
+      {
+        "titulo": "Avaliação de Conformidade de Componentes de Sistemas de Segurança de Máquinas",
+        "url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/arquivos/normas-regulamentadoras/nr-12_avaliacao_de_conformidade_de_componentes_de_sistemas_de_seguranca_de_maquinas_no_brasil.pdf"
+      }
+    ]
+  },
+  {
+    "numero": "13",
+    "titulo": "Caldeiras, Vasos de Pressão e Tubulações e Tanques Metálicos de Armazenamento",
+    "status": "vigente",
+    "data_atualizacao": "2022-12-20",
+    "fonte_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/norma-regulamentadora-no-13-nr-13",
+    "pdf_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/nr-13-atualizada-2023-b.pdf",
+    "ementa": "Estabelece requisitos técnicos e legais mínimos relativos à instalação, inspeção, operação e manutenção de caldeiras, vasos de pressão, tubulações e tanques metálicos de armazenamento, visando à segurança e à saúde dos trabalhadores. Define critérios de inspeção, certificação e manutenção de equipamentos sob pressão. Estabelece responsabilidades de profissionais habilitados, operadores e empresas quanto à segurança operacional desses equipamentos.",
+    "campo_aplicacao": "Aplica-se a equipamentos que operem sob pressão ou armazenem fluidos, abrangendo caldeiras, vasos de pressão, tubulações e tanques metálicos de armazenamento, independentemente do setor econômico.",
+    "portarias_recentes": [
+      "Portaria MTP nº 4.219, de 20/12/2022",
+      "Portaria MTb nº 1.082, de 18/12/2018",
+      "Portaria MTb nº 1.084, de 28/09/2017"
+    ],
+    "manuais_relacionados": [
+      {
+        "titulo": "Perguntas e Respostas da NR-13",
+        "url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/perguntas-e-respostas-nr13_2023_04_28.pdf"
+      }
+    ]
+  },
+  {
+    "numero": "14",
+    "titulo": "Fornos",
+    "status": "vigente",
+    "data_atualizacao": "2022-07-28",
+    "fonte_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/norma-regulamentadora-no-14-nr-14",
+    "pdf_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/arquivos/normas-regulamentadoras/nr-14-atualizada-2022.pdf",
+    "ementa": "Estabelece requisitos mínimos de segurança na construção, instalação, operação e manutenção de fornos industriais, regulamentando o artigo 187 da Consolidação das Leis do Trabalho. Caracterizada como Norma Especial, foi originalmente editada pela Portaria MTb nº 3.214 de 1978, tendo como referências normas internacionais e a regulamentação das obras da Usina de Itaipu. Visa proteger os trabalhadores envolvidos na operação e manutenção de fornos em diferentes setores.",
+    "campo_aplicacao": "Aplica-se aos requisitos mínimos de segurança relacionados à construção, instalação, operação e manutenção de fornos industriais em quaisquer estabelecimentos onde sejam utilizados.",
+    "portarias_recentes": [
+      "Portaria MTP nº 2.189, de 28/07/2022",
+      "Portaria SIT nº 787, de 28/11/2018",
+      "Portaria SSMT nº 12, de 06/06/1983"
+    ],
+    "manuais_relacionados": []
+  },
+  {
+    "numero": "15",
+    "titulo": "Atividades e Operações Insalubres",
+    "status": "vigente",
+    "data_atualizacao": "2025-12-03",
+    "fonte_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/norma-regulamentadora-no-15-nr-15",
+    "pdf_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/nr-15-atualizada-2025.pdf",
+    "ementa": "Estabelece as atividades e operações consideradas insalubres, que geram direito ao pagamento do adicional de insalubridade ao trabalhador exposto. Composta por uma parte geral e treze anexos, define os limites de tolerância para agentes físicos, químicos e biológicos, incluindo ruído, calor, radiações, vibração, agentes químicos, poeiras minerais e agentes biológicos. Regulamenta os artigos 189 a 196 da CLT, conforme a Lei nº 6.514 de 1977.",
+    "campo_aplicacao": "Aplica-se a todas as atividades e operações que exponham trabalhadores a agentes insalubres acima dos limites de tolerância, sem estar condicionada a setores ou atividades econômicas específicas.",
+    "portarias_recentes": [
+      "Portaria MTE nº 2.021, de 03/12/2025",
+      "Portaria MTP nº 806, de 13/04/2022",
+      "Portaria MTP nº 426, de 07/10/2021"
+    ],
+    "manuais_relacionados": []
+  },
+  {
+    "numero": "16",
+    "titulo": "Atividades e Operações Perigosas",
+    "status": "vigente",
+    "data_atualizacao": "2025-12-03",
+    "fonte_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/norma-regulamentadora-no-16-nr-16",
+    "pdf_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/nr-16-atualizada-2025-ii.pdf",
+    "ementa": "Regulamenta os artigos 193 a 196 da Consolidação das Leis do Trabalho, estabelecendo procedimentos e definições para o pagamento do adicional de periculosidade. Composta por uma parte geral e anexos temáticos, aborda as atividades consideradas perigosas, incluindo trabalho com explosivos, inflamáveis, radiações ionizantes, segurança pessoal e patrimonial, energia elétrica e atividades em motocicleta. Determina os requisitos de proteção e a remuneração diferenciada para trabalhadores expostos.",
+    "campo_aplicacao": "Aplica-se a empresas e trabalhadores que realizam atividades e operações perigosas conforme definido nos anexos específicos, abrangendo setores de explosivos, inflamáveis, energia elétrica, segurança profissional, radiações e transporte em motocicleta.",
+    "portarias_recentes": [
+      "Portaria MTE nº 2.021, de 03/12/2025",
+      "Portaria SIT nº 530, de 15/04/2016",
+      "Portaria MTE nº 595, de 07/05/2015"
+    ],
+    "manuais_relacionados": []
+  },
+  {
+    "numero": "17",
+    "titulo": "Ergonomia",
+    "status": "vigente",
+    "data_atualizacao": "2022-12-20",
+    "fonte_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/norma-regulamentadora-no-17-nr-17",
+    "pdf_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/nr-17-atualizada-2023.pdf",
+    "ementa": "Estabelece os parâmetros que permitem a adaptação das condições de trabalho às características psicofisiológicas dos trabalhadores, de modo a proporcionar conforto, segurança e desempenho eficiente. Caracterizada como Norma Geral, regulamenta os artigos 175, 176, 178, 198 e 199 da CLT, abordando aspectos como levantamento e transporte de cargas, mobiliário dos postos de trabalho, equipamentos, condições ambientais e organização do trabalho.",
+    "campo_aplicacao": "Aplica-se a todas as atividades econômicas em que existam trabalhadores, sem restrição setorial, com o objetivo de garantir a saúde e segurança através da adequação ergonômica dos postos de trabalho.",
+    "portarias_recentes": [
+      "Portaria MTP nº 4.219, de 20/12/2022",
+      "Portaria MTb nº 876, de 24/10/2018",
+      "Portaria SIT nº 13, de 21/06/2007"
+    ],
+    "manuais_relacionados": []
+  },
+  {
+    "numero": "18",
+    "titulo": "Segurança e Saúde no Trabalho na Indústria da Construção",
+    "status": "vigente",
+    "data_atualizacao": "2024-08-27",
+    "fonte_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/norma-regulamentadora-no-18-nr-18",
+    "pdf_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/nr-18-atualizada-2026.pdf",
+    "ementa": "Estabelece diretrizes administrativas, de planejamento e de organização que objetivam a implementação de medidas de controle e sistemas preventivos de segurança e saúde no trabalho na indústria da construção. A reformulação de 2020 introduziu padrões mais flexíveis, baseados em resultados, com ênfase na responsabilidade profissional sobre métodos prescritivos. Abrange atividades de construção, demolição, reformas, ampliações e reparos.",
+    "campo_aplicacao": "Aplica-se à indústria da construção incluindo edificações horizontais e verticais, construções pesadas (pontes, viadutos, barragens) e atividades correlatas de demolição e reparação, cobrindo todos os trabalhadores empregados nesses ambientes.",
+    "portarias_recentes": [
+      "Portaria MTE nº 1.420, de 27/08/2024",
+      "Portaria SEPRT nº 3.733, de 10/02/2020",
+      "Portaria SIT nº 787, de 28/11/2018"
+    ],
+    "manuais_relacionados": [
+      {
+        "titulo": "Histórico sobre a Reformulação da NR-18",
+        "url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/arquivos/normas-regulamentadoras/nr-18_historico_reformulacao_nr_18.pdf"
+      }
+    ]
+  },
+  {
+    "numero": "19",
+    "titulo": "Explosivos",
+    "status": "vigente",
+    "data_atualizacao": "2022-12-20",
+    "fonte_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/norma-regulamentadora-no-19-nr-19",
+    "pdf_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/nr-19-atualizada-2023.pdf",
+    "ementa": "Estabelece disposições de segurança para o processo de fabricação, armazenamento, manuseio e transporte de explosivos em geral. Inclui medidas específicas para a atividade de fogos de artifícios e artigos pirotécnicos, abrangendo desde a produção até o comércio destes materiais. Tem como objetivo a prevenção de acidentes graves e a proteção dos trabalhadores expostos aos riscos inerentes aos explosivos.",
+    "campo_aplicacao": "Aplica-se a empresas que realizam fabricação, armazenamento, manuseio e transporte de explosivos, bem como comércio e produção de fogos de artifício e artigos pirotécnicos.",
+    "portarias_recentes": [
+      "Portaria MTP nº 4.219, de 20/12/2022",
+      "Portaria SIT nº 228, de 24/05/2011",
+      "Portaria SIT nº 07, de 30/03/2007"
+    ],
+    "manuais_relacionados": []
+  },
+  {
+    "numero": "20",
+    "titulo": "Segurança e Saúde no Trabalho com Inflamáveis e Combustíveis",
+    "status": "vigente",
+    "data_atualizacao": "2025-01-21",
+    "fonte_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/norma-regulamentadora-no-20-nr-20",
+    "pdf_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/nr-20-atualizada-2025.pdf",
+    "ementa": "Estabelece os requisitos mínimos de segurança e saúde para as atividades de extração, produção, armazenamento, transferência, manuseio e manipulação de inflamáveis e líquidos combustíveis. Inclui diretrizes para capacitação, análise de riscos, instalações, equipamentos e gerenciamento operacional. Regulamenta o artigo 200 da CLT conforme a Lei nº 6.514/1977, abrangendo modalidades de ensino presencial e à distância para a capacitação dos trabalhadores.",
+    "campo_aplicacao": "Aplica-se à execução de trabalho com inflamáveis e combustíveis, considerando atividades, instalações e equipamentos utilizados, independentemente de setores ou atividades econômicas específicas.",
+    "portarias_recentes": [
+      "Portaria MTE nº 60, de 21/01/2025",
+      "Portaria SEPRT nº 1.360, de 09/12/2019",
+      "Portaria MTb nº 3.214, de 08/06/1978"
+    ],
+    "manuais_relacionados": [
+      {
+        "titulo": "Perguntas e Respostas sobre a NR-20",
+        "url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/arquivos/normas-regulamentadoras/nr-20-perguntas_respostas_nr_20.pdf"
+      }
+    ]
+  },
+  {
+    "numero": "21",
+    "titulo": "Trabalhos a Céu Aberto",
+    "status": "vigente",
+    "data_atualizacao": "1999-12-15",
+    "fonte_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/norma-regulamentadora-no-21-nr-21",
+    "pdf_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/arquivos/normas-regulamentadoras/nr-21.pdf",
+    "ementa": "Norma especial que regulamenta a execução de trabalhos realizados a céu aberto, conforme disposições do inciso V do artigo 200 da Consolidação das Leis do Trabalho. Estabelece requisitos de segurança e saúde ocupacional para atividades laborais realizadas em ambientes externos, incluindo proteção contra intempéries, condições mínimas de moradia para trabalhadores afastados de seus domicílios e medidas básicas de higiene. Originalmente aprovada pela Portaria MTb nº 3.214 de 1978.",
+    "campo_aplicacao": "Aplica-se a todos os trabalhos executados a céu aberto, sendo norma especial não condicionada a setores ou atividades econômicas específicas.",
+    "portarias_recentes": [
+      "Portaria MTE nº 2.037, de 15/12/1999",
+      "Portaria SIT nº 787, de 28/11/2018",
+      "Portaria MTb nº 3.214, de 08/06/1978"
+    ],
+    "manuais_relacionados": []
+  },
+  {
+    "numero": "22",
+    "titulo": "Segurança e Saúde Ocupacional na Mineração",
+    "status": "vigente",
+    "data_atualizacao": "2026-01-29",
+    "fonte_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/norma-regulamentadora-no-22-nr-22",
+    "pdf_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/nr-22-atualizada-2026.pdf",
+    "ementa": "Norma setorial que estabelece parâmetros de segurança e saúde do trabalho no setor mineral. Regulamenta a execução de atividades em minas a céu aberto, minas subterrâneas, garimpos, pesquisa mineral e beneficiamento mineral, buscando reduzir a incidência de doenças e acidentes ocupacionais. Inclui obrigações dos empregadores e direitos dos trabalhadores, com destaque para o direito de recusa em atividades de risco grave e iminente.",
+    "campo_aplicacao": "Abrange todas as atividades de mineração no Brasil, incluindo minas a céu aberto, operações subterrâneas, garimpos, pesquisa mineral e beneficiamento.",
+    "portarias_recentes": [
+      "Portaria MTE nº 105, de 29/01/2026",
+      "Portaria SEPRT nº 210, de 11/04/2019",
+      "Portaria MTb nº 1.085, de 18/12/2018"
+    ],
+    "manuais_relacionados": []
+  },
+  {
+    "numero": "23",
+    "titulo": "Proteção Contra Incêndios",
+    "status": "vigente",
+    "data_atualizacao": "2022-09-05",
+    "fonte_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/norma-regulamentadora-no-23-nr-23",
+    "pdf_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/arquivos/normas-regulamentadoras/nr-23-atualizada-2022.pdf",
+    "ementa": "Estabelece as disposições para a proteção contra incêndios nos locais de trabalho, incluindo procedimentos de rápida evacuação, disponibilidade de equipamentos de combate a incêndio e existência de pessoal treinado. Originalmente publicada pela Portaria MTb nº 3.214 de 1978 para implementar o artigo 153 da CLT, exige conformidade com a legislação estadual de prevenção de incêndios, mantendo protocolos informativos e padrões de saídas de emergência.",
+    "campo_aplicacao": "Aplica-se a todos os estabelecimentos de trabalho que necessitam de medidas de prevenção de incêndios, capacidade de evacuação rápida de pessoal e disponibilidade de equipamentos de combate a incêndio.",
+    "portarias_recentes": [
+      "Portaria MTP nº 2.769, de 05/09/2022",
+      "Portaria SIT nº 221, de 06/05/2011",
+      "Portaria SIT nº 24, de 09/10/2001"
+    ],
+    "manuais_relacionados": []
+  },
+  {
+    "numero": "24",
+    "titulo": "Condições Sanitárias e de Conforto nos Locais de Trabalho",
+    "status": "vigente",
+    "data_atualizacao": "2019-09-23",
+    "fonte_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/norma-regulamentadora-no-24-nr-24",
+    "pdf_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/arquivos/normas-regulamentadoras/nr-24-atualizada-2022.pdf",
+    "ementa": "Regulamenta as condições sanitárias e de conforto nos locais de trabalho, implementando exigências de higiene, limpeza, iluminação, ventilação e dimensionamento de ambientes laborais. Estabelece parâmetros para instalações sanitárias, vestiários, refeitórios, cozinhas, alojamentos e demais dependências destinadas aos trabalhadores. Busca garantir ambientes seguros com adequadas condições de salubridade e bem-estar.",
+    "campo_aplicacao": "Aplica-se a todos os locais de trabalho, independentemente do setor ou atividade econômica, estabelecendo requisitos mínimos de higiene e conforto aplicáveis de forma transversal.",
+    "portarias_recentes": [
+      "Portaria SEPRT nº 1.066, de 23/09/2019",
+      "Portaria SSST nº 13, de 17/09/1993",
+      "Portaria MTb nº 3.214, de 08/06/1978"
+    ],
+    "manuais_relacionados": []
+  },
+  {
+    "numero": "25",
+    "titulo": "Resíduos Industriais",
+    "status": "vigente",
+    "data_atualizacao": "2022-12-05",
+    "fonte_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/norma-regulamentadora-no-25-nr-25",
+    "pdf_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/arquivos/normas-regulamentadoras/nr-25-atualizada-2022-1.pdf",
+    "ementa": "Regulamenta o tratamento, armazenamento e disposição de resíduos industriais, incluindo medidas preventivas contra acidentes e doenças ocupacionais relacionadas aos rejeitos. Incorpora requisitos para resíduos radioativos e biológicos, exigindo conformidade com as legislações específicas aplicáveis a cada tipo de resíduo. Tem como foco a proteção dos trabalhadores expostos no manuseio dos resíduos gerados pelos processos produtivos.",
+    "campo_aplicacao": "Aplica-se a empresas que geram resíduos industriais em seus processos produtivos, estabelecendo obrigações para prevenção de riscos ocupacionais associados ao manuseio, acondicionamento e disposição desses resíduos.",
+    "portarias_recentes": [
+      "Portaria MTP nº 3.994, de 05/12/2022",
+      "Portaria SIT nº 253, de 04/08/2011",
+      "Portaria SIT nº 227, de 24/05/2011"
+    ],
+    "manuais_relacionados": []
+  },
+  {
+    "numero": "26",
+    "titulo": "Sinalização de Segurança",
+    "status": "vigente",
+    "data_atualizacao": "2015-05-28",
+    "fonte_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/norma-regulamentadora-no-26-nr-26",
+    "pdf_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/arquivos/normas-regulamentadoras/nr-26-atualizada-2022.pdf",
+    "ementa": "Estabelece o uso obrigatório de cores para segurança em locais de trabalho, visando indicar e advertir sobre os riscos existentes. Estabelece também os requisitos para a classificação e rotulagem preventiva de produtos químicos, conforme o Sistema Globalmente Harmonizado (SGH), obrigando fabricantes e importadores a elaborarem a Ficha com Dados de Segurança do Produto Químico (FISPQ). Produtos saneantes notificados ou registrados na ANVISA seguem regras específicas daquela agência.",
+    "campo_aplicacao": "Aplica-se a todos os estabelecimentos ou locais de trabalho onde seja necessário indicar e advertir sobre os riscos existentes através de sinalização de segurança e rotulagem preventiva de produtos químicos.",
+    "portarias_recentes": [
+      "Portaria MTE nº 704, de 28/05/2015",
+      "Portaria SIT nº 229, de 24/05/2011",
+      "Portaria MTb nº 3.214, de 08/06/1978"
+    ],
+    "manuais_relacionados": []
+  },
+  {
+    "numero": "27",
+    "titulo": "Registro Profissional do Técnico de Segurança do Trabalho",
+    "status": "revogada",
+    "data_atualizacao": "2008-05-29",
+    "fonte_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/norma-regulamentadora-no-27-nr-27",
+    "pdf_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/arquivos/normas-regulamentadoras/nr_27_revogada_2008.pdf",
+    "ementa": "Norma revogada pela Portaria MTE nº 262, de 29 de maio de 2008. Estabelecia os procedimentos para o registro profissional do Técnico de Segurança do Trabalho junto ao Ministério do Trabalho. Fundamentava-se no artigo 200 da CLT, alterado pela Lei nº 6.514 de 1977, que conferiu competência ao Ministério do Trabalho para regulamentar segurança e saúde no trabalho.",
+    "campo_aplicacao": "Aplicava-se aos Técnicos de Segurança do Trabalho que necessitavam realizar registro profissional junto ao Ministério do Trabalho do Brasil.",
+    "portarias_recentes": [
+      "Portaria MTE nº 262, de 29/05/2008 (revogação)",
+      "Portaria SSST nº 13, de 20/12/1995",
+      "Portaria SSST nº 10, de 01/07/1993"
+    ],
+    "manuais_relacionados": []
+  },
+  {
+    "numero": "28",
+    "titulo": "Fiscalização e Penalidades",
+    "status": "vigente",
+    "data_atualizacao": "2026-01-29",
+    "fonte_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/norma-regulamentadora-no-28-nr-28",
+    "pdf_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/nr-28-atualizada-2026.pdf",
+    "ementa": "Regulamenta os procedimentos de fiscalização quanto ao cumprimento das disposições legais e regulamentares sobre segurança e saúde do trabalhador, estabelecendo as penalidades aplicáveis em caso de descumprimento. Fundamenta-se nos artigos 161 e 201 da CLT, alterados pela Lei nº 6.514/1977. Estabelece também critérios de gradação de multas administrativas conforme a gravidade da infração e o porte do estabelecimento.",
+    "campo_aplicacao": "Constitui norma geral aplicável a todas as empresas e estabelecimentos sujeitos à fiscalização das normas de segurança e saúde do trabalho, sem condicionamento a atividades, instalações ou setores econômicos específicos.",
+    "portarias_recentes": [
+      "Portaria MTE nº 104, de 29/01/2026",
+      "Portaria SIT nº 319, de 15/05/2012",
+      "Portaria DNSST nº 07, de 1992"
+    ],
+    "manuais_relacionados": []
+  },
+  {
+    "numero": "29",
+    "titulo": "Segurança e Saúde no Trabalho Portuário",
+    "status": "vigente",
+    "data_atualizacao": "2022-12-20",
+    "fonte_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/norma-regulamentadora-no-29-nr-29",
+    "pdf_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/nr-29-atualizada-2023.pdf",
+    "ementa": "Estabelece requisitos de segurança e saúde para as operações em portos organizados e instalações portuárias de uso privativo, abrangendo a movimentação de cargas e mercadorias. Construída tripartitamente com participação do governo, empregadores e trabalhadores, incorpora padrões técnicos da Fundacentro e as diretrizes da Convenção nº 152 da OIT. A norma orienta-se pela prevenção de acidentes e proteção integral dos trabalhadores portuários.",
+    "campo_aplicacao": "Aplica-se às atividades de trabalho portuário desenvolvidas em instalações portuárias no território brasileiro, abrangendo operações de carga, descarga e movimentação de mercadorias.",
+    "portarias_recentes": [
+      "Portaria MTP nº 4.219, de 20/12/2022",
+      "Portaria MTE nº 1.080, de 16/07/2014",
+      "Portaria SSST nº 53, de 29/12/1997"
+    ],
+    "manuais_relacionados": [
+      {
+        "titulo": "Guia de Boas Práticas para Trabalho em Alturas nas Atividades Portuárias (2015)",
+        "url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/arquivos/normas-regulamentadoras/NR29_GUIA_DE_BOAS_PRATICAS_PARA_TRABALHO_EM_ALTURAS_NAS_ATIVIDADES_PORTURIAS.pdf"
+      },
+      {
+        "titulo": "Manual do Usuário - SESSTP",
+        "url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/manual-do-usuario-sesstp-versao-1-0-publicar.pdf"
+      }
+    ]
+  },
+  {
+    "numero": "30",
+    "titulo": "Segurança e Saúde no Trabalho Aquaviário",
+    "status": "vigente",
+    "data_atualizacao": "2022-12-20",
+    "fonte_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/norma-regulamentadora-no-30-nr-30",
+    "pdf_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/nr-30-atualizada-2023.pdf",
+    "ementa": "Norma setorial que regulamenta as condições de segurança e saúde no trabalho a bordo de embarcações, abrangendo atividades profissionais realizadas no mar e em águas interiores. Fundamenta-se na Convenção nº 147 da OIT e na legislação nacional como a Lei nº 9.537/1997 (LESTA). Aplicável aos marítimos, pescadores, fluviários, mergulhadores, práticos e agentes de manobra e docagem em todas as modalidades do trabalho aquaviário.",
+    "campo_aplicacao": "Aplica-se ao trabalho aquaviário em suas diversas modalidades, incluindo atividades profissionais no mar e em águas interiores, abrangendo trabalho marítimo, fluvial, pesqueiro e operações relacionadas.",
+    "portarias_recentes": [
+      "Portaria MTP nº 4.219, de 20/12/2022",
+      "Portaria MTb nº 1.186, de 20/12/2018",
+      "Portaria MTE nº 2.062, de 30/12/2014"
+    ],
+    "manuais_relacionados": []
+  },
+  {
+    "numero": "31",
+    "titulo": "Segurança e Saúde no Trabalho na Agricultura, Pecuária Silvicultura, Exploração Florestal e Aquicultura",
+    "status": "vigente",
+    "data_atualizacao": "2024-03-21",
+    "fonte_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/norma-regulamentadora-no-31-nr-31",
+    "pdf_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/nr-31-atualizada-2024-2.pdf",
+    "ementa": "Estabelece os preceitos a serem observados na organização e no ambiente de trabalho, de forma a tornar compatível o planejamento e o desenvolvimento das atividades da agricultura, pecuária, silvicultura, exploração florestal e aquicultura com a segurança e saúde dos trabalhadores. Originada em 2005 pela Portaria MTE nº 86, substituiu as anteriores Normas Regulamentadoras Rurais. Foi revisada de forma significativa em 2011 e 2018, com modernizações posteriores, sempre mediante processo tripartite de negociação.",
+    "campo_aplicacao": "Aplica-se a todos os empregadores e trabalhadores das atividades de agricultura, pecuária, silvicultura, exploração florestal e aquicultura no território brasileiro.",
+    "portarias_recentes": [
+      "Portaria MTE nº 342, de 21/03/2024",
+      "Portaria SIT nº 1.086, de 18/12/2018",
+      "Portaria MTE nº 2.546, de 14/12/2011"
+    ],
+    "manuais_relacionados": [
+      {
+        "titulo": "Manual do Usuário - SESTR",
+        "url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/manual-do-usuario-sestr-versao-11-10-2023-para-publicacao.pdf"
+      }
+    ]
+  },
+  {
+    "numero": "32",
+    "titulo": "Segurança e Saúde no Trabalho em Serviços de Saúde",
+    "status": "vigente",
+    "data_atualizacao": "2022-12-20",
+    "fonte_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/norma-regulamentadora-no-32-nr-32",
+    "pdf_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/nr-32-atualizada-2023-1.pdf",
+    "ementa": "Estabelece as diretrizes básicas para a implementação de medidas de proteção à segurança e saúde dos trabalhadores em serviços de saúde, bem como daqueles que exercem atividades de promoção e assistência à saúde em geral. Aborda riscos biológicos, químicos e radiações ionizantes, além de resíduos, condições ergonômicas, ambientais e o manuseio de materiais perfurocortantes, complementando programas como o PGR e o PCMSO.",
+    "campo_aplicacao": "Aplica-se a ambulatórios médicos e odontológicos, clínicas, laboratórios de análises clínicas, hospitais e similares onde se exercem atividades de promoção e assistência à saúde. Não se aplica a serviços de saúde animal.",
+    "portarias_recentes": [
+      "Portaria MTP nº 4.219, de 20/12/2022",
+      "Portaria SEPRT nº 915, de 30/07/2019",
+      "Portaria MTE nº 1.748, de 30/08/2011"
+    ],
+    "manuais_relacionados": [
+      {
+        "titulo": "Guia Técnico de Riscos Biológicos - NR-32 (2008)",
+        "url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/arquivos/normas-regulamentadoras/nr-32_guia_tecnico_de_riscos_biologicos_nr_32.pdf"
+      }
+    ]
+  },
+  {
+    "numero": "33",
+    "titulo": "Segurança e Saúde nos Trabalhos em Espaços Confinados",
+    "status": "vigente",
+    "data_atualizacao": "2022-06-15",
+    "fonte_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/norma-regulamentadora-no-33-nr-33",
+    "pdf_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/arquivos/normas-regulamentadoras/nr-33-atualizada-2022-_retificada.pdf",
+    "ementa": "Estabelece os requisitos mínimos para a identificação dos espaços confinados, o reconhecimento, a avaliação, o monitoramento e o controle dos riscos existentes, de forma a garantir permanentemente a segurança e a saúde dos trabalhadores que interagem direta ou indiretamente nestes ambientes. Define medidas de prevenção administrativas, pessoais e de capacitação, incluindo procedimentos para situações de emergência e a obrigatoriedade de emissão da Permissão de Entrada e Trabalho (PET).",
+    "campo_aplicacao": "Aplica-se a todos os trabalhos realizados em espaços confinados, abrangendo diversos setores econômicos não contemplados por outras normas específicas, com medidas técnicas de prevenção e capacitação obrigatória.",
+    "portarias_recentes": [
+      "Portaria SEPRT nº 1.690, de 15/06/2022",
+      "Portaria SIT nº 787, de 28/11/2018",
+      "Portaria MTE nº 202, de 22/12/2006"
+    ],
+    "manuais_relacionados": [
+      {
+        "titulo": "Guia Técnico da NR-33 (2013)",
+        "url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/arquivos/normas-regulamentadoras/nr-33_guia_tecnico_da_nr_33.pdf"
+      }
+    ]
+  },
+  {
+    "numero": "34",
+    "titulo": "Condições e Meio Ambiente de Trabalho na Indústria da Construção, Reparação e Desmonte Naval",
+    "status": "vigente",
+    "data_atualizacao": "2022-12-20",
+    "fonte_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/norma-regulamentadora-no-34-nr-34",
+    "pdf_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/nr-34-atualizada-2023-2.pdf",
+    "ementa": "Estabelece os requisitos mínimos e as medidas de proteção à segurança, à saúde e ao meio ambiente de trabalho nas atividades da indústria de construção, reparação e desmonte naval. Aborda atividades específicas como trabalho a quente, trabalho em altura, exposição a radiações ionizantes, jateamento e hidrojateamento, pintura, movimentação de cargas, montagem e desmontagem de andaimes, serviços com estruturas flutuantes e plano de resposta a emergências.",
+    "campo_aplicacao": "Aplica-se às atividades da indústria de construção, reparação e desmonte naval desenvolvidas em instalações empregadas para estes fins ou nas próprias embarcações e estruturas, tais como navios, barcos, lanchas, plataformas fixas ou flutuantes.",
+    "portarias_recentes": [
+      "Portaria MTP nº 4.219, de 20/12/2022",
+      "Portaria SEPRT nº 915, de 30/07/2019",
+      "Portaria MTb nº 836, de 09/10/2018"
+    ],
+    "manuais_relacionados": []
+  },
+  {
+    "numero": "35",
+    "titulo": "Trabalho em Altura",
+    "status": "vigente",
+    "data_atualizacao": "2025-10-02",
+    "fonte_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/norma-regulamentadora-no-35-nr-35",
+    "pdf_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/nr-35-atualizada-2025-1.pdf",
+    "ementa": "Estabelece os requisitos mínimos e as medidas de proteção para o trabalho em altura, envolvendo o planejamento, a organização e a execução, de forma a garantir a segurança e a saúde dos trabalhadores envolvidos direta ou indiretamente com esta atividade. Considera-se trabalho em altura toda atividade executada acima de 2,00 m do nível inferior, onde haja risco de queda. A norma prioriza a antecipação dos riscos por meio de análise de risco e emissão de permissão de trabalho.",
+    "campo_aplicacao": "Aplica-se a todas as atividades de trabalho em altura com risco de queda em todos os setores da economia, sendo complementada por anexos específicos para atividades particulares.",
+    "portarias_recentes": [
+      "Portaria MTE nº 1.680, de 02/10/2025",
+      "Portaria SEPRT nº 915, de 30/07/2019",
+      "Portaria MTE nº 1.113, de 22/09/2016"
+    ],
+    "manuais_relacionados": [
+      {
+        "titulo": "Manual Consolidado da NR-35 (2018)",
+        "url": "https://www.gov.br/trabalho-e-emprego/pt-br/assuntos/inspecao-do-trabalho/manuais-e-publicacoes/manual_consolidado_da_nr_35.pdf"
+      }
+    ]
+  },
+  {
+    "numero": "36",
+    "titulo": "Segurança e Saúde no Trabalho em Empresas de Abate e Processamento de Carnes e Derivados",
+    "status": "vigente",
+    "data_atualizacao": "2024-07-01",
+    "fonte_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/norma-regulamentadora-no-36-nr-36",
+    "pdf_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/nr-36-atualizada-2024-1.pdf",
+    "ementa": "Estabelece os requisitos mínimos para avaliação, controle e monitoramento dos riscos existentes nas atividades desenvolvidas na indústria de abate e processamento de carnes e derivados destinados ao consumo humano, de forma a garantir permanentemente a segurança, saúde e qualidade de vida no trabalho. Aborda condições de trabalho, padrões ergonômicos, organização do trabalho e especificações de segurança em máquinas. Foi desenvolvida por meio de processo tripartite com participação de trabalhadores, empregadores e governo.",
+    "campo_aplicacao": "Aplica-se a empresas que realizam abate de animais e processamento de carnes e derivados destinados ao consumo humano, abordando segurança no trabalho, proteção à saúde e requisitos específicos do setor.",
+    "portarias_recentes": [
+      "Portaria MTE nº 1.065, de 01/07/2024",
+      "Portaria MTb nº 1.087, de 18/12/2018",
+      "Portaria MTb nº 99, de 08/02/2018"
+    ],
+    "manuais_relacionados": [
+      {
+        "titulo": "Manual de Interpretação e Aplicação da NR-36 (2017)",
+        "url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/arquivos/normas-regulamentadoras/nr-36_manual_nr_36_compilado.pdf"
+      }
+    ]
+  },
+  {
+    "numero": "37",
+    "titulo": "Segurança e Saúde em Plataformas de Petróleo",
+    "status": "vigente",
+    "data_atualizacao": "2022-12-20",
+    "fonte_url": "https://www.gov.br/trabalho-e-emprego/pt-br/assuntos/inspecao-do-trabalho/seguranca-e-saude-no-trabalho/ctpp-nrs/norma-regulamentadora-no-37-nr-37",
+    "pdf_url": "https://www.gov.br/trabalho-e-emprego/pt-br/assuntos/inspecao-do-trabalho/seguranca-e-saude-no-trabalho/ctpp-nrs/nr-37-atualizada-2023.pdf",
+    "ementa": "Estabelece os requisitos mínimos de segurança, saúde e condições de vivência no trabalho a bordo de plataformas de petróleo nas Águas Jurisdicionais Brasileiras. Compreende 33 capítulos e 9 anexos, desenvolvida para reduzir acidentes ocupacionais e preservar o ambiente marinho, baseada em consulta pública com aproximadamente 3.500 sugestões avaliadas. Abrange todo o ciclo de vida das plataformas, incluindo operações, riscos geralmente presentes e novas tecnologias disponíveis.",
+    "campo_aplicacao": "Aplica-se a todas as plataformas de petróleo e instalações localizadas nas Águas Jurisdicionais Brasileiras (AJB), abrangendo todo o ciclo de vida das plataformas.",
+    "portarias_recentes": [
+      "Portaria MTP nº 4.219, de 20/12/2022",
+      "Portaria SEPRT nº 1.412, de 17/12/2019",
+      "Portaria MTb nº 1.186, de 20/12/2018"
+    ],
+    "manuais_relacionados": [
+      {
+        "titulo": "Manual do Usuário - Registro do SESMT PP",
+        "url": "https://www.gov.br/trabalho-e-emprego/pt-br/assuntos/inspecao-do-trabalho/seguranca-e-saude-no-trabalho/ctpp-nrs/manual-do-usuario-registro-de-sesmt-pp-publicar.pdf"
+      }
+    ]
+  },
+  {
+    "numero": "38",
+    "titulo": "Segurança e Saúde no Trabalho nas Atividades de Limpeza Urbana e Manejo de Resíduos Sólidos",
+    "status": "vigente",
+    "data_atualizacao": "2025-05-27",
+    "fonte_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/norma-regulamentadora-no-38-nr-38",
+    "pdf_url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/nr-38-atualizada-2025-3.pdf",
+    "ementa": "Estabelece os requisitos para a proteção à segurança e à saúde dos trabalhadores envolvidos nas atividades de limpeza urbana e manejo de resíduos sólidos. Aborda a identificação de perigos, avaliação de riscos e medidas de controle específicas para os trabalhadores destes setores. A norma promove práticas preventivas para a redução de acidentes e doenças ocupacionais, abrangendo operações de coleta, transporte, tratamento e disposição de resíduos.",
+    "campo_aplicacao": "Aplica-se às organizações que executam atividades de limpeza urbana e manejo de resíduos sólidos, incluindo empregados diretos e prestadores de serviços contratados envolvidos em operações de coleta, transporte, tratamento e disposição final.",
+    "portarias_recentes": [
+      "Portaria MTE de 27/05/2025"
+    ],
+    "manuais_relacionados": [],
+    "fonte_status": "partial",
+    "notas": "Lista detalhada de portarias específicas com número e data exata não foi totalmente extraída da página - apenas a data da última atualização foi identificada."
+  }
+]

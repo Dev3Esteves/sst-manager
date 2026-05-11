@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { Suspense } from "react"
 import { createClient } from "@/lib/supabase/server"
 import { Button } from "@/components/ui/button"
 import { Badge, type BadgeProps } from "@/components/ui/badge"
@@ -7,10 +8,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { formatCPF } from "@/lib/validations/shared"
 import { EmpresaBadge } from "@/components/empresa-badge"
 import { Plus, Pencil, FileSpreadsheet, HardHat } from "lucide-react"
+import { ExportCsvButton } from "@/components/shared/export-csv-button"
+import { ListFilters } from "@/components/shared/list-filters"
 
-export default async function ColaboradoresPage() {
+export default async function ColaboradoresPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ busca?: string; status?: string; vinculo?: string }>
+}) {
+  const sp = await searchParams
   const supabase = await createClient()
-  const { data: colaboradores } = await supabase
+  let query = supabase
     .from("colaboradores")
     .select(`
       id, nome_completo, cpf, tipo_vinculo, status, matricula, data_admissao,
@@ -21,6 +29,12 @@ export default async function ColaboradoresPage() {
     `)
     .order("nome_completo")
 
+  if (sp.status) query = query.eq("status", sp.status)
+  if (sp.vinculo) query = query.eq("tipo_vinculo", sp.vinculo)
+  if (sp.busca) query = query.ilike("nome_completo", `%${sp.busca}%`)
+
+  const { data: colaboradores } = await query
+
   return (
     <div className="container py-8 space-y-6">
       <div className="flex items-center justify-between">
@@ -29,6 +43,36 @@ export default async function ColaboradoresPage() {
           <p className="text-muted-foreground">Cadastro de empregados próprios e terceiros.</p>
         </div>
         <div className="flex gap-2">
+          <ExportCsvButton
+            data={(colaboradores ?? []).map((c) => {
+              const empresa = Array.isArray(c.empresas) ? c.empresas[0] : c.empresas
+              const cargo = Array.isArray(c.cargos) ? c.cargos[0] : c.cargos
+              const obra = Array.isArray(c.obras) ? c.obras[0] : c.obras
+              return {
+                nome_completo: c.nome_completo,
+                cpf: c.cpf,
+                matricula: c.matricula ?? "",
+                empresa: empresa?.razao_social ?? "",
+                cargo: cargo?.titulo ?? "",
+                obra: obra?.nome ?? "",
+                tipo_vinculo: c.tipo_vinculo,
+                status: c.status,
+                data_admissao: c.data_admissao,
+              }
+            })}
+            columns={[
+              { key: "nome_completo", label: "Nome" },
+              { key: "cpf", label: "CPF" },
+              { key: "matricula", label: "Matrícula" },
+              { key: "empresa", label: "Empresa" },
+              { key: "cargo", label: "Cargo" },
+              { key: "obra", label: "Obra" },
+              { key: "tipo_vinculo", label: "Vínculo" },
+              { key: "status", label: "Status" },
+              { key: "data_admissao", label: "Admissão" },
+            ]}
+            filename="colaboradores"
+          />
           <Button variant="outline" asChild>
             <Link href="/colaboradores/importar">
               <FileSpreadsheet className="h-4 w-4" />
@@ -43,6 +87,24 @@ export default async function ColaboradoresPage() {
           </Button>
         </div>
       </div>
+
+      <Suspense>
+        <ListFilters filters={[
+          { key: "busca", label: "Nome", type: "text", placeholder: "Buscar por nome..." },
+          { key: "status", label: "Status", type: "select", options: [
+            { value: "ativo", label: "Ativo" },
+            { value: "afastado", label: "Afastado" },
+            { value: "ferias", label: "Férias" },
+            { value: "demitido", label: "Demitido" },
+          ]},
+          { key: "vinculo", label: "Vínculo", type: "select", options: [
+            { value: "clt", label: "CLT" },
+            { value: "pj", label: "PJ" },
+            { value: "estagiario", label: "Estagiário" },
+            { value: "terceiro", label: "Terceiro" },
+          ]},
+        ]} />
+      </Suspense>
 
       <Card>
         <CardHeader>

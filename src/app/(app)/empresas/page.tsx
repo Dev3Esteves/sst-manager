@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { formatCNPJ } from "@/lib/validations/shared"
 import { TIPO_EMPRESA_LABEL } from "@/lib/validations/empresa"
 import { EmpresaBadge } from "@/components/empresa-badge"
+import { ExportCsvButton } from "@/components/shared/export-csv-button"
 import { Plus, Pencil, Building2, Handshake, Wrench, ListFilter } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -61,12 +62,29 @@ export default async function EmpresasPage({
           <h1 className="text-3xl font-bold tracking-tight">Empresas</h1>
           <p className="text-muted-foreground">Donas do sistema, contratantes e prestadoras.</p>
         </div>
-        <Button asChild>
-          <Link href="/empresas/new">
-            <Plus className="h-4 w-4" />
-            Nova empresa
-          </Link>
-        </Button>
+        <div className="flex gap-2">
+          <ExportCsvButton
+            data={(empresas ?? []).map((e) => ({
+              razao_social: e.razao_social,
+              cnpj: formatCNPJ(e.cnpj),
+              tipo: e.dona_sistema ? "Dona do sistema" : (TIPO_EMPRESA_LABEL[e.tipo ?? ""] ?? "—"),
+              ativo: e.ativo ? "Ativa" : "Inativa",
+            }))}
+            columns={[
+              { key: "razao_social", label: "Razão Social" },
+              { key: "cnpj", label: "CNPJ" },
+              { key: "tipo", label: "Tipo" },
+              { key: "ativo", label: "Status" },
+            ]}
+            filename="empresas"
+          />
+          <Button asChild>
+            <Link href="/empresas/new">
+              <Plus className="h-4 w-4" />
+              Nova empresa
+            </Link>
+          </Button>
+        </div>
       </div>
 
       <div

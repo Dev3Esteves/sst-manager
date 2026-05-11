@@ -6,7 +6,7 @@ import { Badge, type BadgeProps } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { formatDate } from "@/lib/utils/vencimento"
 import { OCORRENCIA_TIPOS, GRAVIDADE_LABEL, type AcaoCorretiva, type InvestigacaoInput } from "@/lib/validations/ocorrencia"
-import { ArrowLeft, AlertTriangle, FileCode, FileText, ShieldCheck, Pencil } from "lucide-react"
+import { ArrowLeft, AlertTriangle, FileCode, FileText, ShieldCheck, Pencil, FileDown } from "lucide-react"
 import { InvestigacaoForm } from "./investigacao-form"
 import { saveInvestigacao, encerrarOcorrencia } from "../actions"
 import { promoverOcorrenciaParaNc } from "../../nao-conformidades/actions"
@@ -55,6 +55,12 @@ export default async function OcorrenciaViewPage({ params }: { params: Promise<{
           <Link href="/ocorrencias"><ArrowLeft className="h-4 w-4" />Voltar</Link>
         </Button>
         <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" asChild>
+            <a href={`/api/ocorrencias/${id}/pdf`} target="_blank" rel="noopener noreferrer">
+              <FileDown className="h-4 w-4" />
+              Baixar PDF
+            </a>
+          </Button>
           {ehAcidente && (
             <>
               <Button variant="outline" size="sm" asChild>

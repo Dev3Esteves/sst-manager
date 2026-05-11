@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { classificarVencimento, urgenciaBadgeVariant, urgenciaLabel, formatDate } from "@/lib/utils/vencimento"
+import { ExportCsvButton } from "@/components/shared/export-csv-button"
 import { Plus, Pencil, FileSpreadsheet } from "lucide-react"
 
 export default async function EpisPage() {
@@ -22,6 +23,23 @@ export default async function EpisPage() {
           <p className="text-muted-foreground">Catálogo de equipamentos de proteção individual.</p>
         </div>
         <div className="flex gap-2">
+          <ExportCsvButton
+            data={(epis ?? []).map((e) => ({
+              descricao: e.descricao,
+              ca: e.ca,
+              ca_validade: e.ca_validade ?? "",
+              fabricante: e.fabricante ?? "",
+              tipo: e.tipo?.replace("_", " ") ?? "",
+            }))}
+            columns={[
+              { key: "descricao", label: "Descrição" },
+              { key: "ca", label: "CA" },
+              { key: "ca_validade", label: "Validade CA" },
+              { key: "fabricante", label: "Fabricante" },
+              { key: "tipo", label: "Tipo" },
+            ]}
+            filename="epis"
+          />
           <Button variant="outline" asChild>
             <Link href="/epis/importar"><FileSpreadsheet className="h-4 w-4" />Importar</Link>
           </Button>

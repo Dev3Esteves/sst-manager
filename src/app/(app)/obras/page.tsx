@@ -6,6 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { PageHeader } from "@/components/page-header"
 import { EmpresaBadge } from "@/components/empresa-badge"
+import { ExportCsvButton } from "@/components/shared/export-csv-button"
 import { Plus, Pencil, HardDrive } from "lucide-react"
 
 export default async function ObrasPage({
@@ -37,6 +38,28 @@ export default async function ObrasPage({
         description="Projetos/obras em andamento. Referência nos documentos oficiais e para alocação de colaboradores em campo."
         actions={
           <>
+            <ExportCsvButton
+              data={(obras ?? []).map((o) => {
+                const empresa = Array.isArray(o.empresa) ? o.empresa[0] : o.empresa
+                return {
+                  nome: o.nome,
+                  codigo: o.codigo ?? "",
+                  empresa: empresa?.razao_social ?? "",
+                  cidade: o.cidade ?? "",
+                  uf: o.uf ?? "",
+                  ativa: o.ativa ? "Ativa" : "Encerrada",
+                }
+              })}
+              columns={[
+                { key: "nome", label: "Nome" },
+                { key: "codigo", label: "Código" },
+                { key: "empresa", label: "Empresa" },
+                { key: "cidade", label: "Cidade" },
+                { key: "uf", label: "UF" },
+                { key: "ativa", label: "Status" },
+              ]}
+              filename="obras"
+            />
             <Button variant="outline" asChild>
               <Link href={filtroAtivas ? "/obras?ativa=0" : "/obras"}>
                 {filtroAtivas ? "Mostrar todas" : "Só ativas"}

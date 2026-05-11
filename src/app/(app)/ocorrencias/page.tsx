@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { Suspense } from "react"
 import { createClient } from "@/lib/supabase/server"
 import { Button } from "@/components/ui/button"
 import { Badge, type BadgeProps } from "@/components/ui/badge"
@@ -6,6 +7,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { formatDate } from "@/lib/utils/vencimento"
 import { OCORRENCIA_TIPOS, GRAVIDADE_LABEL } from "@/lib/validations/ocorrencia"
+import { ExportCsvButton } from "@/components/shared/export-csv-button"
+import { ListFilters } from "@/components/shared/list-filters"
 import { Plus, AlertTriangle } from "lucide-react"
 
 function gravidadeVariant(g: string | null): BadgeProps["variant"] {
@@ -26,13 +29,26 @@ function statusVariant(s: string | null): BadgeProps["variant"] {
   }
 }
 
-export default async function OcorrenciasPage() {
+export default async function OcorrenciasPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ tipo?: string; gravidade?: string; status?: string; de?: string; ate?: string }>
+}) {
+  const sp = await searchParams
   const supabase = await createClient()
-  const { data: ocorrencias } = await supabase
+  let query = supabase
     .from("ocorrencias")
     .select("id, tipo, numero_sequencial, data_ocorrencia, local, gravidade, status, dias_afastamento, colaboradores(nome_completo)")
     .order("data_ocorrencia", { ascending: false })
     .limit(100)
+
+  if (sp.tipo) query = query.eq("tipo", sp.tipo)
+  if (sp.gravidade) query = query.eq("gravidade", sp.gravidade)
+  if (sp.status) query = query.eq("status", sp.status)
+  if (sp.de) query = query.gte("data_ocorrencia", sp.de)
+  if (sp.ate) query = query.lte("data_ocorrencia", sp.ate)
+
+  const { data: ocorrencias } = await query
 
   return (
     <div className="container py-8 space-y-6">
@@ -41,10 +57,54 @@ export default async function OcorrenciasPage() {
           <h1 className="text-3xl font-bold tracking-tight">Ocorrências</h1>
           <p className="text-muted-foreground">Acidentes, quase-acidentes, incidentes e desvios.</p>
         </div>
-        <Button asChild>
-          <Link href="/ocorrencias/new"><Plus className="h-4 w-4" />Registrar ocorrência</Link>
-        </Button>
+        <div className="flex gap-2">
+          <ExportCsvButton
+            data={(ocorrencias ?? []).map((o) => {
+              const c = Array.isArray(o.colaboradores) ? o.colaboradores[0] : o.colaboradores
+              return {
+                tipo: OCORRENCIA_TIPOS[o.tipo] ?? o.tipo,
+                data_ocorrencia: o.data_ocorrencia ?? "",
+                local: o.local ?? "",
+                envolvido: c?.nome_completo ?? "",
+                gravidade: o.gravidade ? (GRAVIDADE_LABEL[o.gravidade] ?? o.gravidade) : "",
+                status: o.status ?? "",
+              }
+            })}
+            columns={[
+              { key: "tipo", label: "Tipo" },
+              { key: "data_ocorrencia", label: "Data Ocorrência" },
+              { key: "local", label: "Local" },
+              { key: "envolvido", label: "Envolvido" },
+              { key: "gravidade", label: "Gravidade" },
+              { key: "status", label: "Status" },
+            ]}
+            filename="ocorrencias"
+          />
+          <Button asChild>
+            <Link href="/ocorrencias/new"><Plus className="h-4 w-4" />Registrar ocorrência</Link>
+          </Button>
+        </div>
       </div>
+
+      <Suspense>
+        <ListFilters filters={[
+          { key: "tipo", label: "Tipo", type: "select", options: Object.entries(OCORRENCIA_TIPOS).map(([v, l]) => ({ value: v, label: l })) },
+          { key: "gravidade", label: "Gravidade", type: "select", options: [
+            { value: "leve", label: "Leve" },
+            { value: "moderado", label: "Moderado" },
+            { value: "grave", label: "Grave" },
+            { value: "fatal", label: "Fatal" },
+          ]},
+          { key: "status", label: "Status", type: "select", options: [
+            { value: "aberta", label: "Aberta" },
+            { value: "investigando", label: "Investigando" },
+            { value: "concluida", label: "Concluída" },
+            { value: "encerrada", label: "Encerrada" },
+          ]},
+          { key: "de", label: "De", type: "date" },
+          { key: "ate", label: "Até", type: "date" },
+        ]} />
+      </Suspense>
 
       <Card>
         <CardHeader>

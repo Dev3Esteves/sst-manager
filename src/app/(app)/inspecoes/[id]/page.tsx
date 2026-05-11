@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Badge, type BadgeProps } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { formatDate } from "@/lib/utils/vencimento"
-import { ArrowLeft, CheckCircle2, XCircle, MinusCircle } from "lucide-react"
+import { ArrowLeft, CheckCircle2, XCircle, MinusCircle, FileDown } from "lucide-react"
 import type { RespostaItem } from "@/lib/validations/inspecao"
 import { inativarInspecao } from "../actions"
 import { InativarButton } from "@/components/shared/inativar-button"
@@ -41,7 +41,15 @@ export default async function InspecaoViewPage({ params }: { params: Promise<{ i
         <Button variant="ghost" size="sm" asChild>
           <Link href="/inspecoes"><ArrowLeft className="h-4 w-4" />Voltar</Link>
         </Button>
-        <InativarButton action={inativarInspecao.bind(null, id)} entityName="inspeção" />
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" asChild>
+            <a href={`/api/inspecoes/${id}/pdf`} target="_blank" rel="noopener noreferrer">
+              <FileDown className="h-4 w-4" />
+              Baixar PDF
+            </a>
+          </Button>
+          <InativarButton action={inativarInspecao.bind(null, id)} entityName="inspeção" />
+        </div>
       </div>
 
       <Card>

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { ExportCsvButton } from "@/components/shared/export-csv-button"
 import { Plus, Pencil, FileSpreadsheet } from "lucide-react"
 
 export default async function CargosPage() {
@@ -21,6 +22,24 @@ export default async function CargosPage() {
           <p className="text-muted-foreground">Vinculados a CBO, NRs e grupo de risco.</p>
         </div>
         <div className="flex gap-2">
+          <ExportCsvButton
+            data={(cargos ?? []).map((c) => {
+              const emp = Array.isArray(c.empresas) ? c.empresas[0] : c.empresas
+              return {
+                titulo: c.titulo,
+                cbo: c.cbo ?? "",
+                grupo_risco: c.grupo_risco ?? "",
+                empresa: emp?.razao_social ?? "",
+              }
+            })}
+            columns={[
+              { key: "titulo", label: "Título" },
+              { key: "cbo", label: "CBO" },
+              { key: "grupo_risco", label: "Grupo de Risco" },
+              { key: "empresa", label: "Empresa" },
+            ]}
+            filename="cargos"
+          />
           <Button variant="outline" asChild>
             <Link href="/cargos/importar"><FileSpreadsheet className="h-4 w-4" />Importar</Link>
           </Button>

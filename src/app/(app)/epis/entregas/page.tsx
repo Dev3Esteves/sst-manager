@@ -6,6 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { formatDate } from "@/lib/utils/vencimento"
 import { MOTIVOS_LABEL } from "@/lib/validations/epi-entrega"
+import { ExportCsvButton } from "@/components/shared/export-csv-button"
 import { Plus, PenLine, HardHat } from "lucide-react"
 
 export default async function EntregasPage() {
@@ -24,6 +25,27 @@ export default async function EntregasPage() {
           <p className="text-muted-foreground">Histórico de fichas de entrega com assinatura.</p>
         </div>
         <div className="flex gap-2">
+          <ExportCsvButton
+            data={(entregas ?? []).map((e) => {
+              const c = Array.isArray(e.colaboradores) ? e.colaboradores[0] : e.colaboradores
+              const epi = Array.isArray(e.epis) ? e.epis[0] : e.epis
+              return {
+                colaborador: c?.nome_completo ?? "",
+                epi: epi?.descricao ?? "",
+                data_entrega: e.data_entrega ?? "",
+                quantidade: String(e.quantidade),
+                motivo: MOTIVOS_LABEL[e.motivo] ?? e.motivo,
+              }
+            })}
+            columns={[
+              { key: "colaborador", label: "Colaborador" },
+              { key: "epi", label: "EPI" },
+              { key: "data_entrega", label: "Data Entrega" },
+              { key: "quantidade", label: "Quantidade" },
+              { key: "motivo", label: "Motivo" },
+            ]}
+            filename="entregas-epi"
+          />
           <Button variant="outline" asChild>
             <Link href="/epis"><HardHat className="h-4 w-4" />Catálogo</Link>
           </Button>

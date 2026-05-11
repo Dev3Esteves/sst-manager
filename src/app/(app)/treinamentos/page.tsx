@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { ExportCsvButton } from "@/components/shared/export-csv-button"
 import { Plus, Pencil, ListChecks, FileSpreadsheet } from "lucide-react"
 
 const TIPO_LABEL: Record<string, string> = {
@@ -28,6 +29,23 @@ export default async function TreinamentosPage() {
           <p className="text-muted-foreground">Catálogo de treinamentos e capacitações.</p>
         </div>
         <div className="flex gap-2">
+          <ExportCsvButton
+            data={(treinamentos ?? []).map((t) => ({
+              titulo: t.titulo,
+              nr_referencia: t.nr_referencia ?? "",
+              carga_horaria: `${t.carga_horaria_horas}h`,
+              tipo: TIPO_LABEL[t.tipo] ?? t.tipo,
+              modalidade: t.modalidade,
+            }))}
+            columns={[
+              { key: "titulo", label: "Título" },
+              { key: "nr_referencia", label: "NR Referência" },
+              { key: "carga_horaria", label: "Carga Horária" },
+              { key: "tipo", label: "Tipo" },
+              { key: "modalidade", label: "Modalidade" },
+            ]}
+            filename="treinamentos"
+          />
           <Button variant="outline" asChild>
             <Link href="/treinamentos/importar"><FileSpreadsheet className="h-4 w-4" />Importar</Link>
           </Button>

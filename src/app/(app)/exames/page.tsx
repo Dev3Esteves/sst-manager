@@ -1,10 +1,13 @@
 import Link from "next/link"
+import { Suspense } from "react"
 import { createClient } from "@/lib/supabase/server"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { classificarVencimento, urgenciaBadgeVariant, urgenciaLabel, formatDate } from "@/lib/utils/vencimento"
+import { ExportCsvButton } from "@/components/shared/export-csv-button"
+import { ListFilters } from "@/components/shared/list-filters"
 import { Plus, ScanLine, FileSpreadsheet } from "lucide-react"
 
 const TIPO_LABEL: Record<string, string> = {
@@ -16,12 +19,24 @@ const TIPO_LABEL: Record<string, string> = {
   complementar: "Complementar",
 }
 
-export default async function ExamesPage() {
+export default async function ExamesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ tipo?: string; resultado?: string; de?: string; ate?: string }>
+}) {
+  const sp = await searchParams
   const supabase = await createClient()
-  const { data: exames } = await supabase
+  let query = supabase
     .from("exames_medicos")
     .select("id, tipo, subtipo, data_realizacao, data_vencimento, resultado, numero_aso, colaboradores(nome_completo, cpf)")
     .order("data_vencimento", { ascending: true })
+
+  if (sp.tipo) query = query.eq("tipo", sp.tipo)
+  if (sp.resultado) query = query.eq("resultado", sp.resultado)
+  if (sp.de) query = query.gte("data_vencimento", sp.de)
+  if (sp.ate) query = query.lte("data_vencimento", sp.ate)
+
+  const { data: exames } = await query
 
   return (
     <div className="container py-8 space-y-6">
@@ -31,6 +46,29 @@ export default async function ExamesPage() {
           <p className="text-muted-foreground">PCMSO — controle de ASOs e vencimentos.</p>
         </div>
         <div className="flex gap-2 flex-wrap">
+          <ExportCsvButton
+            data={(exames ?? []).map((e) => {
+              const colab = Array.isArray(e.colaboradores) ? e.colaboradores[0] : e.colaboradores
+              const urgencia = classificarVencimento(e.data_vencimento)
+              return {
+                colaborador: colab?.nome_completo ?? "",
+                tipo: TIPO_LABEL[e.tipo] ?? e.tipo,
+                data_realizacao: e.data_realizacao ?? "",
+                data_vencimento: e.data_vencimento ?? "",
+                resultado: e.resultado === "apto_restricao" ? "Apto c/ restrição" : e.resultado === "apto" ? "Apto" : e.resultado === "inapto" ? "Inapto" : "",
+                status: urgenciaLabel(urgencia),
+              }
+            })}
+            columns={[
+              { key: "colaborador", label: "Colaborador" },
+              { key: "tipo", label: "Tipo" },
+              { key: "data_realizacao", label: "Realização" },
+              { key: "data_vencimento", label: "Vencimento" },
+              { key: "resultado", label: "Resultado" },
+              { key: "status", label: "Status" },
+            ]}
+            filename="exames-medicos"
+          />
           <Button variant="outline" asChild>
             <Link href="/exames/importar">
               <FileSpreadsheet className="h-4 w-4" />
@@ -51,6 +89,19 @@ export default async function ExamesPage() {
           </Button>
         </div>
       </div>
+
+      <Suspense>
+        <ListFilters filters={[
+          { key: "tipo", label: "Tipo", type: "select", options: Object.entries(TIPO_LABEL).map(([v, l]) => ({ value: v, label: l })) },
+          { key: "resultado", label: "Resultado", type: "select", options: [
+            { value: "apto", label: "Apto" },
+            { value: "apto_restricao", label: "Apto c/ restrição" },
+            { value: "inapto", label: "Inapto" },
+          ]},
+          { key: "de", label: "Vencimento de", type: "date" },
+          { key: "ate", label: "Vencimento até", type: "date" },
+        ]} />
+      </Suspense>
 
       <Card>
         <CardHeader>

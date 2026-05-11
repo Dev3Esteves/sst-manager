@@ -1,10 +1,12 @@
 import Link from "next/link"
+import { Suspense } from "react"
 import { createClient } from "@/lib/supabase/server"
 import { Button } from "@/components/ui/button"
 import { Badge, type BadgeProps } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { formatDate } from "@/lib/utils/vencimento"
+import { ListFilters } from "@/components/shared/list-filters"
 import { Plus, ClipboardCheck } from "lucide-react"
 
 function conformidadeVariant(p: number | null): BadgeProps["variant"] {
@@ -15,13 +17,25 @@ function conformidadeVariant(p: number | null): BadgeProps["variant"] {
   return "vencido"
 }
 
-export default async function InspecoesPage() {
+export default async function InspecoesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ status?: string; de?: string; ate?: string; busca?: string }>
+}) {
+  const sp = await searchParams
   const supabase = await createClient()
-  const { data: inspecoes } = await supabase
+  let query = supabase
     .from("inspecoes")
     .select("id, local, data_inspecao, percentual_conformidade, status, templates_inspecao(titulo, categoria), colaboradores(nome_completo)")
     .order("data_inspecao", { ascending: false })
     .limit(100)
+
+  if (sp.status) query = query.eq("status", sp.status)
+  if (sp.de) query = query.gte("data_inspecao", sp.de)
+  if (sp.ate) query = query.lte("data_inspecao", sp.ate)
+  if (sp.busca) query = query.ilike("local", `%${sp.busca}%`)
+
+  const { data: inspecoes } = await query
 
   return (
     <div className="container py-8 space-y-6">
@@ -34,6 +48,19 @@ export default async function InspecoesPage() {
           <Link href="/inspecoes/new"><Plus className="h-4 w-4" />Nova inspeção</Link>
         </Button>
       </div>
+
+      <Suspense>
+        <ListFilters filters={[
+          { key: "busca", label: "Local", type: "text", placeholder: "Buscar por local..." },
+          { key: "status", label: "Status", type: "select", options: [
+            { value: "rascunho", label: "Rascunho" },
+            { value: "concluida", label: "Concluída" },
+            { value: "sincronizada", label: "Sincronizada" },
+          ]},
+          { key: "de", label: "De", type: "date" },
+          { key: "ate", label: "Até", type: "date" },
+        ]} />
+      </Suspense>
 
       <Card>
         <CardHeader>

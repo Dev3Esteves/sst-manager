@@ -56,6 +56,7 @@ const sections: NavSection[] = [
     label: "Referências",
     items: [
       { href: "/referencias/nrs", label: "Normas Regulamentadoras", icon: BookMarked },
+      { href: "/referencias/esocial", label: "Tabela 24 eSocial", icon: BookMarked },
     ],
   },
   {

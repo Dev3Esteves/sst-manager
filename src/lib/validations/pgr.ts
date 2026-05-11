@@ -215,3 +215,56 @@ export const epiGheSchema = z.object({
 })
 
 export type EpiGheInput = z.infer<typeof epiGheSchema>
+
+// -----------------------------------------------------------------------------
+// eSocial — Tabela 24 (Códigos dos Agentes Nocivos)
+// -----------------------------------------------------------------------------
+
+export const ESOCIAL_GRUPO = [
+  "quimico",
+  "fisico",
+  "biologico",
+  "associacao",
+  "ausencia",
+] as const
+export type EsocialGrupo = (typeof ESOCIAL_GRUPO)[number]
+
+export const ESOCIAL_GRUPO_LABEL: Record<EsocialGrupo, string> = {
+  quimico: "Químico",
+  fisico: "Físico",
+  biologico: "Biológico",
+  associacao: "Associação",
+  ausencia: "Ausência de agente nocivo",
+}
+
+/**
+ * Categorias de risco do PGR que mapeiam direto para grupos eSocial S-2240.
+ * Ergonômico, acidente e psicossocial caem em "ausência" (05.01.001) porque
+ * o eSocial S-2240 só cobre químico/físico/biológico para fins de PPP.
+ */
+export const RISCO_CATEGORIA_TO_ESOCIAL_GRUPOS: Record<RiscoCategoria, EsocialGrupo[]> = {
+  fisico: ["fisico", "associacao"],
+  quimico: ["quimico", "associacao"],
+  biologico: ["biologico", "associacao"],
+  ergonomico: ["ausencia"],
+  acidente: ["ausencia"],
+  psicossocial: ["ausencia"],
+}
+
+/**
+ * Retorna mensagem de aviso quando código eSocial é incompatível com a
+ * categoria do risco. Retorna `null` quando compatível ou sem código.
+ */
+export function validarCompatibilidadeEsocial(
+  categoria: RiscoCategoria,
+  grupoEsocial: EsocialGrupo | null | undefined,
+): string | null {
+  if (!grupoEsocial) return null
+  const grupos = RISCO_CATEGORIA_TO_ESOCIAL_GRUPOS[categoria]
+  if (grupos.includes(grupoEsocial)) return null
+  return (
+    `Categoria do risco (${RISCO_CATEGORIA_LABEL[categoria]}) não combina com o ` +
+    `grupo do código eSocial (${ESOCIAL_GRUPO_LABEL[grupoEsocial]}). ` +
+    `Esperado: ${grupos.map((g) => ESOCIAL_GRUPO_LABEL[g]).join(" ou ")}.`
+  )
+}

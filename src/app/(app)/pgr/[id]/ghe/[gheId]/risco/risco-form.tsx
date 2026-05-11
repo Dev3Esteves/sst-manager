@@ -19,6 +19,10 @@ import {
   type TipoExposicao,
   type CategoriaRisco,
 } from "@/lib/validations/pgr"
+import {
+  EsocialAgenteCombobox,
+  type EsocialAgenteCatalog,
+} from "./esocial-agente-combobox"
 
 type Risco = {
   id?: string
@@ -40,12 +44,14 @@ type ActionResult = { error?: Record<string, string[]> } | void
 export function RiscoForm({
   risco,
   gheLabel,
+  catalogoEsocial,
   action,
   onDelete,
   modo,
 }: {
   risco?: Risco
   gheLabel: string
+  catalogoEsocial: EsocialAgenteCatalog[]
   action: (formData: FormData) => Promise<ActionResult>
   onDelete?: () => Promise<ActionResult>
   modo: "criar" | "editar"
@@ -54,6 +60,9 @@ export function RiscoForm({
   const [errors, setErrors] = useState<Record<string, string[]>>({})
   const [pending, startTransition] = useTransition()
   const [confirmDelete, setConfirmDelete] = useState(false)
+  const [categoria, setCategoria] = useState<RiscoCategoria>(
+    risco?.categoria ?? "acidente",
+  )
 
   function handleSubmit(formData: FormData) {
     setErrors({})
@@ -121,7 +130,12 @@ export function RiscoForm({
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div>
               <Label htmlFor="categoria">Categoria *</Label>
-              <Select name="categoria" defaultValue={risco?.categoria ?? "acidente"} required>
+              <Select
+                name="categoria"
+                value={categoria}
+                onValueChange={(v) => setCategoria(v as RiscoCategoria)}
+                required
+              >
                 <SelectTrigger id="categoria">
                   <SelectValue />
                 </SelectTrigger>
@@ -150,17 +164,18 @@ export function RiscoForm({
           </div>
 
           <div>
-            <Label htmlFor="codigo_esocial">Código eSocial (Tabela 24)</Label>
-            <Input
-              id="codigo_esocial"
+            <Label>Código eSocial (Tabela 24)</Label>
+            <EsocialAgenteCombobox
               name="codigo_esocial"
-              defaultValue={risco?.codigo_esocial ?? ""}
-              placeholder="Ex.: 02.01.001"
-              className="font-mono"
+              defaultValue={risco?.codigo_esocial}
+              catalogo={catalogoEsocial}
+              categoria={categoria}
             />
             <p className="text-xs text-muted-foreground mt-1">
-              Validação contra catálogo oficial da Tabela 24 entra em chunk futuro
-              (Sprint A.4).
+              Catálogo da Tabela 24 (leiaute S-1.3). Para ergonômico/acidente/
+              psicossocial use <span className="font-mono">05.01.001</span> (ausência
+              de agente nocivo) — esses agentes vão para o PGR mas não geram
+              aposentadoria especial pelo S-2240.
             </p>
           </div>
         </CardContent>

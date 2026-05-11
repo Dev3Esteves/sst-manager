@@ -11,10 +11,13 @@ import {
   RISCO_CATEGORIA_LABEL,
   CATEGORIA_RISCO_LABEL,
   ACAO_STATUS_LABEL,
+  TIPO_MEDIDA_LABEL,
+  NIVEL_NIOSH_LABEL,
   type PgrStatus,
   type RiscoCategoria,
   type CategoriaRisco,
   type AcaoStatus,
+  type TipoMedida,
 } from "@/lib/validations/pgr"
 
 type Pgr = {
@@ -72,6 +75,19 @@ type Acao = {
   status: AcaoStatus
 }
 
+type Medida = {
+  id: string
+  pgr_ghe_id: string | null
+  agente_ambiental: string | null
+  tipo_medida: TipoMedida
+  nivel_niosh: number | null
+  acao: string
+  detalhamento: string | null
+  abrangencia: string | null
+  periodicidade: string | null
+  status: string | null
+}
+
 function statusVariant(status: PgrStatus): "default" | "secondary" | "outline" | "vencido" {
   switch (status) {
     case "vigente": return "default"
@@ -112,7 +128,7 @@ export default async function PgrDetailPage({ params }: { params: Promise<{ id: 
 
   if (!pgr) notFound()
 
-  const [{ data: ghes }, { data: riscos }, { data: acoes }] = await Promise.all([
+  const [{ data: ghes }, { data: riscos }, { data: acoes }, { data: medidas }] = await Promise.all([
     supabase
       .from("pgr_ghe")
       .select("id, codigo, descricao, funcao_posicao, local_trabalho, num_empregados_expostos")
@@ -131,6 +147,16 @@ export default async function PgrDetailPage({ params }: { params: Promise<{ id: 
       .eq("pgr_id", id)
       .order("numero_item")
       .returns<Acao[]>(),
+    supabase
+      .from("pgr_medida_controle")
+      .select(`
+        id, pgr_ghe_id, agente_ambiental, tipo_medida, nivel_niosh,
+        acao, detalhamento, abrangencia, periodicidade, status
+      `)
+      .eq("pgr_id", id)
+      .order("ordem")
+      .order("nivel_niosh")
+      .returns<Medida[]>(),
   ])
 
   const obra = pgr.obras
@@ -140,6 +166,8 @@ export default async function PgrDetailPage({ params }: { params: Promise<{ id: 
   const ghesList = ghes ?? []
   const riscosList = riscos ?? []
   const acoesList = acoes ?? []
+  const medidasList = medidas ?? []
+  const ghesById = new Map(ghesList.map((g) => [g.id, g.codigo]))
 
   const riscosCriticos = riscosList.filter(
     (r) => r.categoria_risco === "alto" || r.categoria_risco === "muito_alto",
@@ -386,6 +414,84 @@ export default async function PgrDetailPage({ params }: { params: Promise<{ id: 
           </CardContent>
         </Card>
       )}
+
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0">
+          <CardTitle className="text-base">
+            Medidas de controle ({medidasList.length})
+          </CardTitle>
+          <Button size="sm" asChild>
+            <Link href={`/pgr/${pgr.id}/medida/new`}>
+              <Plus className="h-4 w-4" />
+              Nova medida
+            </Link>
+          </Button>
+        </CardHeader>
+        <CardContent>
+          {medidasList.length === 0 ? (
+            <p className="text-sm text-muted-foreground text-center py-6">
+              Nenhuma medida de controle cadastrada (Anexo VI). Hierarquia NIOSH:
+              eliminação &gt; substituição &gt; engenharia &gt; administrativa &gt; EPI.
+            </p>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-24">GHE</TableHead>
+                  <TableHead className="w-28">Tipo</TableHead>
+                  <TableHead className="w-32">Nível NIOSH</TableHead>
+                  <TableHead>Ação / Agente</TableHead>
+                  <TableHead className="w-12"></TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {medidasList.map((m) => (
+                  <TableRow key={m.id} className="hover:bg-accent/50">
+                    <TableCell className="font-mono text-xs">
+                      {m.pgr_ghe_id ? (ghesById.get(m.pgr_ghe_id) ?? "—") : "Todos"}
+                    </TableCell>
+                    <TableCell className="text-xs">
+                      {TIPO_MEDIDA_LABEL[m.tipo_medida]}
+                    </TableCell>
+                    <TableCell className="text-xs">
+                      {m.nivel_niosh ? (
+                        <Badge
+                          variant={m.nivel_niosh <= 3 ? "default" : "outline"}
+                          className="text-[10px]"
+                        >
+                          {m.nivel_niosh}. {NIVEL_NIOSH_LABEL[m.nivel_niosh]}
+                        </Badge>
+                      ) : (
+                        <span className="text-muted-foreground">—</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-sm">
+                      <Link
+                        href={`/pgr/${pgr.id}/medida/${m.id}`}
+                        className="hover:underline font-medium"
+                      >
+                        {m.acao}
+                      </Link>
+                      {m.agente_ambiental && (
+                        <div className="text-xs text-muted-foreground">
+                          {m.agente_ambiental}
+                        </div>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      <Button variant="ghost" size="icon" asChild>
+                        <Link href={`/pgr/${pgr.id}/medida/${m.id}`}>
+                          <Pencil className="h-3.5 w-3.5" />
+                        </Link>
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0">

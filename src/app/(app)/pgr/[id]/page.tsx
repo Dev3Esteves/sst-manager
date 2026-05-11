@@ -207,19 +207,17 @@ export default async function PgrDetailPage({ params }: { params: Promise<{ id: 
             )}
           </div>
           <div className="flex flex-col gap-2 shrink-0">
-            {pgr.arquivo_pdf_url ? (
-              <Button asChild>
-                <a href={pgr.arquivo_pdf_url} target="_blank" rel="noopener noreferrer">
-                  <FileDown className="h-4 w-4" />
-                  Baixar PDF
-                </a>
-              </Button>
-            ) : (
-              <Button disabled title="Gerador de PDF em desenvolvimento">
+            <Button asChild>
+              <a
+                href={`/api/pgr/${pgr.id}/pdf`}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Abrir PDF FO-121-00 em nova aba"
+              >
                 <FileDown className="h-4 w-4" />
-                Gerar PDF
-              </Button>
-            )}
+                Gerar PDF (FO-121-00)
+              </a>
+            </Button>
             <Button variant="outline" asChild>
               <Link href={`/pgr/${pgr.id}/edit`}>
                 <Pencil className="h-4 w-4" />

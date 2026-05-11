@@ -32,6 +32,7 @@ const GRUPO_ORDEM: EsocialGrupo[] = [
   "quimico",
   "biologico",
   "associacao",
+  "outros",
   "ausencia",
 ]
 

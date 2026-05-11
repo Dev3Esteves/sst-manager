@@ -1,5 +1,5 @@
 -- ============================================================================
--- MIGRATION 0013 — CATÁLOGO DE AGENTES NOCIVOS (Tabela 24 do eSocial)
+-- MIGRATION 0013 — CATÁLOGO DE AGENTES NOCIVOS (Tabela 22 do eSocial)
 --
 -- Fonte primária: gov.br/esocial — Documentação Técnica, leiaute S-1.3
 -- (https://www.gov.br/esocial/pt-br/documentacao-tecnica/tabelas).
@@ -7,13 +7,13 @@
 -- usado para PPP eletrônico e aposentadoria especial (Decreto 3.048/1999, Anexo IV).
 --
 -- Convenções de código (3 grupos XX.XX.XXX):
---   01.xx.xxx → Agentes químicos
---   02.xx.xxx → Agentes físicos
---   03.xx.xxx → Agentes biológicos
---   04.xx.xxx → Associação de agentes
---   05.01.001 → "Ausência de agente nocivo ou de atividades previstas no Anexo IV
---                do Decreto 3.048/1999" (placeholder para ergonômico/acidente/
---                psicossocial — eSocial não emite S-2240 para esses casos).
+--   01.xx.xxx → Agentes químicos          (TIPO 'QUÍMICOS')
+--   02.xx.xxx → Agentes físicos           (TIPO 'FÍSICOS')
+--   03.xx.xxx → Agentes biológicos        (TIPO 'BIOLÓGICOS')
+--   04.xx.xxx → Associação de agentes     (TIPO 'ASSOCIAÇÃO ... FÍSICOS, QUÍMICOS E BIOLÓGICOS')
+--   05.01.001 → Outros agentes nocivos    (TIPO 'OUTROS') — incluídos por decisão judicial/administrativa
+--   09.01.001 → Ausência de agente nocivo (TIPO 'AUSÊNCIA') — placeholder para riscos
+--               ergonômicos / acidente / psicossociais que não geram S-2240 previdenciário.
 --
 -- Tabela GLOBAL (sem empresa_id) — o catálogo é o mesmo para todos os tenants,
 -- seguindo o padrão já estabelecido por `nr_catalog` (migration 0011).
@@ -25,7 +25,7 @@ CREATE TABLE esocial_agente_nocivo (
   grupo                           TEXT NOT NULL
                                     CHECK (grupo IN (
                                       'quimico', 'fisico', 'biologico',
-                                      'associacao', 'ausencia'
+                                      'associacao', 'outros', 'ausencia'
                                     )),
   exige_aposentadoria_especial    BOOLEAN NOT NULL DEFAULT false,
   limite_tolerancia               TEXT,                       -- ex.: "85 dB(A) — NR-15 Anexo 1"
@@ -39,8 +39,8 @@ CREATE TABLE esocial_agente_nocivo (
 );
 
 COMMENT ON TABLE esocial_agente_nocivo IS
-  'Tabela 24 do eSocial — Códigos dos Agentes Nocivos para S-2240. '
-  'Atualizada via scripts/seed-esocial-tabela24.mjs (idempotente, upsert por '
+  'Tabela 22 do eSocial — Códigos dos Agentes Nocivos para S-2240. '
+  'Atualizada via scripts/seed-esocial-tabela22.mjs (idempotente, upsert por '
   'codigo). Validação no editor de risco alerta quando categoria do risco e '
   'grupo do código divergem.';
 

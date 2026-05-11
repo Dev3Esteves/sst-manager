@@ -1,14 +1,20 @@
 #!/usr/bin/env node
 /**
- * Seed do catálogo Tabela 24 do eSocial (agentes nocivos) a partir de
- * data/esocial-tabela24.json. Idempotente — upsert por `codigo`.
+ * Seed do catálogo Tabela 22 do eSocial (agentes nocivos para S-2240) a partir
+ * de data/esocial-tabela22.json. Idempotente — upsert por `codigo`.
+ *
+ * O JSON é gerado a partir do CSV oficial via
+ * `scripts/convert-esocial-tabela22-csv.mjs`. Atualizações futuras do leiaute:
+ *   1. baixar nova versão de TABELA22_v*_Conteudo.csv do gov.br/esocial
+ *   2. rodar o converter
+ *   3. rodar este seed
  *
  * Pré-requisitos:
  *   - Migration 0013 aplicada (tabela esocial_agente_nocivo existindo)
- *   - data/esocial-tabela24.json gerado (extração de gov.br/esocial)
+ *   - data/esocial-tabela22.json presente
  *   - .env.local com NEXT_PUBLIC_SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY
  *
- * Uso: node scripts/seed-esocial-tabela24.mjs
+ * Uso: node scripts/seed-esocial-tabela22.mjs
  */
 
 import { createClient } from "@supabase/supabase-js"
@@ -32,7 +38,7 @@ const supabase = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.SUPABASE_SERVICE
   auth: { autoRefreshToken: false, persistSession: false },
 })
 
-const DATA_FILE = join(__dirname, "..", "data", "esocial-tabela24.json")
+const DATA_FILE = join(__dirname, "..", "data", "esocial-tabela22.json")
 const raw = JSON.parse(readFileSync(DATA_FILE, "utf8"))
 if (!Array.isArray(raw)) {
   console.error(`ERRO: ${DATA_FILE} não é um array JSON`)
@@ -52,7 +58,7 @@ const COLS = [
   "ativo",
 ]
 
-const GRUPOS_VALIDOS = new Set(["quimico", "fisico", "biologico", "associacao", "ausencia"])
+const GRUPOS_VALIDOS = new Set(["quimico", "fisico", "biologico", "associacao", "outros", "ausencia"])
 
 const erros = []
 const rows = raw.map((r, i) => {

@@ -217,7 +217,12 @@ export const epiGheSchema = z.object({
 export type EpiGheInput = z.infer<typeof epiGheSchema>
 
 // -----------------------------------------------------------------------------
-// eSocial — Tabela 24 (Códigos dos Agentes Nocivos)
+// eSocial — Tabela 22 (Códigos dos Agentes Nocivos, evento S-2240)
+//
+// Fonte oficial: tabela 22 do eSocial (gov.br/esocial), leiaute S-1.3.
+// Família de códigos XX.XX.XXX:
+//   01.xx.xxx → QUÍMICOS         02.xx.xxx → FÍSICOS         03.xx.xxx → BIOLÓGICOS
+//   04.xx.xxx → ASSOCIAÇÃO       05.01.001 → OUTROS          09.01.001 → AUSÊNCIA
 // -----------------------------------------------------------------------------
 
 export const ESOCIAL_GRUPO = [
@@ -225,6 +230,7 @@ export const ESOCIAL_GRUPO = [
   "fisico",
   "biologico",
   "associacao",
+  "outros",
   "ausencia",
 ] as const
 export type EsocialGrupo = (typeof ESOCIAL_GRUPO)[number]
@@ -234,21 +240,24 @@ export const ESOCIAL_GRUPO_LABEL: Record<EsocialGrupo, string> = {
   fisico: "Físico",
   biologico: "Biológico",
   associacao: "Associação",
+  outros: "Outros (decisão judicial)",
   ausencia: "Ausência de agente nocivo",
 }
 
 /**
  * Categorias de risco do PGR que mapeiam direto para grupos eSocial S-2240.
- * Ergonômico, acidente e psicossocial caem em "ausência" (05.01.001) porque
- * o eSocial S-2240 só cobre químico/físico/biológico para fins de PPP.
+ * Ergonômico, acidente e psicossocial caem em "ausência" (09.01.001) porque
+ * o eSocial S-2240 não cobre esses agentes para fins de PPP/aposentadoria
+ * especial (ainda assim eles vão para o inventário do PGR). Também aceitam
+ * "outros" (05.01.001 — incluídos por decisão judicial/administrativa).
  */
 export const RISCO_CATEGORIA_TO_ESOCIAL_GRUPOS: Record<RiscoCategoria, EsocialGrupo[]> = {
   fisico: ["fisico", "associacao"],
   quimico: ["quimico", "associacao"],
   biologico: ["biologico", "associacao"],
-  ergonomico: ["ausencia"],
-  acidente: ["ausencia"],
-  psicossocial: ["ausencia"],
+  ergonomico: ["ausencia", "outros"],
+  acidente: ["ausencia", "outros"],
+  psicossocial: ["ausencia", "outros"],
 }
 
 /**

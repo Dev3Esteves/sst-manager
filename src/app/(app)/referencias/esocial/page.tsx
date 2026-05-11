@@ -2,10 +2,10 @@ import { createClient } from "@/lib/supabase/server"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { ExternalLink, AlertTriangle } from "lucide-react"
+import { ExternalLink } from "lucide-react"
 import { ESOCIAL_GRUPO_LABEL, type EsocialGrupo } from "@/lib/validations/pgr"
 
-export const metadata = { title: "Tabela 24 — Agentes Nocivos eSocial" }
+export const metadata = { title: "Tabela 22 — Agentes Nocivos eSocial" }
 
 type AgenteRow = {
   codigo: string
@@ -23,6 +23,7 @@ const GRUPO_BADGE: Record<EsocialGrupo, "default" | "outline" | "secondary" | "a
   quimico: "alerta",
   biologico: "critico",
   associacao: "secondary",
+  outros: "secondary",
   ausencia: "outline",
 }
 
@@ -48,10 +49,10 @@ export default async function EsocialCatalogPage() {
     <div className="container py-8 space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">
-          Tabela 24 — Agentes Nocivos eSocial
+          Tabela 22 — Agentes Nocivos eSocial
         </h1>
         <p className="text-muted-foreground">
-          Catálogo de códigos para o evento <span className="font-mono">S-2240</span>{" "}
+          Catálogo oficial dos códigos para o evento <span className="font-mono">S-2240</span>{" "}
           (Condições Ambientais do Trabalho). Fonte:{" "}
           <a
             href="https://www.gov.br/esocial/pt-br/documentacao-tecnica/tabelas"
@@ -65,30 +66,14 @@ export default async function EsocialCatalogPage() {
         </p>
       </div>
 
-      {lista.length > 0 && (
-        <div className="rounded-md border border-amber-300 bg-amber-50 dark:bg-amber-950/20 p-4 flex gap-3">
-          <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
-          <div className="text-sm">
-            <strong className="text-amber-700 dark:text-amber-300">
-              Catálogo em pré-validação.
-            </strong>{" "}
-            Os códigos foram montados a partir das convenções pré-eSocial PPP e
-            do precedente SISTENGE (PGR_GAROA). Confira cada linha contra o
-            <strong> Anexo II oficial</strong> do leiaute S-1.3 antes de submeter
-            S-2240 em produção. Detalhes da pesquisa em{" "}
-            <code className="text-xs">docs/research/esocial-tabela24-fontes.md</code>.
-          </div>
-        </div>
-      )}
-
-      <div className="grid gap-3 md:grid-cols-5">
+      <div className="grid gap-3 md:grid-cols-6">
         <Card>
           <CardContent className="pt-6">
             <div className="text-2xl font-bold">{lista.length}</div>
             <p className="text-xs text-muted-foreground">Códigos no catálogo</p>
           </CardContent>
         </Card>
-        {(["fisico", "quimico", "biologico", "ausencia"] as const).map((g) => (
+        {(["quimico", "fisico", "biologico", "associacao", "ausencia"] as const).map((g) => (
           <Card key={g}>
             <CardContent className="pt-6">
               <div className="text-2xl font-bold">{porGrupo[g] ?? 0}</div>

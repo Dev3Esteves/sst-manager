@@ -164,7 +164,7 @@ export function RiscoForm({
           </div>
 
           <div>
-            <Label>Código eSocial (Tabela 24)</Label>
+            <Label>Código eSocial (Tabela 22)</Label>
             <EsocialAgenteCombobox
               name="codigo_esocial"
               defaultValue={risco?.codigo_esocial}
@@ -172,8 +172,8 @@ export function RiscoForm({
               categoria={categoria}
             />
             <p className="text-xs text-muted-foreground mt-1">
-              Catálogo da Tabela 24 (leiaute S-1.3). Para ergonômico/acidente/
-              psicossocial use <span className="font-mono">05.01.001</span> (ausência
+              Catálogo oficial Tabela 22 (leiaute S-1.3). Para ergonômico/acidente/
+              psicossocial use <span className="font-mono">09.01.001</span> (ausência
               de agente nocivo) — esses agentes vão para o PGR mas não geram
               aposentadoria especial pelo S-2240.
             </p>

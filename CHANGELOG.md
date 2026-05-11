@@ -11,6 +11,82 @@ _Mudanças em desenvolvimento na branch `master` ainda não publicadas numa tag.
 
 ---
 
+## [0.7.0] — 2026-05-11
+
+Sprint A do roadmap SST entregue em 3 sub-sprints integrados, mais infraestrutura
+de referências regulatórias.
+
+### Adicionado
+
+#### Sprint A.1 — Módulo PGR (NR-1)
+- **Migration `0012_pgr_module.sql`** — 7 tabelas alinhadas ao formulário FO-121-00
+  da SISTENGE: `pgr`, `pgr_ghe`, `pgr_ghe_cargo`, `pgr_risco`, `pgr_acao`,
+  `pgr_medida_controle`, `pgr_epi_ghe`. Também adiciona `cno` e `num_empregados_max`
+  em `obras`. RLS padrão do projeto + índices por empresa/status.
+- **UI completa** — lista (`/pgr`), criar (`/pgr/new`), detalhe com KPIs e
+  navegação por aninhamento (`/pgr/[id]`), editores de GHE/cargos/riscos/ações/
+  medidas/EPIs com sub-rotas dedicadas.
+- **Gerador PDF FO-121-00** — `@react-pdf/renderer` com capa + caracterização
+  (contratada/obra/responsáveis) + Anexos I (cronograma 5W1H), II (caracterização
+  GHEs), III (inventário de riscos com badge colorida por categoria), VI (medidas
+  com hierarquia NIOSH), VII (lista EPI por GHE) e assinaturas. Cabeçalhos
+  repetem-se por página; rodapé carrega o código do formulário SGI.
+  Endpoint GET `/api/pgr/[id]/pdf` (idempotente, sem persistência ainda).
+
+#### Sprint A.3 — Causa raiz estruturada (ISO 45001 cl. 10.2)
+- **Migration `0014_nao_conformidades.sql`** — 4 tabelas: `nao_conformidades`,
+  `nc_causa_5whys`, `nc_causa_ishikawa`, `nc_acoes_corretivas`. NC com origem
+  multifonte (ocorrência/auditoria/inspeção/reclamação/desvio), severidade
+  e status workflow. AC com tipo discriminado (contenção/corretiva/preventiva)
+  e verificação de eficácia mandatória para fechamento ISO.
+- **UI nova** — `/nao-conformidades` (lista com KPIs), `/new` (form),
+  `/[id]` (detalhe com 4 seções editáveis: NC form, 5 Whys, Ishikawa 6M, ACs).
+- **Promoção ocorrência → NC** — botão "Abrir NC formal" na detail da ocorrência;
+  cria NC linkada, mapeia gravidade → severidade, e migra automaticamente os
+  5 Whys legados (JSONB `ocorrencias.investigacao`) para tabela relacional.
+- **Compat preservada** — `ocorrencias.causa_raiz` e `acoes_corretivas` JSONB
+  continuam para fluxo legado.
+
+#### Sprint A.4 — Catálogo eSocial Tabela 22 (S-2240)
+- **Migration `0013_esocial_agente_nocivo.sql`** — catálogo global de agentes
+  nocivos para o evento S-2240. RLS read-only para authenticated; escrita só
+  via service_role.
+- **Seed oficial com 94 agentes** — extraído do CSV oficial fornecido pela
+  SISTENGE (`TABELA22_v4_Conteudo.csv`, leiaute S-1.3). 65 químicos, 18 físicos,
+  7 biológicos, 2 associações, 1 outros, 1 ausência. 2 inativos preservados
+  com `ativo=false` para histórico.
+- **Combobox no editor de risco** — busca por código/descrição, agrupado por
+  categoria, badge "ap. esp." para agentes que geram aposentadoria especial.
+  Validação cruzada: aviso âmbar quando categoria do risco diverge do grupo
+  do código eSocial.
+- **Página `/referencias/esocial`** — dashboard com contagem por grupo e tabela
+  completa. Link no sidebar.
+- **Pipeline reutilizável** — `scripts/convert-esocial-tabela22-csv.mjs` parsea
+  o CSV oficial e gera o JSON; `scripts/seed-esocial-tabela22.mjs` faz upsert
+  idempotente.
+
+#### Referências regulatórias (preparação)
+- **Migration `0011_referencias_catalogos.sql`** — catálogo público de NRs.
+- **Seed com 38 NRs** populadas de gov.br/trabalho-e-emprego.
+- **Página `/referencias/nrs`** + detalhe individual.
+
+#### Outros
+- **Indicadores TF/TG dinâmicos** — fórmulas NBR 14280 com base 10⁶ HHT
+  documentadas; remove constante hardcoded `HHT_MENSAL_ESTIMADO`.
+- **Anatomia PGR SISTENGE** documentada em `docs/research/pgr-sistenge-anatomia.md`
+  (810 linhas).
+- **Pacote de referências regulatórias** em `docs/referencias-software.md`
+  e gap analysis em `docs/research/gap-analysis-software.md`.
+
+### Validação
+
+- tsc 0 erros · 319 testes (vs 287 antes) · build OK.
+- Migrations 0012/0013/0014 aplicadas no Supabase em produção via SQL Editor.
+- Bootstrap consolidado em `supabase/bootstrap-a4-a3.sql` e `bootstrap-0012-pgr.sql`
+  para ambientes novos.
+
+---
+
 ## [0.6.0] — 2026-04-21
 
 ### Adicionado

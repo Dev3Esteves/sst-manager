@@ -40,3 +40,11 @@ export async function updateObra(id: string, formData: FormData) {
   revalidatePath("/obras")
   redirect("/obras")
 }
+
+export async function inativarObra(id: string) {
+  const supabase = await createClient()
+  const { error } = await supabase.from("obras").update({ ativa: false }).eq("id", id)
+  if (error) return { error: { _form: [error.message] } }
+  revalidatePath("/obras")
+  redirect("/obras")
+}

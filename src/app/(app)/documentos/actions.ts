@@ -98,6 +98,14 @@ export async function createPt(payload: PtPayload) {
   redirect(`/documentos/${data.id}`)
 }
 
+export async function cancelarDocumento(id: string) {
+  const supabase = await createClient()
+  const { error } = await supabase.from("documentos_sst").update({ status: "cancelado" }).eq("id", id)
+  if (error) return { error: { _form: [error.message] } }
+  revalidatePath("/documentos")
+  redirect("/documentos")
+}
+
 export type AutorizacaoNrPayload = z.input<typeof autorizacaoNrSchema> & {
   assinatura_colaborador_data_url?: string
   assinatura_responsavel_data_url?: string

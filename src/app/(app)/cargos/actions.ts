@@ -49,3 +49,11 @@ export async function updateCargo(id: string, formData: FormData) {
   revalidatePath("/cargos")
   redirect("/cargos")
 }
+
+export async function inativarCargo(id: string) {
+  const supabase = await createClient()
+  const { error } = await supabase.from("cargos").update({ ativo: false }).eq("id", id)
+  if (error) return { error: { _form: [error.message] } }
+  revalidatePath("/cargos")
+  redirect("/cargos")
+}

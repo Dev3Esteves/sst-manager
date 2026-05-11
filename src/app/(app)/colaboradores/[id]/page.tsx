@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { ColaboradorForm } from "../colaborador-form"
-import { updateColaborador } from "../actions"
+import { updateColaborador, inativarColaborador } from "../actions"
+import { InativarButton } from "@/components/shared/inativar-button"
 
 export default async function EditColaboradorPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -21,6 +22,9 @@ export default async function EditColaboradorPage({ params }: { params: Promise<
 
   return (
     <div className="container py-8 max-w-4xl">
+      <div className="flex justify-end mb-4">
+        <InativarButton action={inativarColaborador.bind(null, id)} entityName="colaborador" />
+      </div>
       <ColaboradorForm
         colaborador={colaborador}
         empresas={empresas ?? []}

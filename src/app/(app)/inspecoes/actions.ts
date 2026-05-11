@@ -35,3 +35,11 @@ export async function createInspecao(payload: InspecaoInput) {
   revalidatePath("/inspecoes")
   redirect(`/inspecoes/${data.id}`)
 }
+
+export async function inativarInspecao(id: string) {
+  const supabase = await createClient()
+  const { error } = await supabase.from("inspecoes").update({ ativo: false }).eq("id", id)
+  if (error) return { error: { _form: [error.message] } }
+  revalidatePath("/inspecoes")
+  redirect("/inspecoes")
+}

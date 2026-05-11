@@ -15,27 +15,43 @@ type Empresa = { id: string; razao_social: string }
 type Colaborador = { id: string; nome_completo: string }
 type FormErrors = { _form?: string[] }
 
+type OcorrenciaExistente = {
+  id: string
+  empresa_id: string
+  tipo: string
+  data_ocorrencia: string
+  local: string
+  descricao: string
+  colaborador_id: string | null
+  gravidade: string | null
+  parte_corpo_atingida: string | null
+  natureza_lesao: string | null
+  agente_causador: string | null
+  dias_afastamento: number | null
+}
+
 export function OcorrenciaForm({
-  empresas, colaboradores, action,
+  empresas, colaboradores, action, ocorrencia,
 }: {
   empresas: Empresa[]
   colaboradores: Colaborador[]
   action: (payload: OcorrenciaInput) => Promise<{ error?: FormErrors } | void>
+  ocorrencia?: OcorrenciaExistente
 }) {
   const [errors, setErrors] = useState<FormErrors>({})
   const [pending, startTransition] = useTransition()
-  const [empresaId, setEmpresaId] = useState(empresas[0]?.id || "")
-  const [tipo, setTipo] = useState<string>("quase_acidente")
-  const [colabId, setColabId] = useState("")
-  const [gravidade, setGravidade] = useState<string>("")
-  const [data, setData] = useState(new Date().toISOString().slice(0, 16))
-  const [local, setLocal] = useState("")
-  const [descricao, setDescricao] = useState("")
+  const [empresaId, setEmpresaId] = useState(ocorrencia?.empresa_id ?? empresas[0]?.id ?? "")
+  const [tipo, setTipo] = useState<string>(ocorrencia?.tipo ?? "quase_acidente")
+  const [colabId, setColabId] = useState(ocorrencia?.colaborador_id ?? "")
+  const [gravidade, setGravidade] = useState<string>(ocorrencia?.gravidade ?? "")
+  const [data, setData] = useState(ocorrencia ? ocorrencia.data_ocorrencia.slice(0, 16) : new Date().toISOString().slice(0, 16))
+  const [local, setLocal] = useState(ocorrencia?.local ?? "")
+  const [descricao, setDescricao] = useState(ocorrencia?.descricao ?? "")
   const [regioesAtingidas, setRegioesAtingidas] = useState<RegiaoCorpo[]>([])
-  const [parteCorpoAtingida, setParteCorpoAtingida] = useState("")
-  const [naturezaLesao, setNaturezaLesao] = useState("")
-  const [agenteCausador, setAgenteCausador] = useState("")
-  const [diasAfastamento, setDiasAfastamento] = useState("")
+  const [parteCorpoAtingida, setParteCorpoAtingida] = useState(ocorrencia?.parte_corpo_atingida ?? "")
+  const [naturezaLesao, setNaturezaLesao] = useState(ocorrencia?.natureza_lesao ?? "")
+  const [agenteCausador, setAgenteCausador] = useState(ocorrencia?.agente_causador ?? "")
+  const [diasAfastamento, setDiasAfastamento] = useState(ocorrencia?.dias_afastamento?.toString() ?? "")
 
   const ehAcidente = ["acidente_tipico", "acidente_trajeto", "doenca_ocupacional"].includes(tipo)
 
@@ -68,8 +84,8 @@ export function OcorrenciaForm({
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Registrar ocorrência</h1>
-        <p className="text-muted-foreground">Após salvar, você poderá fazer a investigação guiada (5 Porquês).</p>
+        <h1 className="text-3xl font-bold tracking-tight">{ocorrencia ? "Editar ocorrência" : "Registrar ocorrência"}</h1>
+        <p className="text-muted-foreground">{ocorrencia ? "Atualize os dados da ocorrência." : "Após salvar, você poderá fazer a investigação guiada (5 Porquês)."}</p>
       </div>
 
       <Card>
@@ -196,7 +212,7 @@ export function OcorrenciaForm({
         </Button>
         <Button type="button" onClick={handleSubmit} disabled={pending || !local || !descricao}>
           {pending && <Loader2 className="h-4 w-4 animate-spin" />}
-          Registrar
+          {ocorrencia ? "Salvar" : "Registrar"}
         </Button>
       </div>
     </div>

@@ -6,6 +6,8 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { formatDate } from "@/lib/utils/vencimento"
 import { Download, ArrowLeft, CheckCircle2 } from "lucide-react"
+import { cancelarDocumento } from "../actions"
+import { InativarButton } from "@/components/shared/inativar-button"
 
 export default async function DocumentoViewPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -23,11 +25,16 @@ export default async function DocumentoViewPage({ params }: { params: Promise<{ 
         <Button variant="ghost" size="sm" asChild>
           <Link href="/documentos"><ArrowLeft className="h-4 w-4" />Voltar</Link>
         </Button>
-        <Button asChild>
-          <Link href={`/api/documentos/${doc.id}/pdf`} target="_blank">
-            <Download className="h-4 w-4" />Baixar PDF
-          </Link>
-        </Button>
+        <div className="flex gap-2">
+          <Button asChild>
+            <Link href={`/api/documentos/${doc.id}/pdf`} target="_blank">
+              <Download className="h-4 w-4" />Baixar PDF
+            </Link>
+          </Button>
+          {doc.status !== "cancelado" && (
+            <InativarButton action={cancelarDocumento.bind(null, id)} entityName="documento" />
+          )}
+        </div>
       </div>
 
       <Card className="border-status-regular">

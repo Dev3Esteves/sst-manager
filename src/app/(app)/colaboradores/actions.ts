@@ -47,3 +47,11 @@ export async function updateColaborador(id: string, formData: FormData) {
   revalidatePath("/colaboradores")
   redirect("/colaboradores")
 }
+
+export async function inativarColaborador(id: string) {
+  const supabase = await createClient()
+  const { error } = await supabase.from("colaboradores").update({ status: "demitido" }).eq("id", id)
+  if (error) return { error: { _form: [error.message] } }
+  revalidatePath("/colaboradores")
+  redirect("/colaboradores")
+}

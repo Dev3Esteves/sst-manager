@@ -37,3 +37,31 @@ export async function createEntrega(payload: EpiEntregaInput) {
   revalidatePath("/epis/entregas")
   redirect("/epis/entregas")
 }
+
+export async function updateEntrega(id: string, payload: EpiEntregaInput) {
+  const parsed = epiEntregaSchema.safeParse(payload)
+  if (!parsed.success) {
+    return { error: { _form: [parsed.error.errors[0]?.message || "Dados inválidos"] } }
+  }
+  const supabase = await createClient()
+  const { error } = await supabase.from("epi_entregas").update({
+    colaborador_id: parsed.data.colaborador_id,
+    epi_id: parsed.data.epi_id,
+    data_entrega: parsed.data.data_entrega,
+    quantidade: parsed.data.quantidade,
+    motivo: parsed.data.motivo,
+    observacoes: parsed.data.observacoes,
+  }).eq("id", id)
+
+  if (error) return { error: { _form: [error.message] } }
+  revalidatePath("/epis/entregas")
+  redirect("/epis/entregas")
+}
+
+export async function inativarEntrega(id: string) {
+  const supabase = await createClient()
+  const { error } = await supabase.from("epi_entregas").update({ ativo: false }).eq("id", id)
+  if (error) return { error: { _form: [error.message] } }
+  revalidatePath("/epis/entregas")
+  redirect("/epis/entregas")
+}

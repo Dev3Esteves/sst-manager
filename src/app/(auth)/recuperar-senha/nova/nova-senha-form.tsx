@@ -1,33 +1,41 @@
 "use client"
 
-import Link from "next/link"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Loader2 } from "lucide-react"
 
-export function LoginForm() {
+export function NovaSenhaForm() {
   const router = useRouter()
-  const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [confirm, setConfirm] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    if (password.length < 8) {
+      setError("A senha deve ter no mínimo 8 caracteres.")
+      return
+    }
+    if (password !== confirm) {
+      setError("As senhas não coincidem.")
+      return
+    }
+
     setLoading(true)
     setError(null)
 
     const supabase = createClient()
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    const { error } = await supabase.auth.updateUser({ password })
 
+    setLoading(false)
     if (error) {
       setError(error.message)
-      setLoading(false)
       return
     }
 
@@ -38,37 +46,32 @@ export function LoginForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-xl">Entrar</CardTitle>
-        <CardDescription>Informe seu e-mail e senha para acessar o sistema.</CardDescription>
+        <CardTitle className="text-xl">Nova senha</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="email">E-mail</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="voce@sistenge.com.br"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              autoComplete="email"
-            />
-          </div>
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="password">Senha</Label>
-              <Link href="/recuperar-senha" className="text-xs text-muted-foreground hover:text-primary underline-offset-4 hover:underline">
-                Esqueci minha senha
-              </Link>
-            </div>
+            <Label htmlFor="password">Nova senha</Label>
             <Input
               id="password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              autoComplete="current-password"
+              minLength={8}
+              autoComplete="new-password"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="confirm">Confirmar senha</Label>
+            <Input
+              id="confirm"
+              type="password"
+              value={confirm}
+              onChange={(e) => setConfirm(e.target.value)}
+              required
+              minLength={8}
+              autoComplete="new-password"
             />
           </div>
           {error && (
@@ -76,7 +79,7 @@ export function LoginForm() {
           )}
           <Button type="submit" className="w-full" disabled={loading}>
             {loading && <Loader2 className="h-4 w-4 animate-spin" />}
-            Entrar
+            Salvar nova senha
           </Button>
         </form>
       </CardContent>

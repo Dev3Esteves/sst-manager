@@ -45,6 +45,23 @@ export async function updateTreinamento(id: string, formData: FormData) {
   redirect("/treinamentos")
 }
 
+export async function inativarTreinamento(id: string) {
+  const supabase = await createClient()
+  const { error } = await supabase.from("treinamentos").update({ ativo: false }).eq("id", id)
+  if (error) return { error: { _form: [error.message] } }
+  revalidatePath("/treinamentos")
+  redirect("/treinamentos")
+}
+
+export async function cancelarRealizacao(id: string) {
+  const supabase = await createClient()
+  const { error } = await supabase.from("treinamentos_realizados").update({ status: "cancelado" }).eq("id", id)
+  if (error) return { error: { _form: [error.message] } }
+  revalidatePath("/treinamentos/realizacoes")
+  revalidatePath("/vencimentos")
+  redirect("/treinamentos/realizacoes")
+}
+
 export async function createRealizacao(formData: FormData) {
   const parsed = treinamentoRealizadoSchema.safeParse({
     colaborador_id: formData.get("colaborador_id"),

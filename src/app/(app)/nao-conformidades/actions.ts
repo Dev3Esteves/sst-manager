@@ -86,6 +86,15 @@ export async function deleteNc(ncId: string) {
   redirect("/nao-conformidades")
 }
 
+export async function cancelarNc(ncId: string) {
+  const supabase = await createClient()
+  const { error } = await supabase.from("nao_conformidades").update({ status: "cancelada" }).eq("id", ncId)
+  if (error) return { error: { _form: [error.message] } }
+  revalidatePath(`/nao-conformidades/${ncId}`)
+  revalidatePath("/nao-conformidades")
+  redirect("/nao-conformidades")
+}
+
 // -----------------------------------------------------------------------------
 // 5 Whys (replace-all por NC)
 // -----------------------------------------------------------------------------

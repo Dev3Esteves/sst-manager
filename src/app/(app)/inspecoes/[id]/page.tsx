@@ -7,6 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { formatDate } from "@/lib/utils/vencimento"
 import { ArrowLeft, CheckCircle2, XCircle, MinusCircle } from "lucide-react"
 import type { RespostaItem } from "@/lib/validations/inspecao"
+import { inativarInspecao } from "../actions"
+import { InativarButton } from "@/components/shared/inativar-button"
 
 function conformidadeVariant(p: number | null): BadgeProps["variant"] {
   if (p === null) return "secondary"
@@ -39,6 +41,7 @@ export default async function InspecaoViewPage({ params }: { params: Promise<{ i
         <Button variant="ghost" size="sm" asChild>
           <Link href="/inspecoes"><ArrowLeft className="h-4 w-4" />Voltar</Link>
         </Button>
+        <InativarButton action={inativarInspecao.bind(null, id)} entityName="inspeção" />
       </div>
 
       <Card>

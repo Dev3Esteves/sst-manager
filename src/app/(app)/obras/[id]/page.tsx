@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { ObraForm } from "../obra-form"
-import { updateObra } from "../actions"
+import { updateObra, inativarObra } from "../actions"
+import { InativarButton } from "@/components/shared/inativar-button"
 
 export default async function EditObraPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -25,6 +26,9 @@ export default async function EditObraPage({ params }: { params: Promise<{ id: s
 
   return (
     <div className="container py-8 max-w-3xl">
+      <div className="flex justify-end mb-4">
+        <InativarButton action={inativarObra.bind(null, id)} entityName="obra" />
+      </div>
       <ObraForm
         obra={obra}
         donas={donas ?? []}

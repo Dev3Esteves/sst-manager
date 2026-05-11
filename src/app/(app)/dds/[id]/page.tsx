@@ -6,6 +6,8 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { formatDate } from "@/lib/utils/vencimento"
 import { ArrowLeft, Download, MessageSquare, CheckCircle2, MinusCircle } from "lucide-react"
+import { cancelarDds } from "../actions"
+import { InativarButton } from "@/components/shared/inativar-button"
 
 type DdsViewConteudo = {
   tema: string
@@ -49,11 +51,16 @@ export default async function DDSViewPage({ params }: { params: Promise<{ id: st
         <Button variant="ghost" size="sm" asChild>
           <Link href="/dds"><ArrowLeft className="h-4 w-4" />Voltar</Link>
         </Button>
-        <Button asChild>
-          <Link href={`/api/documentos/${dds.id}/pdf`} target="_blank">
-            <Download className="h-4 w-4" />Baixar PDF
-          </Link>
-        </Button>
+        <div className="flex gap-2">
+          <Button asChild>
+            <Link href={`/api/documentos/${dds.id}/pdf`} target="_blank">
+              <Download className="h-4 w-4" />Baixar PDF
+            </Link>
+          </Button>
+          {dds.status !== "cancelado" && (
+            <InativarButton action={cancelarDds.bind(null, id)} entityName="DDS" />
+          )}
+        </div>
       </div>
 
       <Card>

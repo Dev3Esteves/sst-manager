@@ -6,10 +6,11 @@ import { Badge, type BadgeProps } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { formatDate } from "@/lib/utils/vencimento"
 import { OCORRENCIA_TIPOS, GRAVIDADE_LABEL, type AcaoCorretiva, type InvestigacaoInput } from "@/lib/validations/ocorrencia"
-import { ArrowLeft, AlertTriangle, FileCode, FileText, ShieldCheck } from "lucide-react"
+import { ArrowLeft, AlertTriangle, FileCode, FileText, ShieldCheck, Pencil } from "lucide-react"
 import { InvestigacaoForm } from "./investigacao-form"
-import { saveInvestigacao } from "../actions"
+import { saveInvestigacao, encerrarOcorrencia } from "../actions"
 import { promoverOcorrenciaParaNc } from "../../nao-conformidades/actions"
+import { InativarButton } from "@/components/shared/inativar-button"
 
 function gravidadeVariant(g: string | null): BadgeProps["variant"] {
   switch (g) {
@@ -82,6 +83,14 @@ export default async function OcorrenciaViewPage({ params }: { params: Promise<{
                 Abrir NC formal
               </Button>
             </form>
+          )}
+          {oc.status !== "encerrada" && (
+            <>
+              <Button variant="outline" size="sm" asChild>
+                <Link href={`/ocorrencias/${id}/edit`}><Pencil className="h-4 w-4" />Editar</Link>
+              </Button>
+              <InativarButton action={encerrarOcorrencia.bind(null, id)} entityName="ocorrencia" />
+            </>
           )}
           <Badge variant="outline" className="capitalize">{oc.status}</Badge>
         </div>

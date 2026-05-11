@@ -1,0 +1,18 @@
+-- 0015_soft_delete_columns.sql
+-- Adiciona coluna "ativo" nas tabelas que ainda nao suportam soft delete
+
+ALTER TABLE cargos ADD COLUMN IF NOT EXISTS ativo BOOLEAN NOT NULL DEFAULT true;
+ALTER TABLE epis ADD COLUMN IF NOT EXISTS ativo BOOLEAN NOT NULL DEFAULT true;
+ALTER TABLE epi_entregas ADD COLUMN IF NOT EXISTS ativo BOOLEAN NOT NULL DEFAULT true;
+ALTER TABLE treinamentos ADD COLUMN IF NOT EXISTS ativo BOOLEAN NOT NULL DEFAULT true;
+ALTER TABLE inspecoes ADD COLUMN IF NOT EXISTS ativo BOOLEAN NOT NULL DEFAULT true;
+ALTER TABLE exames_medicos ADD COLUMN IF NOT EXISTS ativo BOOLEAN NOT NULL DEFAULT true;
+ALTER TABLE dds ADD COLUMN IF NOT EXISTS ativo BOOLEAN NOT NULL DEFAULT true;
+
+CREATE INDEX IF NOT EXISTS idx_cargos_ativo ON cargos (ativo) WHERE ativo = true;
+CREATE INDEX IF NOT EXISTS idx_epis_ativo ON epis (ativo) WHERE ativo = true;
+CREATE INDEX IF NOT EXISTS idx_epi_entregas_ativo ON epi_entregas (ativo) WHERE ativo = true;
+CREATE INDEX IF NOT EXISTS idx_treinamentos_ativo ON treinamentos (ativo) WHERE ativo = true;
+CREATE INDEX IF NOT EXISTS idx_inspecoes_ativo ON inspecoes (ativo) WHERE ativo = true;
+CREATE INDEX IF NOT EXISTS idx_exames_medicos_ativo ON exames_medicos (ativo) WHERE ativo = true;
+CREATE INDEX IF NOT EXISTS idx_dds_ativo ON dds (ativo) WHERE ativo = true;

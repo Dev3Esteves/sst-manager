@@ -97,3 +97,11 @@ export async function updateEmpresa(id: string, formData: FormData) {
   revalidatePath("/empresas")
   redirect("/empresas")
 }
+
+export async function inativarEmpresa(id: string) {
+  const supabase = await createClient()
+  const { error } = await supabase.from("empresas").update({ ativo: false }).eq("id", id)
+  if (error) return { error: { _form: [error.message] } }
+  revalidatePath("/empresas")
+  redirect("/empresas")
+}

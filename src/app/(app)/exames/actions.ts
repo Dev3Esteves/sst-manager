@@ -22,6 +22,19 @@ function parseForm(formData: FormData) {
   }
 }
 
+export async function updateExame(id: string, formData: FormData) {
+  const parsed = exameSchema.safeParse(parseForm(formData))
+  if (!parsed.success) return { error: parsed.error.flatten().fieldErrors }
+
+  const supabase = await createClient()
+  const { error } = await supabase.from("exames_medicos").update(parsed.data).eq("id", id)
+  if (error) return { error: { _form: [error.message] } }
+
+  revalidatePath("/exames")
+  revalidatePath("/vencimentos")
+  redirect("/exames")
+}
+
 export async function createExame(formData: FormData) {
   const parsed = exameSchema.safeParse(parseForm(formData))
   if (!parsed.success) return { error: parsed.error.flatten().fieldErrors }
@@ -30,6 +43,15 @@ export async function createExame(formData: FormData) {
   const { error } = await supabase.from("exames_medicos").insert(parsed.data)
   if (error) return { error: { _form: [error.message] } }
 
+  revalidatePath("/exames")
+  revalidatePath("/vencimentos")
+  redirect("/exames")
+}
+
+export async function inativarExame(id: string) {
+  const supabase = await createClient()
+  const { error } = await supabase.from("exames_medicos").update({ ativo: false }).eq("id", id)
+  if (error) return { error: { _form: [error.message] } }
   revalidatePath("/exames")
   revalidatePath("/vencimentos")
   redirect("/exames")

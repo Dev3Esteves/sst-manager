@@ -15,21 +15,32 @@ type Colaborador = { id: string; nome_completo: string }
 type Epi = { id: string; descricao: string; ca: string; ca_validade: string | null }
 type FormErrors = { _form?: string[] }
 
+type EntregaExistente = {
+  id: string
+  colaborador_id: string
+  epi_id: string
+  data_entrega: string
+  quantidade: number
+  motivo: string | null
+  observacoes: string | null
+}
+
 export function EntregaForm({
-  colaboradores, epis, action,
+  colaboradores, epis, action, entrega,
 }: {
   colaboradores: Colaborador[]
   epis: Epi[]
   action: (payload: EpiEntregaInput) => Promise<{ error?: FormErrors } | void>
+  entrega?: EntregaExistente
 }) {
   const [errors, setErrors] = useState<FormErrors>({})
   const [pending, startTransition] = useTransition()
-  const [colabId, setColabId] = useState("")
-  const [epiId, setEpiId] = useState("")
-  const [dataEntrega, setDataEntrega] = useState(new Date().toISOString().slice(0, 10))
-  const [quantidade, setQuantidade] = useState(1)
-  const [motivo, setMotivo] = useState<string>("primeiro_fornecimento")
-  const [observacoes, setObservacoes] = useState("")
+  const [colabId, setColabId] = useState(entrega?.colaborador_id ?? "")
+  const [epiId, setEpiId] = useState(entrega?.epi_id ?? "")
+  const [dataEntrega, setDataEntrega] = useState(entrega?.data_entrega ?? new Date().toISOString().slice(0, 10))
+  const [quantidade, setQuantidade] = useState(entrega?.quantidade ?? 1)
+  const [motivo, setMotivo] = useState<string>(entrega?.motivo ?? "primeiro_fornecimento")
+  const [observacoes, setObservacoes] = useState(entrega?.observacoes ?? "")
   const [assinatura, setAssinatura] = useState<string | null>(null)
 
   const epiSelecionado = epis.find(e => e.id === epiId)
@@ -53,7 +64,7 @@ export function EntregaForm({
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Nova entrega de EPI</h1>
+        <h1 className="text-3xl font-bold tracking-tight">{entrega ? "Editar entrega de EPI" : "Nova entrega de EPI"}</h1>
         <p className="text-muted-foreground">O colaborador deve assinar no campo abaixo ao receber o EPI.</p>
       </div>
 
@@ -137,7 +148,7 @@ export function EntregaForm({
         </Button>
         <Button type="button" onClick={handleSubmit} disabled={pending || !colabId || !epiId}>
           {pending && <Loader2 className="h-4 w-4 animate-spin" />}
-          Registrar entrega
+          {entrega ? "Salvar" : "Registrar entrega"}
         </Button>
       </div>
     </div>

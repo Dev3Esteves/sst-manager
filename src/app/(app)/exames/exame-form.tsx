@@ -25,19 +25,36 @@ const PERIODICIDADE_MESES: Record<string, number> = {
   complementar: 6,
 }
 
+type Exame = {
+  id: string
+  colaborador_id: string
+  tipo: string
+  subtipo: string | null
+  data_realizacao: string
+  data_vencimento: string
+  resultado: string | null
+  restricoes: string | null
+  medico_nome: string | null
+  crm: string | null
+  clinica: string | null
+  numero_aso: string | null
+  observacoes: string | null
+}
+
 export function ExameForm({
-  colaboradores, action,
+  colaboradores, action, exame,
 }: {
   colaboradores: Colaborador[]
   action: (formData: FormData) => Promise<{ error?: FormErrors } | void>
+  exame?: Exame
 }) {
   const [errors, setErrors] = useState<FormErrors>({})
   const [pending, startTransition] = useTransition()
-  const [colabId, setColabId] = useState("")
-  const [tipo, setTipo] = useState("periodico")
-  const [resultado, setResultado] = useState("")
-  const [dataRealizacao, setDataRealizacao] = useState("")
-  const [dataVencimento, setDataVencimento] = useState("")
+  const [colabId, setColabId] = useState(exame?.colaborador_id ?? "")
+  const [tipo, setTipo] = useState(exame?.tipo ?? "periodico")
+  const [resultado, setResultado] = useState(exame?.resultado ?? "")
+  const [dataRealizacao, setDataRealizacao] = useState(exame?.data_realizacao ?? "")
+  const [dataVencimento, setDataVencimento] = useState(exame?.data_vencimento ?? "")
   const [prefilled, setPrefilled] = useState<string[]>([])
   const numeroAsoRef = useRef<HTMLInputElement>(null)
   const medicoRef = useRef<HTMLInputElement>(null)
@@ -143,7 +160,7 @@ export function ExameForm({
       </div>
       <Card>
         <CardHeader>
-          <CardTitle>Registrar exame médico</CardTitle>
+          <CardTitle>{exame ? "Editar exame médico" : "Registrar exame médico"}</CardTitle>
           <CardDescription>ASO (Atestado de Saúde Ocupacional) — PCMSO.</CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4 md:grid-cols-2">
@@ -173,7 +190,7 @@ export function ExameForm({
           </div>
           <div className="space-y-2">
             <Label htmlFor="subtipo">Subtipo (ex: audiometria)</Label>
-            <Input id="subtipo" name="subtipo" />
+            <Input id="subtipo" name="subtipo" defaultValue={exame?.subtipo ?? ""} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="data_realizacao">Data de realização *</Label>
@@ -205,27 +222,27 @@ export function ExameForm({
           </div>
           <div className="space-y-2">
             <Label htmlFor="numero_aso">Número do ASO</Label>
-            <Input id="numero_aso" name="numero_aso" ref={numeroAsoRef} />
+            <Input id="numero_aso" name="numero_aso" ref={numeroAsoRef} defaultValue={exame?.numero_aso ?? ""} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="medico_nome">Médico responsável</Label>
-            <Input id="medico_nome" name="medico_nome" ref={medicoRef} />
+            <Input id="medico_nome" name="medico_nome" ref={medicoRef} defaultValue={exame?.medico_nome ?? ""} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="crm">CRM</Label>
-            <Input id="crm" name="crm" ref={crmRef} />
+            <Input id="crm" name="crm" ref={crmRef} defaultValue={exame?.crm ?? ""} />
           </div>
           <div className="space-y-2 md:col-span-2">
             <Label htmlFor="clinica">Clínica</Label>
-            <Input id="clinica" name="clinica" ref={clinicaRef} />
+            <Input id="clinica" name="clinica" ref={clinicaRef} defaultValue={exame?.clinica ?? ""} />
           </div>
           <div className="space-y-2 md:col-span-2">
             <Label htmlFor="restricoes">Restrições</Label>
-            <Input id="restricoes" name="restricoes" />
+            <Input id="restricoes" name="restricoes" defaultValue={exame?.restricoes ?? ""} />
           </div>
           <div className="space-y-2 md:col-span-2">
             <Label htmlFor="observacoes">Observações</Label>
-            <Input id="observacoes" name="observacoes" />
+            <Input id="observacoes" name="observacoes" defaultValue={exame?.observacoes ?? ""} />
           </div>
           {errors._form && (
             <p className="text-sm text-destructive md:col-span-2" role="alert">{errors._form[0]}</p>
@@ -239,7 +256,7 @@ export function ExameForm({
         </Button>
         <Button type="submit" disabled={pending}>
           {pending && <Loader2 className="h-4 w-4 animate-spin" />}
-          Registrar
+          {exame ? "Salvar" : "Registrar"}
         </Button>
       </div>
     </form>

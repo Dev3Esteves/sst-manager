@@ -36,3 +36,12 @@ export async function updateEpi(id: string, formData: FormData) {
   revalidatePath("/vencimentos")
   redirect("/epis")
 }
+
+export async function inativarEpi(id: string) {
+  const supabase = await createClient()
+  const { error } = await supabase.from("epis").update({ ativo: false }).eq("id", id)
+  if (error) return { error: { _form: [error.message] } }
+  revalidatePath("/epis")
+  revalidatePath("/vencimentos")
+  redirect("/epis")
+}

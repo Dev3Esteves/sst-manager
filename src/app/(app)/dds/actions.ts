@@ -89,3 +89,12 @@ export async function createDDS(payload: DdsInput) {
   revalidatePath("/documentos")
   redirect(`/dds/${doc.id}`)
 }
+
+export async function cancelarDds(id: string) {
+  const supabase = await createClient()
+  const { error } = await supabase.from("documentos_sst").update({ status: "cancelado" }).eq("id", id)
+  if (error) return { error: { _form: [error.message] } }
+  revalidatePath("/dds")
+  revalidatePath("/documentos")
+  redirect("/dds")
+}

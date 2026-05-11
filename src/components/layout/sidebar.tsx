@@ -48,6 +48,7 @@ const sections: NavSection[] = [
     label: "Relatórios",
     items: [
       { href: "/matriz-treinamentos", label: "Matriz treinamentos", icon: Grid3x3 },
+      { href: "/nao-conformidades", label: "Não-Conformidades", icon: ShieldCheck },
       { href: "/relatorios/mensal", label: "Relatório mensal", icon: FileBarChart },
       { href: "/relatorios/heatmap-ocorrencias", label: "Heatmap ocorrências", icon: MapPin },
     ],

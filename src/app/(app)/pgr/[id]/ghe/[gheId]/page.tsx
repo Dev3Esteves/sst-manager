@@ -12,8 +12,10 @@ import { CargosEditor } from "./cargos-editor"
 import {
   RISCO_CATEGORIA_LABEL,
   CATEGORIA_RISCO_LABEL,
+  EPI_USO_LABEL,
   type RiscoCategoria,
   type CategoriaRisco,
+  type EpiUso,
 } from "@/lib/validations/pgr"
 
 type RiscoRow = {
@@ -23,6 +25,15 @@ type RiscoRow = {
   codigo_esocial: string | null
   tipo_exposicao: string | null
   categoria_risco: CategoriaRisco | null
+  ordem: number
+}
+
+type EpiRow = {
+  id: string
+  epi_nome: string
+  epi_id: string | null
+  uso: EpiUso
+  observacao: string | null
   ordem: number
 }
 
@@ -43,7 +54,7 @@ export default async function EditGhePage({
   const { id: pgrId, gheId } = await params
   const supabase = await createClient()
 
-  const [{ data: ghe }, { data: cargos }, { data: pgr }, { data: riscos }] = await Promise.all([
+  const [{ data: ghe }, { data: cargos }, { data: pgr }, { data: riscos }, { data: epis }] = await Promise.all([
     supabase.from("pgr_ghe").select("*").eq("id", gheId).single(),
     supabase
       .from("pgr_ghe_cargo")
@@ -63,12 +74,20 @@ export default async function EditGhePage({
       .order("ordem")
       .order("agente_ambiental")
       .returns<RiscoRow[]>(),
+    supabase
+      .from("pgr_epi_ghe")
+      .select("id, epi_nome, epi_id, uso, observacao, ordem")
+      .eq("pgr_ghe_id", gheId)
+      .order("ordem")
+      .order("epi_nome")
+      .returns<EpiRow[]>(),
   ])
 
   if (!ghe || !pgr) notFound()
 
   const obra = Array.isArray(pgr.obras) ? pgr.obras[0] : pgr.obras
   const riscosList = riscos ?? []
+  const episList = epis ?? []
 
   async function handleDelete() {
     "use server"
@@ -166,6 +185,73 @@ export default async function EditGhePage({
                     <TableCell>
                       <Button variant="ghost" size="icon" asChild>
                         <Link href={`/pgr/${pgrId}/ghe/${gheId}/risco/${r.id}`}>
+                          <Pencil className="h-3.5 w-3.5" />
+                        </Link>
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0">
+          <CardTitle className="text-base">
+            EPIs do GHE ({episList.length})
+          </CardTitle>
+          <Button size="sm" asChild>
+            <Link href={`/pgr/${pgrId}/ghe/${gheId}/epi/new`}>
+              <Plus className="h-4 w-4" />
+              Novo EPI
+            </Link>
+          </Button>
+        </CardHeader>
+        <CardContent>
+          {episList.length === 0 ? (
+            <p className="text-sm text-muted-foreground text-center py-6">
+              Nenhum EPI vinculado a este GHE (Anexo VII). Linkar EPIs cadastrados em
+              /epis facilita reuso e mantém CA consistente.
+            </p>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>EPI</TableHead>
+                  <TableHead className="w-32">Uso</TableHead>
+                  <TableHead className="w-32">Cadastrado</TableHead>
+                  <TableHead className="w-12"></TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {episList.map((e) => (
+                  <TableRow key={e.id} className="hover:bg-accent/50">
+                    <TableCell className="font-medium">
+                      <Link
+                        href={`/pgr/${pgrId}/ghe/${gheId}/epi/${e.id}`}
+                        className="hover:underline"
+                      >
+                        {e.epi_nome}
+                      </Link>
+                      {e.observacao && (
+                        <div className="text-xs text-muted-foreground italic line-clamp-1">
+                          {e.observacao}
+                        </div>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="outline" className="text-[10px]">
+                        {EPI_USO_LABEL[e.uso]}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-xs text-muted-foreground">
+                      {e.epi_id ? "Sim" : "Livre"}
+                    </TableCell>
+                    <TableCell>
+                      <Button variant="ghost" size="icon" asChild>
+                        <Link href={`/pgr/${pgrId}/ghe/${gheId}/epi/${e.id}`}>
                           <Pencil className="h-3.5 w-3.5" />
                         </Link>
                       </Button>

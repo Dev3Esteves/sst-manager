@@ -1,13 +1,24 @@
 /**
- * Instrumento COPSOQ III (adaptação Brasil) — definição estruturada.
+ * Instrumento COPSOQ II-Br — versão CURTA (estrutura oficial validada).
  *
- * ⚠️ RASCUNHO: os textos de itens abaixo são REPRESENTATIVOS, para operar o
- * motor e a coleta. Antes de produção, substituir pelo texto OFICIAL da versão
- * validada no Brasil (COPSOQ III-Br) — sujeito a licença do COPSOQ International
- * Network. A estrutura (domínios, dimensões, escala, direção de risco) segue o
- * padrão COPSOQ e não muda com a troca do texto.
+ * Estrutura conforme a validação brasileira da versão curta do COPSOQ II:
+ *   Gonçalves JS, Moriguchi CS, Chaves TC, Sato TO. "Cross-cultural adaptation
+ *   and psychometric properties of the short version of COPSOQ II-Brazil."
+ *   Rev Saude Publica. 2021;55:69 — 7 domínios, 11 dimensões, 40 questões,
+ *   Likert 5 pontos, classificação favorável/atenção/desfavorável.
  *
- * Escala Likert 0-100; `reverso=true` em dimensões positivas (apoio, autonomia).
+ * ⚠️ TEXTO ADAPTADO (oficial=false): os enunciados abaixo foram traduzidos da
+ * Tabela 2 do artigo (publicada em inglês) para o português. NÃO são o texto
+ * VERBATIM validado — esse consta na tese de Gonçalves (2019, UFSCar) /
+ * material suplementar. Pela licença COPSOQ (CC BY-NC-ND), só pode ser
+ * distribuído como "COPSOQ II-Br" usando o texto validado sem modificação;
+ * substituir pelos enunciados verbatim antes do uso em produção.
+ *
+ * Escopo de RISCO: incluímos apenas as dimensões de EXPOSIÇÃO (fatores de
+ * risco). Os DESFECHOS da versão curta — satisfação (Q13), saúde geral (Q17)
+ * e burnout/estresse (Q18-Q19) — são consequência, não fator de risco, e são
+ * monitorados à parte (não entram no Inventário do PGR). Item Q1B é o único
+ * com pontuação invertida na versão curta.
  */
 import type { InstrumentoDef } from "./scoring"
 
@@ -19,55 +30,42 @@ export const ESCALA_LIKERT = {
 export const CLASSIFICACAO_TERCIS = {
   metodo: "tercis",
   faixas: {
-    verde: { min: 0, max: 33.3, rotulo: "Risco baixo" },
-    amarelo: { min: 33.4, max: 66.6, rotulo: "Risco médio" },
-    vermelho: { min: 66.7, max: 100, rotulo: "Risco alto" },
+    verde: { min: 0, max: 33.3, rotulo: "Favorável (risco baixo)" },
+    amarelo: { min: 33.4, max: 66.6, rotulo: "Requer atenção (risco médio)" },
+    vermelho: { min: 66.7, max: 100, rotulo: "Desfavorável (risco alto)" },
   },
   min_respondentes_ghe: 5,
 } as const
 
 export const COPSOQ_META = {
-  instrumento: "COPSOQ III-Br",
-  versao_schema: "1.0",
+  instrumento: "COPSOQ II-Br (curta)",
+  versao_schema: "2021.1",
   oficial: false,
+  fonte: "Gonçalves et al., Rev Saude Publica 2021;55:69",
 } as const
+
+// Em todos os itens desta versão: presentes tanto na curta quanto na média.
+const V = ["curto", "medio"]
 
 export const COPSOQ_BR: InstrumentoDef = {
   dominios: [
     {
-      id: "demandas",
+      id: "exigencias",
       nome: "Exigências no trabalho",
       dimensoes: [
         {
-          id: "demandas_quantitativas",
-          nome: "Demandas quantitativas (sobrecarga)",
+          id: "demandas_trabalho",
+          nome: "Demandas no trabalho",
           risco_direcao: "direto",
-          versoes: ["curto", "medio"],
+          versoes: V,
           itens: [
-            { id: "DQ1", texto: "Você precisa fazer mais do que consegue dar conta no seu trabalho?", reverso: false },
-            { id: "DQ2", texto: "Você fica atrasado(a) com suas tarefas por excesso de trabalho?", reverso: false, versoes: ["medio"] },
+            { id: "Q1A", texto: "Você atrasa a entrega do seu trabalho?", reverso: false, versoes: V },
+            { id: "Q1B", texto: "Você tem tempo suficiente para realizar suas tarefas de trabalho?", reverso: true, versoes: V },
+            { id: "Q2A", texto: "É necessário manter um ritmo acelerado de trabalho?", reverso: false, versoes: V },
+            { id: "Q2B", texto: "Você trabalha em ritmo acelerado durante toda a jornada?", reverso: false, versoes: V },
+            { id: "Q3A", texto: "Seu trabalho o coloca em situações emocionalmente desgastantes?", reverso: false, versoes: V },
+            { id: "Q3B", texto: "Você precisa lidar com problemas pessoais de outras pessoas como parte do seu trabalho?", reverso: false, versoes: V },
           ],
-        },
-        {
-          id: "ritmo_trabalho",
-          nome: "Ritmo de trabalho",
-          risco_direcao: "direto",
-          versoes: ["curto", "medio"],
-          itens: [{ id: "RT1", texto: "Você precisa trabalhar muito rápido?", reverso: false }],
-        },
-        {
-          id: "demandas_cognitivas",
-          nome: "Demandas cognitivas",
-          risco_direcao: "direto",
-          versoes: ["medio"],
-          itens: [{ id: "DC1", texto: "Seu trabalho exige muita concentração e atenção?", reverso: false }],
-        },
-        {
-          id: "demandas_emocionais",
-          nome: "Demandas emocionais",
-          risco_direcao: "direto",
-          versoes: ["curto", "medio"],
-          itens: [{ id: "DE1", texto: "Seu trabalho exige que você lide com situações emocionalmente difíceis?", reverso: false }],
         },
       ],
     },
@@ -76,25 +74,28 @@ export const COPSOQ_BR: InstrumentoDef = {
       nome: "Organização e conteúdo do trabalho",
       dimensoes: [
         {
-          id: "influencia",
-          nome: "Influência / autonomia no trabalho",
+          id: "influencia_desenvolvimento",
+          nome: "Influência e desenvolvimento",
           risco_direcao: "inverso",
-          versoes: ["curto", "medio"],
-          itens: [{ id: "IN1", texto: "Você tem influência sobre as decisões relativas ao seu trabalho?", reverso: true }],
+          versoes: V,
+          itens: [
+            { id: "Q4A", texto: "Você tem alto grau de influência nas decisões sobre o seu trabalho?", reverso: true, versoes: V },
+            { id: "Q4B", texto: "Você pode influenciar a quantidade de trabalho atribuída a você?", reverso: true, versoes: V },
+            { id: "Q5A", texto: "Você tem a possibilidade de aprender coisas novas por meio do seu trabalho?", reverso: true, versoes: V },
+            { id: "Q5B", texto: "Seu trabalho exige que você tome iniciativa?", reverso: true, versoes: V },
+          ],
         },
         {
-          id: "desenvolvimento",
-          nome: "Possibilidades de desenvolvimento",
+          id: "significado_comprometimento",
+          nome: "Significado e comprometimento",
           risco_direcao: "inverso",
-          versoes: ["medio"],
-          itens: [{ id: "PD1", texto: "Seu trabalho permite que você aprenda coisas novas?", reverso: true }],
-        },
-        {
-          id: "significado",
-          nome: "Significado do trabalho",
-          risco_direcao: "inverso",
-          versoes: ["curto", "medio"],
-          itens: [{ id: "SG1", texto: "Seu trabalho tem sentido/significado para você?", reverso: true }],
+          versoes: V,
+          itens: [
+            { id: "Q6A", texto: "Seu trabalho tem significado para você?", reverso: true, versoes: V },
+            { id: "Q6B", texto: "Você sente que o trabalho que realiza é importante?", reverso: true, versoes: V },
+            { id: "Q7A", texto: "Você sente que seu local de trabalho é muito importante para você?", reverso: true, versoes: V },
+            { id: "Q7B", texto: "Você recomendaria a um(a) amigo(a) se candidatar a uma vaga no seu local de trabalho?", reverso: true, versoes: V },
+          ],
         },
       ],
     },
@@ -103,53 +104,30 @@ export const COPSOQ_BR: InstrumentoDef = {
       nome: "Relações interpessoais e liderança",
       dimensoes: [
         {
-          id: "previsibilidade",
-          nome: "Previsibilidade",
+          id: "relacoes_interpessoais",
+          nome: "Relações interpessoais",
           risco_direcao: "inverso",
-          versoes: ["medio"],
-          itens: [{ id: "PR1", texto: "Você recebe com antecedência as informações necessárias para o seu trabalho?", reverso: true }],
+          versoes: V,
+          itens: [
+            { id: "Q8A", texto: "No seu local de trabalho, você é informado(a) com antecedência sobre decisões importantes, mudanças ou planos para o futuro?", reverso: true, versoes: V },
+            { id: "Q8B", texto: "Você recebe todas as informações de que precisa para fazer bem o seu trabalho?", reverso: true, versoes: V },
+            { id: "Q9A", texto: "Seu trabalho é reconhecido e valorizado pela gestão?", reverso: true, versoes: V },
+            { id: "Q9B", texto: "Você é tratado(a) de forma justa no seu local de trabalho?", reverso: true, versoes: V },
+            { id: "Q10A", texto: "Seu trabalho tem objetivos/metas claros?", reverso: true, versoes: V },
+            { id: "Q10B", texto: "Você sabe exatamente o que é esperado de você no trabalho?", reverso: true, versoes: V },
+          ],
         },
         {
-          id: "reconhecimento",
-          nome: "Reconhecimento e recompensas",
-          risco_direcao: "inverso",
-          versoes: ["curto", "medio"],
-          itens: [{ id: "RC1", texto: "Seu trabalho é reconhecido e valorizado pela gestão?", reverso: true }],
-        },
-        {
-          id: "clareza_papel",
-          nome: "Clareza de papel",
-          risco_direcao: "inverso",
-          versoes: ["curto", "medio"],
-          itens: [{ id: "CP1", texto: "Você sabe exatamente quais são as suas responsabilidades?", reverso: true }],
-        },
-        {
-          id: "conflito_papel",
-          nome: "Conflitos de papel",
-          risco_direcao: "direto",
-          versoes: ["medio"],
-          itens: [{ id: "CF1", texto: "Você recebe ordens ou exigências contraditórias de pessoas diferentes?", reverso: false }],
-        },
-        {
-          id: "qualidade_lideranca",
+          id: "lideranca",
           nome: "Qualidade da liderança",
           risco_direcao: "inverso",
-          versoes: ["curto", "medio"],
-          itens: [{ id: "QL1", texto: "Sua chefia imediata planeja bem o trabalho e resolve conflitos de forma justa?", reverso: true }],
-        },
-        {
-          id: "apoio_supervisor",
-          nome: "Apoio social da chefia",
-          risco_direcao: "inverso",
-          versoes: ["medio"],
-          itens: [{ id: "AS1", texto: "Você recebe ajuda e apoio da sua chefia quando precisa?", reverso: true }],
-        },
-        {
-          id: "apoio_colegas",
-          nome: "Apoio social dos colegas",
-          risco_direcao: "inverso",
-          versoes: ["curto", "medio"],
-          itens: [{ id: "AC1", texto: "Você recebe ajuda e apoio dos seus colegas quando precisa?", reverso: true }],
+          versoes: V,
+          itens: [
+            { id: "Q11A", texto: "Você diria que seu superior imediato dá alta prioridade à satisfação no trabalho?", reverso: true, versoes: V },
+            { id: "Q11B", texto: "Você diria que seu superior é bom no planejamento do trabalho?", reverso: true, versoes: V },
+            { id: "Q12A", texto: "Com que frequência seu superior imediato está disposto a ouvir seus problemas no trabalho?", reverso: true, versoes: V },
+            { id: "Q12B", texto: "Com que frequência você recebe ajuda e apoio do seu superior imediato?", reverso: true, versoes: V },
+          ],
         },
       ],
     },
@@ -158,65 +136,50 @@ export const COPSOQ_BR: InstrumentoDef = {
       nome: "Interface trabalho-indivíduo",
       dimensoes: [
         {
-          id: "inseguranca_emprego",
-          nome: "Insegurança no emprego",
+          id: "conflito_trabalho_familia",
+          nome: "Conflito trabalho-família",
           risco_direcao: "direto",
-          versoes: ["curto", "medio"],
-          itens: [{ id: "IE1", texto: "Você se preocupa em ficar desempregado(a)?", reverso: false }],
-        },
-        {
-          id: "conflito_trabalho_vida",
-          nome: "Conflito trabalho-vida",
-          risco_direcao: "direto",
-          versoes: ["curto", "medio"],
-          itens: [{ id: "TV1", texto: "As exigências do trabalho atrapalham sua vida pessoal e familiar?", reverso: false }],
+          versoes: V,
+          itens: [
+            { id: "Q14A", texto: "Você sente que seu trabalho consome tanta energia que tem efeito negativo na sua vida pessoal/familiar?", reverso: false, versoes: V },
+            { id: "Q14B", texto: "Você sente que seu trabalho consome tanto tempo que tem efeito negativo na sua vida pessoal/familiar?", reverso: false, versoes: V },
+          ],
         },
       ],
     },
     {
-      id: "capital_social",
-      nome: "Capital social",
+      id: "valores",
+      nome: "Valores no local de trabalho",
       dimensoes: [
         {
-          id: "confianca_vertical",
-          nome: "Confiança vertical",
+          id: "valores_local_trabalho",
+          nome: "Confiança e justiça organizacional",
           risco_direcao: "inverso",
-          versoes: ["medio"],
-          itens: [{ id: "CV1", texto: "A gestão confia nos trabalhadores para fazerem bem o seu trabalho?", reverso: true }],
-        },
-        {
-          id: "justica_organizacional",
-          nome: "Justiça organizacional",
-          risco_direcao: "inverso",
-          versoes: ["curto", "medio"],
-          itens: [{ id: "JO1", texto: "Os conflitos são resolvidos de maneira justa na sua empresa?", reverso: true }],
+          versoes: V,
+          itens: [
+            { id: "Q15A", texto: "Você pode confiar nas informações que vêm dos seus superiores?", reverso: true, versoes: V },
+            { id: "Q15B", texto: "Seus superiores confiam que os empregados farão bem o seu trabalho?", reverso: true, versoes: V },
+            { id: "Q16A", texto: "Os conflitos são resolvidos de forma justa?", reverso: true, versoes: V },
+            { id: "Q16B", texto: "O trabalho é distribuído de forma justa?", reverso: true, versoes: V },
+          ],
         },
       ],
     },
     {
       id: "comportamentos_ofensivos",
-      nome: "Comportamentos ofensivos (assédio e violência)",
+      nome: "Comportamentos ofensivos",
       dimensoes: [
         {
-          id: "assedio_moral",
-          nome: "Assédio moral / bullying",
+          id: "comportamentos_ofensivos",
+          nome: "Assédio e violência",
           risco_direcao: "direto",
-          versoes: ["curto", "medio"],
-          itens: [{ id: "AM1", texto: "Nos últimos 12 meses, você foi exposto(a) a humilhações, perseguições ou hostilidade no trabalho?", reverso: false }],
-        },
-        {
-          id: "assedio_sexual",
-          nome: "Assédio sexual",
-          risco_direcao: "direto",
-          versoes: ["curto", "medio"],
-          itens: [{ id: "AX1", texto: "Nos últimos 12 meses, você foi exposto(a) a assédio sexual no trabalho?", reverso: false }],
-        },
-        {
-          id: "violencia",
-          nome: "Ameaças e violência",
-          risco_direcao: "direto",
-          versoes: ["medio"],
-          itens: [{ id: "VI1", texto: "Nos últimos 12 meses, você sofreu ameaças ou violência física no trabalho?", reverso: false }],
+          versoes: V,
+          itens: [
+            { id: "Q20", texto: "Nos últimos 12 meses, você foi exposto(a) a atenção sexual indesejada no seu local de trabalho?", reverso: false, versoes: V },
+            { id: "Q21", texto: "Nos últimos 12 meses, você foi exposto(a) a ameaças de violência no seu local de trabalho?", reverso: false, versoes: V },
+            { id: "Q22", texto: "Nos últimos 12 meses, você foi exposto(a) a violência física no seu local de trabalho?", reverso: false, versoes: V },
+            { id: "Q23", texto: "Nos últimos 12 meses, você foi exposto(a) a assédio moral (bullying) no seu local de trabalho?", reverso: false, versoes: V },
+          ],
         },
       ],
     },

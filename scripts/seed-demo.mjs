@@ -350,7 +350,7 @@ async function main() {
       data_admissao: randomDate(60, 365 * 8),
       tipo_vinculo: pickWeighted([["clt", 80], ["pj", 8], ["terceiro", 8], ["estagiario", 4]]),
       matricula: pad(1000 + i, 5),
-      email: `${nome.toLowerCase().split(" ").slice(0, 2).join(".").normalize("NFD").replace(/[\u0300-\u036f]/g, "")}@sistenge.com.br`,
+      email: `${nome.toLowerCase().split(" ").slice(0, 2).join(".").normalize("NFD").replace(/[\u0300-\u036f]/g, "")}@sistenge.com`,
       telefone: `(11) 9${pad(rnd(10000), 4)}-${pad(rnd(10000), 4)}`,
       status,
     }, { onConflict: "cpf" }).select().single()

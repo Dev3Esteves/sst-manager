@@ -77,7 +77,7 @@ export const colaboradorImport: ImportSchema<typeof colaboradorImportZod> = {
     { key: "data_nascimento", label: "Data de Nascimento", aliases: ["nascimento", "dt_nascimento"], exemplo: "1985-03-15", parse: parseData },
     { key: "sexo", label: "Sexo (M/F/O)", exemplo: "M", parse: (v) => v?.toUpperCase()?.trim() || undefined },
     { key: "telefone", label: "Telefone", aliases: ["fone", "celular"], exemplo: "(11) 98765-4321" },
-    { key: "email", label: "E-mail", aliases: ["e_mail"], exemplo: "joao@sistenge.com.br" },
+    { key: "email", label: "E-mail", aliases: ["e_mail"], exemplo: "joao@sistenge.com" },
     { key: "matricula", label: "Matrícula", exemplo: "00123" },
     { key: "data_admissao", label: "Data de Admissão", aliases: ["admissao", "dt_admissao"], exemplo: "2023-01-10", obrigatorio: true, parse: parseData },
     {

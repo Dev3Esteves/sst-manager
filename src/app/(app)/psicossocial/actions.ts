@@ -111,6 +111,54 @@ export async function criarCampanha(formData: FormData): Promise<ActionResult> {
   redirect(`/psicossocial/${campanha.id}`)
 }
 
+/**
+ * Gera/atualiza os links (convites anônimos) por GHE: cria um convite para
+ * cada GHE do PGR que ainda não tem. Idempotente — pode ser chamado depois de
+ * adicionar GHEs ao PGR, sem duplicar os existentes.
+ */
+export async function sincronizarConvites(id: string): Promise<ActionResult> {
+  let supabase
+  try {
+    ;({ supabase } = await requireRole(ROLES))
+  } catch (e) {
+    return { error: e instanceof AuthError ? e.message : "Não autorizado" }
+  }
+
+  const { data: campanha } = await supabase
+    .from("psi_campanha")
+    .select("id, pgr_id, empresa_id")
+    .eq("id", id)
+    .maybeSingle()
+  if (!campanha) return { error: "Campanha não encontrada." }
+
+  const { data: ghes } = await supabase.from("pgr_ghe").select("id").eq("pgr_id", campanha.pgr_id)
+  if (!ghes || ghes.length === 0) {
+    return { error: "O PGR não tem GHEs cadastrados. Cadastre os GHEs no PGR primeiro." }
+  }
+
+  const { data: existentes } = await supabase
+    .from("psi_convite")
+    .select("pgr_ghe_id")
+    .eq("campanha_id", id)
+  const jaTem = new Set((existentes ?? []).map((e) => e.pgr_ghe_id))
+
+  const novos = ghes
+    .filter((g) => !jaTem.has(g.id))
+    .map((g) => ({
+      empresa_id: campanha.empresa_id,
+      campanha_id: id,
+      pgr_ghe_id: g.id,
+      token: novoToken(),
+    }))
+  if (novos.length === 0) return { error: "Todos os GHEs do PGR já têm link gerado." }
+
+  const { error } = await supabase.from("psi_convite").insert(novos)
+  if (error) return { error: error.message }
+
+  revalidatePath(`/psicossocial/${id}`)
+  return { ok: true, id: `${novos.length}` }
+}
+
 export async function mudarStatusCampanha(
   id: string,
   status: "aberta" | "encerrada",

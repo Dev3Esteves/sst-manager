@@ -53,33 +53,39 @@ describe("agregarDimensaoGHE", () => {
   })
 })
 
-describe("processarGHE com COPSOQ_BR", () => {
-  it("processa a versão curta e respeita supressão + direção de risco", () => {
-    const respondentes: Respondente[] = Array.from({ length: 6 }, () => ({
-      DQ1: 100, RT1: 75, DE1: 50, IN1: 0, SG1: 25, RC1: 0, CP1: 100,
-      QL1: 50, AC1: 25, IE1: 75, TV1: 100, JO1: 50, AM1: 0, AX1: 0,
-    }))
-    const res = processarGHE(COPSOQ_BR, respondentes, "curto", 5)
-    expect(res.length).toBeGreaterThan(0)
+/** Respondente que marca o mesmo valor em todos os itens de uma versão. */
+function respondenteUniforme(valor: number, versao: "curto" | "medio"): Respondente {
+  const r: Respondente = {}
+  for (const it of itensDaVersao(versao)) r[it.id] = valor
+  return r
+}
 
-    // apoio_colegas é reverso: resposta 25 -> risco 75 (alto)
-    const apoio = res.find((d) => d.dimensao_id === "apoio_colegas")!
-    expect(apoio.score).toBe(75)
-    expect(apoio.classificacao).toBe("vermelho")
-
-    // demandas quantitativas é direto: 100 -> risco 100
-    const dq = res.find((d) => d.dimensao_id === "demandas_quantitativas")!
-    expect(dq.score).toBe(100)
-
-    // dimensão exclusiva da versão média não deve aparecer na curta
-    expect(res.find((d) => d.dimensao_id === "demandas_cognitivas")).toBeUndefined()
+describe("processarGHE com COPSOQ_BR (versão curta oficial)", () => {
+  it("retorna as 8 dimensões de exposição da versão curta", () => {
+    const resp = Array.from({ length: 5 }, () => respondenteUniforme(50, "curto"))
+    const res = processarGHE(COPSOQ_BR, resp, "curto", 5)
+    expect(res.length).toBe(8)
+    // ponto médio (50) classifica todas como amarelo (direto e reverso dão 50)
+    expect(res.every((d) => d.score === 50 && d.classificacao === "amarelo")).toBe(true)
   })
 
-  it("a versão média tem mais dimensões que a curta", () => {
-    const um: Respondente[] = Array.from({ length: 5 }, () => ({ DQ1: 50 }))
-    const curto = processarGHE(COPSOQ_BR, um, "curto", 5)
-    const medio = processarGHE(COPSOQ_BR, um, "medio", 5)
-    expect(medio.length).toBeGreaterThan(curto.length)
+  it("respeita a direção de risco (reverso vs direto)", () => {
+    // Todos respondem 0: dimensão reversa (recurso ausente) = risco máximo;
+    // dimensão direta (demanda/ofensa ausente) = risco mínimo.
+    const resp = Array.from({ length: 5 }, () => respondenteUniforme(0, "curto"))
+    const res = processarGHE(COPSOQ_BR, resp, "curto", 5)
+    const influencia = res.find((d) => d.dimensao_id === "influencia_desenvolvimento")!
+    expect(influencia.score).toBe(100)
+    expect(influencia.classificacao).toBe("vermelho")
+    const ofensivos = res.find((d) => d.dimensao_id === "comportamentos_ofensivos")!
+    expect(ofensivos.score).toBe(0)
+    expect(ofensivos.classificacao).toBe("verde")
+  })
+
+  it("suprime quando há menos respondentes que o mínimo", () => {
+    const resp = Array.from({ length: 4 }, () => respondenteUniforme(50, "curto"))
+    const res = processarGHE(COPSOQ_BR, resp, "curto", 5)
+    expect(res.every((d) => d.suprimido && d.score === null)).toBe(true)
   })
 })
 
@@ -92,18 +98,19 @@ describe("classificacaoParaCategoriaRiscoPGR", () => {
 })
 
 describe("itensDaVersao", () => {
-  it("curto < médio e todos os itens curtos estão na média", () => {
+  it("a versão curta oficial tem 34 itens de exposição e curto ⊆ médio", () => {
     const curto = itensDaVersao("curto")
     const medio = itensDaVersao("medio")
-    expect(curto.length).toBeGreaterThan(0)
-    expect(medio.length).toBeGreaterThan(curto.length)
+    expect(curto.length).toBe(34)
+    expect(medio.length).toBeGreaterThanOrEqual(curto.length)
     const idsMedio = new Set(medio.map((i) => i.id))
     for (const i of curto) expect(idsMedio.has(i.id)).toBe(true)
   })
 
-  it("itens reversos vêm marcados", () => {
+  it("itens reversos vêm marcados (Q1B invertido; Q1A direto; Q4A recurso reverso)", () => {
     const curto = itensDaVersao("curto")
-    expect(curto.find((i) => i.id === "AC1")?.reverso).toBe(true) // apoio colegas
-    expect(curto.find((i) => i.id === "DQ1")?.reverso).toBe(false) // sobrecarga
+    expect(curto.find((i) => i.id === "Q1B")?.reverso).toBe(true)
+    expect(curto.find((i) => i.id === "Q1A")?.reverso).toBe(false)
+    expect(curto.find((i) => i.id === "Q4A")?.reverso).toBe(true)
   })
 })

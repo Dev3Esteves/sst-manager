@@ -36,7 +36,9 @@ export async function updateSession(request: NextRequest) {
   // ser redirecionadas para /login — senão o Vercel Cron (que chama sem cookie
   // de sessão) nunca alcança o handler. Vale para process-jobs e notificar-vencimentos.
   const isCronRoute = pathname.startsWith('/api/cron')
-  const isPublicRoute = isAuthRoute || isCronRoute || pathname === '/'
+  // Coleta anônima do questionário psicossocial (link/QR público, sem sessão).
+  const isColetaPsi = pathname.startsWith('/q/')
+  const isPublicRoute = isAuthRoute || isCronRoute || isColetaPsi || pathname === '/'
 
   if (!user && !isPublicRoute) {
     const url = request.nextUrl.clone()

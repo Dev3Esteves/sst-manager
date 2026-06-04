@@ -6,7 +6,10 @@ export const respostaItemSchema = z.object({
   grupo: z.string().optional().nullable(),
   conforme: z.enum(["sim", "nao", "na"]),
   observacao: z.string().optional().nullable(),
-  foto_url: z.string().optional().nullable(),
+  // Foto da não-conformidade: data URL JPEG comprimido (client-side) ou
+  // path de Storage. Limite defensivo (~2 MB) para não inflar o JSONB nem
+  // o payload da fila offline — a compressão já mantém abaixo disso.
+  foto_url: z.string().max(2_000_000, "Foto muito grande").optional().nullable(),
 })
 
 export const inspecaoSchema = z.object({

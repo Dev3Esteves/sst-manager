@@ -7,7 +7,33 @@ e o versionamento segue [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Não lançado]
 
-_Mudanças em desenvolvimento na branch `master` ainda não publicadas numa tag._
+### Adicionado
+- **Tela de Configurações** (`/configuracoes`) — preenche o link que já existia no menu
+  - 4 abas: **Empresa** (edita a empresa-dona reusando `EmpresaForm`/`updateEmpresa`),
+    **Minha conta** (troca a própria senha via Supabase Auth), **Aparência**
+    (seletor de tema), **Certificado** (template padrão da organização)
+  - Abas Empresa e Certificado restritas a admin; navegação por `?tab=`
+  - **Template de certificado por empresa** (migration `0016`): coluna `empresas.template_certificado`.
+    Resolução do texto do certificado: `treinamento.texto_certificado > empresa.template_certificado > padrão`
+- **Foto em inspeções** — não-conformidade com evidência fotográfica
+  - Compressão client-side (`src/lib/image/compress.ts`) embutida como data URL no JSONB
+  - Funciona **online e offline** (viaja no payload da fila IndexedDB); exibida na página de detalhe
+- **Notificações de vencimento por e-mail** (cron diário `/api/cron/notificar-vencimentos`)
+  - Marcos de antecedência **30/15/7 dias**; lê `vw_vencimentos`, agrupa por empresa,
+    envia para admin + gestor_diretoria. Envio via **Resend** (`src/lib/email/send.ts`),
+    graceful sem `RESEND_API_KEY`. Modo de teste `?ate=N`. Cron em `vercel.json` (`0 11 * * *`)
+- **Testes de Server Actions** (+ helper `src/test/fake-supabase.ts`)
+  - `empresas`, `epis`, `epis/entregas`, `exames`, e auth/forbidden para `configuracoes`
+  - Testes puros de compressão de imagem e da seleção/montagem de notificações
+
+### Mudado
+- `README.md` / `.env.example` — documentam `RESEND_API_KEY` e `EMAIL_FROM`
+- `src/lib/validations/inspecao.ts` — `foto_url` ganha limite defensivo de tamanho
+
+### Corrigido
+- Removido branch de UI inacessível ("Em breve") em `documentos/new`
+
+> **Deploy:** aplicar `0016_template_certificado.sql` e configurar `RESEND_API_KEY`/`EMAIL_FROM`.
 
 ---
 

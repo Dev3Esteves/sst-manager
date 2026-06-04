@@ -57,7 +57,7 @@ const sections: NavSection[] = [
       { href: "/usuarios", label: "Usuários", icon: UserCog },
       { href: "/jobs", label: "Fila de jobs", icon: ListTodo },
       { href: "/auditoria", label: "Auditoria", icon: History },
-      { href: "/configuracoes", label: "Configurações", icon: Settings, disabled: true },
+      { href: "/configuracoes", label: "Configurações", icon: Settings },
     ],
   },
 ]

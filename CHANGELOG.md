@@ -7,7 +7,46 @@ e o versionamento segue [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Não lançado]
 
-_Mudanças em desenvolvimento na branch `master` ainda não publicadas numa tag._
+### Adicionado
+- **Tela de Configurações** (`/configuracoes`) — antes "soon" no menu, agora ativa
+  - 4 abas: **Empresa** (edita a empresa-dona reusando `EmpresaForm`/`updateEmpresa`),
+    **Minha conta** (troca a própria senha via Supabase Auth), **Aparência**
+    (seletor de tema claro/escuro/sistema), **Certificado** (template padrão da org)
+  - Abas Empresa e Certificado restritas a admin (via `getAuth`/perfil); navegação por `?tab=`
+  - **Template de certificado por empresa** (migration `0011`): nova coluna `empresas.template_certificado`.
+    Cadeia de resolução do texto do certificado passa a ser
+    `treinamento.texto_certificado > empresa.template_certificado > padrão hardcoded`
+  - Server actions `trocarSenha` e `salvarTemplateCertificado` (usam guards `requireAuth`/`requireAdmin`)
+- **Foto em inspeções** — botão "em breve" agora funcional
+  - Captura/seleção de foto na não-conformidade, comprimida client-side
+    (`src/lib/image/compress.ts`, maxEdge 1280 / JPEG 0.6) e embutida como data URL no JSONB
+  - Funciona **online e offline** (a foto viaja no payload da fila IndexedDB; sem backend novo)
+  - Exibição da evidência na página de detalhe da inspeção; limite defensivo de ~2 MB por foto
+- **Reset de senha self-service** — elimina o script manual
+  - Link "Esqueci minha senha" no login → `/esqueci-senha` (`resetPasswordForEmail`)
+  - `/auth/callback` troca o `code` (PKCE) por sessão → `/redefinir-senha` (`updateUser`)
+  - Middleware libera as novas rotas públicas; proteção contra open-redirect no callback
+- **Notificações de vencimento por e-mail** (cron diário `/api/cron/notificar-vencimentos`)
+  - Marcos de antecedência **30/15/7 dias** (sem digest diário repetitivo, sem tabela de estado)
+  - Lê `vw_vencimentos`, resolve destinatários (admin + gestor_diretoria ativos) e agrupa por empresa
+  - Envio via **Resend** (`src/lib/email/send.ts`, HTTP API sem SDK); graceful sem `RESEND_API_KEY`
+  - Template HTML com escape anti-injection; cron registrado em `vercel.json` (`0 11 * * *`)
+- **Testes de Server Actions** (+ helper `src/test/fake-supabase.ts`)
+  - Cobertura nominal/validação/erro de DB para `empresas`, `epis`, `epis/entregas`, `exames`,
+    e auth/forbidden para as actions de `configuracoes`
+  - Testes puros de `scaleDimensions` (compressão) e da seleção/montagem de notificações
+- **`.env.example`** versionado com todas as variáveis (Supabase, CRON_SECRET, RESEND, APP_URL)
+
+### Mudado
+- `src/components/layout/sidebar.tsx` — item "Configurações" deixa de ser `disabled`
+- `README.md` — documenta `RESEND_API_KEY`, `EMAIL_FROM`, `NEXT_PUBLIC_APP_URL`
+- `src/lib/validations/inspecao.ts` — `foto_url` ganha limite defensivo de tamanho
+
+### Corrigido
+- Removido branch de UI inacessível ("Em breve") em `documentos/new` — todos os tipos já estavam ativos
+
+> **Atenção ao deploy:** aplicar a migration `0011_template_certificado.sql` e configurar
+> `RESEND_API_KEY`/`EMAIL_FROM`/`NEXT_PUBLIC_APP_URL` para habilitar as notificações.
 
 ---
 

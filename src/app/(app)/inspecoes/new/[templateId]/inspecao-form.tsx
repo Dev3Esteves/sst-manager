@@ -2,16 +2,17 @@
 
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { useState, useTransition, useMemo } from "react"
+import { useState, useTransition, useMemo, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Loader2, CheckCircle2, XCircle, MinusCircle, Camera, CloudOff } from "lucide-react"
+import { Loader2, CheckCircle2, XCircle, MinusCircle, Camera, CloudOff, X } from "lucide-react"
 import { calcConformidade, type InspecaoInput, type RespostaItem, type TemplateItem } from "@/lib/validations/inspecao"
 import { useOnline } from "@/hooks/use-online"
 import { enqueueMutation } from "@/lib/offline/db"
+import { compressImage } from "@/lib/image/compress"
 
 type Empresa = { id: string; razao_social: string }
 type FormErrors = { _form?: string[] }
@@ -190,9 +191,10 @@ export function InspecaoForm({
                         className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                         placeholder="Descreva a não conformidade e ação imediata"
                       />
-                      <Button type="button" variant="outline" size="sm" disabled title="Upload em próxima versão">
-                        <Camera className="h-4 w-4" /> Adicionar foto (em breve)
-                      </Button>
+                      <FotoField
+                        value={r.foto_url ?? null}
+                        onChange={(foto_url) => updateResposta(i, { foto_url })}
+                      />
                     </div>
                   )}
                 </div>
@@ -230,6 +232,72 @@ export function InspecaoForm({
           {online ? "Finalizar inspeção" : "Salvar offline"}
         </Button>
       </div>
+    </div>
+  )
+}
+
+function FotoField({
+  value,
+  onChange,
+}: {
+  value: string | null
+  onChange: (dataUrl: string | null) => void
+}) {
+  const inputRef = useRef<HTMLInputElement>(null)
+  const [busy, setBusy] = useState(false)
+  const [erro, setErro] = useState<string | null>(null)
+
+  async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setErro(null)
+    setBusy(true)
+    try {
+      const dataUrl = await compressImage(file)
+      onChange(dataUrl)
+    } catch (err) {
+      setErro((err as Error).message)
+    } finally {
+      setBusy(false)
+      if (inputRef.current) inputRef.current.value = ""
+    }
+  }
+
+  return (
+    <div className="space-y-2">
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/*"
+        capture="environment"
+        onChange={handleFile}
+        className="hidden"
+      />
+      {value ? (
+        <div className="flex items-start gap-3">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={value}
+            alt="Evidência da não-conformidade"
+            className="h-24 w-24 rounded-md border object-cover"
+          />
+          <Button type="button" variant="ghost" size="sm" onClick={() => onChange(null)}>
+            <X className="h-4 w-4" /> Remover foto
+          </Button>
+        </div>
+      ) : (
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          disabled={busy}
+          onClick={() => inputRef.current?.click()}
+        >
+          {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
+          {busy ? "Processando..." : "Adicionar foto"}
+        </Button>
+      )}
+      {erro && <p className="text-xs text-destructive">{erro}</p>}
     </div>
   )
 }

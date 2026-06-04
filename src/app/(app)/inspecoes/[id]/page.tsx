@@ -83,6 +83,16 @@ export default async function InspecaoViewPage({ params }: { params: Promise<{ i
                 <div className="text-xs text-muted-foreground">{r.grupo ?? "Geral"}</div>
                 <div className="text-sm font-medium">{r.pergunta}</div>
                 {r.observacao && <div className="text-sm text-muted-foreground mt-1">→ {r.observacao}</div>}
+                {r.foto_url && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <a href={r.foto_url} target="_blank" rel="noopener noreferrer">
+                    <img
+                      src={r.foto_url}
+                      alt={`Evidência: ${r.pergunta}`}
+                      className="mt-2 max-h-48 rounded-md border object-contain"
+                    />
+                  </a>
+                )}
               </div>
             ))}
           </CardContent>

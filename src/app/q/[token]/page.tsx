@@ -1,16 +1,20 @@
+import { unstable_noStore as noStore } from "next/cache"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { itensDaVersao } from "@/lib/psicossocial/copsoq"
+import { logger } from "@/lib/logger"
 import { QuestionarioForm } from "./questionario-form"
 import { SistengeLogo } from "@/components/sistenge-logo"
 
 export const dynamic = "force-dynamic"
+export const fetchCache = "force-no-store"
 export const metadata = { title: "Pesquisa de condições de trabalho" }
 
 export default async function ColetaPage({ params }: { params: Promise<{ token: string }> }) {
+  noStore() // coleta nunca pode ser servida de cache (status da campanha muda)
   const { token } = await params
   const admin = createAdminClient()
 
-  const { data: convite } = await admin
+  const { data: convite, error } = await admin
     .from("psi_convite")
     .select("token, psi_campanha(titulo, versao_aplicada, status)")
     .eq("token", token)
@@ -23,6 +27,14 @@ export default async function ColetaPage({ params }: { params: Promise<{ token: 
     : null
 
   const valido = !!convite && campanha?.status === "aberta"
+  if (!valido) {
+    logger.warn("coleta-psi indisponivel", {
+      tokenPrefix: token.slice(0, 8),
+      erro: error?.message ?? null,
+      achouConvite: !!convite,
+      status: campanha?.status ?? null,
+    })
+  }
   const versao = (campanha?.versao_aplicada as "curto" | "medio") ?? "curto"
   const itens = valido ? itensDaVersao(versao) : []
 

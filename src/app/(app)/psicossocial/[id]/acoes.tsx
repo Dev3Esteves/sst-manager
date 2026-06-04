@@ -4,8 +4,8 @@ import { useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
-import { Loader2, Play, Square, Calculator, FileUp } from "lucide-react"
-import { mudarStatusCampanha, calcularResultados, lancarNoInventarioPgr } from "../actions"
+import { Loader2, Play, Square, Calculator, FileUp, QrCode } from "lucide-react"
+import { mudarStatusCampanha, calcularResultados, lancarNoInventarioPgr, sincronizarConvites } from "../actions"
 
 export function AcoesCampanha({ id, status, temResultados }: { id: string; status: string; temResultados: boolean }) {
   const router = useRouter()
@@ -24,6 +24,11 @@ export function AcoesCampanha({ id, status, temResultados }: { id: string; statu
 
   return (
     <div className="flex flex-wrap gap-2">
+      {status !== "analisada" && (
+        <Button size="sm" variant="outline" disabled={pending} onClick={() => run(() => sincronizarConvites(id), "Links/QR gerados por GHE")}>
+          {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <QrCode className="h-4 w-4" />} Gerar/atualizar links por GHE
+        </Button>
+      )}
       {status === "rascunho" && (
         <Button size="sm" disabled={pending} onClick={() => run(() => mudarStatusCampanha(id, "aberta"), "Campanha aberta para respostas")}>
           {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />} Abrir para respostas

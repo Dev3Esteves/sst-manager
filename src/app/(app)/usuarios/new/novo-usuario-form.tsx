@@ -157,7 +157,7 @@ export function NovoUsuarioForm({
             <Input
               id="email" type="email" value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="colaborador@sistenge.com.br"
+              placeholder="colaborador@sistenge.com"
             />
           </div>
           <div className="space-y-2 md:col-span-2">

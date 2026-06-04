@@ -1,0 +1,40 @@
+import { z } from "zod"
+
+/** Criação/edição de campanha psicossocial (autenticado, admin/tec_seguranca). */
+export const campanhaPsiSchema = z.object({
+  pgr_id: z.string().uuid("PGR obrigatório"),
+  instrumento_id: z.string().uuid("Instrumento obrigatório"),
+  titulo: z.string().min(3, "Mínimo 3 caracteres"),
+  versao_aplicada: z.enum(["curto", "medio"]).default("curto"),
+  data_inicio: z.string().min(1, "Data de início obrigatória"),
+  data_fim: z.string().optional().nullable(),
+  min_respondentes: z.coerce.number().int().min(3).max(50).default(5),
+})
+
+export type CampanhaPsiInput = z.infer<typeof campanhaPsiSchema>
+
+/** Submissão anônima de resposta (rota pública /q/[token]). */
+export const respostaPsiSchema = z.object({
+  token: z.string().min(10, "Token inválido"),
+  // demografia opcional e agregável — nunca identificável
+  faixa_etaria: z.enum(["18-24", "25-34", "35-44", "45-54", "55+"]).optional().nullable(),
+  sexo: z.enum(["masculino", "feminino", "outro", "prefiro_nao_informar"]).optional().nullable(),
+  itens: z
+    .array(
+      z.object({
+        item_id: z.string().min(1),
+        valor: z.coerce.number().int().min(0).max(100),
+      }),
+    )
+    .min(1, "Responda pelo menos um item"),
+})
+
+export type RespostaPsiInput = z.infer<typeof respostaPsiSchema>
+
+export const FAIXAS_ETARIAS = ["18-24", "25-34", "35-44", "45-54", "55+"] as const
+export const SEXOS = [
+  { value: "masculino", label: "Masculino" },
+  { value: "feminino", label: "Feminino" },
+  { value: "outro", label: "Outro" },
+  { value: "prefiro_nao_informar", label: "Prefiro não informar" },
+] as const

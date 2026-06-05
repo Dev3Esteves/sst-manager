@@ -6,7 +6,7 @@ import { createAdminClient } from "@/lib/supabase/admin"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { ArrowLeft } from "lucide-react"
+import { ArrowLeft, FileDown } from "lucide-react"
 import { AcoesCampanha, CopiarLink } from "./acoes"
 
 export const dynamic = "force-dynamic"
@@ -92,7 +92,14 @@ export default async function CampanhaDetalhePage({ params }: { params: Promise<
                 {obra?.nome ?? "Obra"}{pgr ? ` · PGR rev ${pgr.numero_revisao}` : ""} · versão {campanha.versao_aplicada} · mín. {campanha.min_respondentes}/GHE
               </CardDescription>
             </div>
-            <Badge variant="outline" className="capitalize">{campanha.status}</Badge>
+            <div className="flex items-center gap-2">
+              <Badge variant="outline" className="capitalize">{campanha.status}</Badge>
+              <Button variant="outline" size="sm" asChild>
+                <a href={`/api/psicossocial/${id}/relatorio`} target="_blank" rel="noopener noreferrer">
+                  <FileDown className="h-4 w-4" /> Relatório PDF
+                </a>
+              </Button>
+            </div>
           </div>
         </CardHeader>
         <CardContent>

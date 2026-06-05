@@ -47,6 +47,8 @@ function mapSexo(s: string | null | undefined): "M" | "F" | "O" | null {
 export async function upsertCargo(db: Db, c: PeopleCargo): Promise<void> {
   const empresaId = await resolverEmpresaId(db, c.empresa_cnpj)
   if (!empresaId) throw new Error(`Empresa não encontrada para CNPJ ${c.empresa_cnpj}`)
+  // `cargos` no SST não tem coluna de status — o `ativo` do People só governa
+  // se o cargo é enviado (backfill manda só ativos) e o soft-delete vira remoção.
   const { error } = await db.from("cargos").upsert(
     {
       external_id: c.external_id,
@@ -54,7 +56,6 @@ export async function upsertCargo(db: Db, c: PeopleCargo): Promise<void> {
       empresa_id: empresaId,
       titulo: c.nome,
       cbo: c.cbo ?? null,
-      ativo: c.ativo,
     },
     { onConflict: "external_id" },
   )
@@ -88,13 +89,28 @@ export async function upsertColaborador(db: Db, c: PeopleColaborador): Promise<v
   if (error) throw new Error(error.message)
 }
 
-/** Soft-delete: registros vindos do People são desativados, não apagados. */
+/**
+ * "Delete" vindo do People. Colaborador é soft-deletado (status=demitido,
+ * preserva histórico de ASO/exames). Cargo não tem coluna de status no SST,
+ * então o registro de origem People é removido (só os que vieram de lá).
+ */
 export async function desativarPorExternalId(
   db: Db,
   tabela: "cargos" | "colaboradores",
   externalId: string,
 ): Promise<void> {
-  const patch = tabela === "colaboradores" ? { status: "demitido" } : { ativo: false }
-  const { error } = await db.from(tabela).update(patch).eq("external_id", externalId)
+  if (tabela === "colaboradores") {
+    const { error } = await db
+      .from("colaboradores")
+      .update({ status: "demitido" })
+      .eq("external_id", externalId)
+    if (error) throw new Error(error.message)
+    return
+  }
+  const { error } = await db
+    .from("cargos")
+    .delete()
+    .eq("external_id", externalId)
+    .eq("origem", "people")
   if (error) throw new Error(error.message)
 }

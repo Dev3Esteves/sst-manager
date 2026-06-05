@@ -9,10 +9,16 @@ colaboradores e exames) e o **sst-manager**.
 > definido. Toda a tradução para o modelo do SST vive nessa pasta
 > (anti-corruption layer); o resto do sistema não conhece o People.
 
+## Quem é dono do quê (direção reconciliada)
+| Dado | Fonte | Direção |
+|---|---|---|
+| Cargos, Colaboradores | **People** | People → SST (webhook) |
+| ASO/Exames, EPIs, Inspeções, PGR, Psicossocial | **SST** | People ← SST (leitura) |
+
 ## Princípios
-- **People é mestre** de cargos/colaboradores/exames. No SST eles ganham
-  `external_id` (id no People) e `origem='people'` e são tratados como
-  somente-leitura.
+- **People é mestre** de cargos/colaboradores. No SST eles ganham `external_id`
+  (id no People) e `origem='people'` e são tratados como somente-leitura.
+- ASO/EPI **não** vêm no webhook — o SST é a fonte e o People consulta por CPF.
 - **Webhook (People → SST)** para escrever; **API de leitura (SST → People)**
   para o People consumir o NR-01.
 - Idempotência por `event_id`; autenticação por HMAC (webhook) e API key
@@ -55,9 +61,11 @@ Exemplo de `data` para `colaborador.upserted`:
 }
 ```
 
-## B) Leitura: SST → People (NR-01)
+## B) Leitura: SST → People
 Autenticação: `Authorization: Bearer <PEOPLE_API_KEY>` (ou `x-api-key`).
 
+- `GET /api/integr/v1/saude/aso?cpf=...` — status do ASO mais recente do colaborador (`valido|vencido|nao_realizado`).
+- `GET /api/integr/v1/seguranca/epis?cpf=...` — EPIs entregues (NR-6), com status do CA (`valido|substituir|vencido`).
 - `GET /api/integr/v1/psicossocial/campanhas?empresa_cnpj=...` — lista campanhas (metadados).
 - `GET /api/integr/v1/psicossocial/campanhas/{id}/resultados` — resultados **agregados** por GHE × dimensão. **Nunca** expõe respostas individuais (anonimato/LGPD).
 

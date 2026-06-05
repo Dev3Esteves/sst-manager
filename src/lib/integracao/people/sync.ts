@@ -11,7 +11,7 @@
  * colaboradores.data_admissao/sexo M|F|O, etc.).
  */
 import type { SupabaseClient } from "@supabase/supabase-js"
-import type { PeopleCargo, PeopleColaborador, PeopleExame } from "./contrato"
+import type { PeopleCargo, PeopleColaborador } from "./contrato"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Db = SupabaseClient<any, "public", any>
@@ -23,12 +23,6 @@ async function resolverEmpresaId(db: Db, cnpj: string): Promise<string | null> {
   const alvo = soDigitos(cnpj)
   const { data } = await db.from("empresas").select("id, cnpj")
   return (data ?? []).find((e) => soDigitos(e.cnpj ?? "") === alvo)?.id ?? null
-}
-
-async function resolverColaboradorId(db: Db, cpf: string): Promise<string | null> {
-  const alvo = soDigitos(cpf)
-  const { data } = await db.from("colaboradores").select("id, cpf")
-  return (data ?? []).find((c) => soDigitos(c.cpf ?? "") === alvo)?.id ?? null
 }
 
 async function resolverCargoId(db: Db, externalId: string): Promise<string | null> {
@@ -94,30 +88,10 @@ export async function upsertColaborador(db: Db, c: PeopleColaborador): Promise<v
   if (error) throw new Error(error.message)
 }
 
-export async function upsertExame(db: Db, e: PeopleExame): Promise<void> {
-  const colaboradorId = await resolverColaboradorId(db, e.colaborador_cpf)
-  if (!colaboradorId) throw new Error(`Colaborador não encontrado para CPF ${e.colaborador_cpf}`)
-  const { error } = await db.from("exames_medicos").upsert(
-    {
-      external_id: e.external_id,
-      origem: "people",
-      colaborador_id: colaboradorId,
-      tipo: e.tipo,
-      data_realizacao: e.data_realizacao,
-      data_vencimento: e.data_vencimento,
-      resultado: e.resultado ?? null,
-      medico_nome: e.medico_nome ?? null,
-      crm: e.crm ?? null,
-    },
-    { onConflict: "external_id" },
-  )
-  if (error) throw new Error(error.message)
-}
-
 /** Soft-delete: registros vindos do People são desativados, não apagados. */
 export async function desativarPorExternalId(
   db: Db,
-  tabela: "cargos" | "colaboradores" | "exames_medicos",
+  tabela: "cargos" | "colaboradores",
   externalId: string,
 ): Promise<void> {
   const patch = tabela === "colaboradores" ? { status: "demitido" } : { ativo: false }

@@ -1,12 +1,29 @@
 import type { Manual } from "../tipos"
-import { manualPsicossocial } from "./psicossocial"
-import { manualApr } from "./apr"
+import { manuaisCadastros } from "./cadastros"
+import { manuaisOperacao } from "./operacao"
+import { manuaisDocumentos } from "./documentos"
+import { manuaisRelatorios } from "./relatorios"
+import { manuaisReferencias } from "./referencias"
+import { manuaisAdministracao } from "./administracao"
 
-/**
- * Registro de manuais disponíveis. Adicione novos manuais aqui conforme forem
- * escritos (um arquivo por módulo nesta pasta).
- */
-export const MANUAIS: Manual[] = [manualPsicossocial, manualApr]
+/** Todos os manuais, em ordem de categoria. */
+export const MANUAIS: Manual[] = [
+  ...manuaisCadastros,
+  ...manuaisOperacao,
+  ...manuaisDocumentos,
+  ...manuaisRelatorios,
+  ...manuaisReferencias,
+  ...manuaisAdministracao,
+]
+
+export const CATEGORIAS = [
+  "Cadastros",
+  "Operação",
+  "Documentos",
+  "Relatórios",
+  "Referências",
+  "Administração",
+] as const
 
 export function getManual(slug: string): Manual | undefined {
   return MANUAIS.find((m) => m.slug === slug)

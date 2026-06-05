@@ -17,10 +17,9 @@ import {
   peopleEventoSchema,
   peopleCargoSchema,
   peopleColaboradorSchema,
-  peopleExameSchema,
   peopleDeleteSchema,
 } from "@/lib/integracao/people/contrato"
-import { upsertCargo, upsertColaborador, upsertExame, desativarPorExternalId } from "@/lib/integracao/people/sync"
+import { upsertCargo, upsertColaborador, desativarPorExternalId } from "@/lib/integracao/people/sync"
 
 export const runtime = "nodejs"
 export const dynamic = "force-dynamic"
@@ -73,10 +72,6 @@ export async function POST(req: Request) {
           await upsertColaborador(admin, peopleColaboradorSchema.parse(evento.data)); break
         case "colaborador.deleted":
           await desativarPorExternalId(admin, "colaboradores", peopleDeleteSchema.parse(evento.data).external_id); break
-        case "exame.upserted":
-          await upsertExame(admin, peopleExameSchema.parse(evento.data)); break
-        case "exame.deleted":
-          await desativarPorExternalId(admin, "exames_medicos", peopleDeleteSchema.parse(evento.data).external_id); break
       }
     } catch (err) {
       const msg = (err as Error).message

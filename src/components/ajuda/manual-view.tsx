@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { CheckCircle2, XCircle, Lightbulb, AlertTriangle } from "lucide-react"
+import { CheckCircle2, XCircle, Lightbulb, AlertTriangle, MessagesSquare, ListChecks } from "lucide-react"
 import type { Manual, BlocoManual } from "@/lib/ajuda/tipos"
 
 function Bloco({ bloco }: { bloco: BlocoManual }) {
@@ -42,6 +42,32 @@ function Bloco({ bloco }: { bloco: BlocoManual }) {
             <div className="flex items-center gap-1.5 text-status-vencido font-semibold mb-1"><XCircle className="h-4 w-4" /> Evite</div>
             <div className="whitespace-pre-wrap">{bloco.evitar}</div>
           </div>
+        </div>
+      )
+    case "cenario":
+      return (
+        <div className="flex gap-2 rounded-md border bg-muted/30 p-3 text-sm">
+          <MessagesSquare className="h-4 w-4 shrink-0 text-primary mt-0.5" />
+          <span><span className="font-medium">Se {bloco.situacao}:</span> <span className="text-muted-foreground">{bloco.orientacao}</span></span>
+        </div>
+      )
+    case "checklist":
+      return (
+        <ul className="space-y-1 text-sm">
+          {bloco.itens.map((it, i) => (
+            <li key={i} className="flex gap-2"><ListChecks className="h-4 w-4 shrink-0 text-status-regular mt-0.5" /><span>{it}</span></li>
+          ))}
+        </ul>
+      )
+    case "faq":
+      return (
+        <div className="space-y-2.5">
+          {bloco.itens.map((f, i) => (
+            <div key={i} className="text-sm">
+              <div className="font-medium">{f.p}</div>
+              <div className="text-muted-foreground">{f.r}</div>
+            </div>
+          ))}
         </div>
       )
     case "dica":

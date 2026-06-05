@@ -13,6 +13,10 @@ export type BlocoManual =
   | { tipo: "exemplo"; titulo?: string; texto: string }
   /** Padrão de escrita: o jeito recomendado vs o que evitar. */
   | { tipo: "padrao"; recomendado: string; evitar: string }
+  /** Sugestão de escrita conforme o que acontece: situação → como registrar. */
+  | { tipo: "cenario"; situacao: string; orientacao: string }
+  | { tipo: "checklist"; itens: string[] }
+  | { tipo: "faq"; itens: { p: string; r: string }[] }
   | { tipo: "dica"; texto: string }
   | { tipo: "atencao"; texto: string }
 
@@ -26,6 +30,8 @@ export type Manual = {
   titulo: string
   /** Rótulo curto do módulo (para o card do índice). */
   modulo: string
+  /** Categoria para agrupar no índice. */
+  categoria: "Cadastros" | "Operação" | "Documentos" | "Relatórios" | "Referências" | "Administração"
   /** Link para abrir o módulo no app (opcional). */
   rota?: string
   /** Perfis que tipicamente usam o módulo. */

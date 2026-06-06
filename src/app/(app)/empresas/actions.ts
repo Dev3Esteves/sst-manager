@@ -47,11 +47,31 @@ async function uploadLogo(
 function parseForm(formData: FormData) {
   const donaSistema = formData.get("dona_sistema") === "on"
   const empresaMaeRaw = (formData.get("empresa_mae_id") as string | null)?.trim() || null
+
+  const str = (k: string) => ((formData.get(k) as string | null)?.trim() || null)
+
+  // Endereço (coluna JSONB) — null se todos os campos vazios
+  const enderecoCampos = {
+    cep: str("cep"),
+    logradouro: str("logradouro"),
+    numero: str("numero"),
+    complemento: str("complemento"),
+    bairro: str("bairro"),
+    municipio: str("municipio"),
+    uf: str("uf"),
+  }
+  const endereco = Object.values(enderecoCampos).some(Boolean) ? enderecoCampos : null
+
+  const telefone = str("telefone")
+  const telefones = telefone ? { principal: telefone } : null
+
   return {
     razao_social: formData.get("razao_social") as string,
     nome_fantasia: (formData.get("nome_fantasia") as string) || null,
     cnpj: formData.get("cnpj") as string,
     inscricao_estadual: (formData.get("inscricao_estadual") as string) || null,
+    endereco,
+    telefones,
     tipo: formData.get("tipo") as string,
     dona_sistema: donaSistema,
     // Donas do sistema não têm mãe — força null

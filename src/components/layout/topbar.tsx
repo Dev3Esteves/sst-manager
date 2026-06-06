@@ -6,11 +6,15 @@ import { Breadcrumbs } from "@/components/breadcrumbs"
 import { CommandPaletteTrigger } from "@/components/command-palette"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { NotificationsBell } from "./notifications-bell"
+import { EmpresaSwitcher } from "./empresa-switcher"
+import { getEmpresasDoUsuario } from "@/lib/auth/empresa-context"
 import { primeiroNome } from "@/lib/utils/nome"
 
 export async function Topbar() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
+
+  const { empresas, ativaId } = await getEmpresasDoUsuario()
 
   // Busca nome do colaborador vinculado ao usuário (para primeiro nome na topbar)
   let nome: string | null = null
@@ -37,6 +41,9 @@ export async function Topbar() {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <div className="hidden md:block">
+            <EmpresaSwitcher empresas={empresas} ativaId={ativaId} />
+          </div>
           <div className="hidden sm:block">
             <CommandPaletteTrigger />
           </div>

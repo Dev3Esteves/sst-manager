@@ -23,7 +23,7 @@ export function EditarUsuarioForm({
   authEmail: string
   lastSignIn: string | null
   isSelf: boolean
-  initial: { perfil_id: string; empresa_id: string; colaborador_id: string | null; ativo: boolean }
+  initial: { perfil_id: string; empresa_id: string; empresas_ids: string[]; colaborador_id: string | null; ativo: boolean }
   perfis: Perfil[]
   empresas: Empresa[]
   colaboradores: Colaborador[]
@@ -33,15 +33,26 @@ export function EditarUsuarioForm({
 
   const [perfilId, setPerfilId] = useState(initial.perfil_id)
   const [empresaId, setEmpresaId] = useState(initial.empresa_id)
+  // Empresas adicionais (além da principal) que o usuário pode operar.
+  const [empresasExtras, setEmpresasExtras] = useState<string[]>(
+    initial.empresas_ids.filter((id) => id !== initial.empresa_id),
+  )
   const [colaboradorId, setColaboradorId] = useState(initial.colaborador_id ?? "")
   const [ativo, setAtivo] = useState(initial.ativo)
   const [novaSenha, setNovaSenha] = useState<string | null>(null)
+
+  function toggleEmpresaExtra(id: string) {
+    setEmpresasExtras((atual) =>
+      atual.includes(id) ? atual.filter((x) => x !== id) : [...atual, id],
+    )
+  }
 
   function handleSalvar() {
     startTransition(async () => {
       const r = await editarUsuario(usuarioId, {
         perfil_id: perfilId,
         empresa_id: empresaId,
+        empresas_ids: empresasExtras,
         colaborador_id: colaboradorId || null,
         ativo,
       })
@@ -180,7 +191,7 @@ export function EditarUsuarioForm({
             </Select>
           </div>
           <div className="space-y-2">
-            <Label>Empresa *</Label>
+            <Label>Empresa principal *</Label>
             <Select value={empresaId} onValueChange={setEmpresaId}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -188,6 +199,27 @@ export function EditarUsuarioForm({
               </SelectContent>
             </Select>
           </div>
+          {empresas.length > 1 && (
+            <div className="space-y-2 md:col-span-2">
+              <Label>Outras empresas que pode operar (grupo)</Label>
+              <div className="grid gap-2 sm:grid-cols-2 rounded-md border p-3">
+                {empresas.filter((e) => e.id !== empresaId).map((e) => (
+                  <label key={e.id} className="flex items-center gap-2 text-sm">
+                    <input
+                      type="checkbox"
+                      className="h-4 w-4 rounded border-input"
+                      checked={empresasExtras.includes(e.id)}
+                      onChange={() => toggleEmpresaExtra(e.id)}
+                    />
+                    {e.razao_social}
+                  </label>
+                ))}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Marque para permitir alternar entre empresas pelo seletor no topo.
+              </p>
+            </div>
+          )}
           <div className="space-y-2 md:col-span-2">
             <Label>Colaborador vinculado</Label>
             <Select value={colaboradorId || "__none__"} onValueChange={(v) => setColaboradorId(v === "__none__" ? "" : v)}>

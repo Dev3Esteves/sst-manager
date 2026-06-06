@@ -31,16 +31,20 @@ export default async function EditarUsuarioPage({ params }: { params: Promise<{ 
     { data: perfis },
     { data: empresas },
     { data: colaboradores },
+    { data: vinculos },
     authInfo,
   ] = await Promise.all([
     admin.from("usuarios").select("*").eq("id", id).single(),
     admin.from("perfis_acesso").select("id, nome, descricao").order("nome"),
     admin.from("empresas").select("id, razao_social").eq("ativo", true).order("razao_social"),
     admin.from("colaboradores").select("id, nome_completo, email").eq("status", "ativo").order("nome_completo"),
+    admin.from("usuario_empresas").select("empresa_id").eq("usuario_id", id),
     admin.auth.admin.getUserById(id),
   ])
 
   if (!usuario) notFound()
+
+  const empresasIds = (vinculos ?? []).map((v) => (v as { empresa_id: string }).empresa_id)
 
   const authEmail = authInfo.data.user?.email ?? "(sem email)"
   const lastSignIn = authInfo.data.user?.last_sign_in_at ?? null
@@ -56,6 +60,7 @@ export default async function EditarUsuarioPage({ params }: { params: Promise<{ 
         initial={{
           perfil_id: usuario.perfil_id ?? "",
           empresa_id: usuario.empresa_id ?? "",
+          empresas_ids: empresasIds,
           colaborador_id: usuario.colaborador_id ?? null,
           ativo: usuario.ativo,
         }}

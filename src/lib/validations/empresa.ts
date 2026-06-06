@@ -1,11 +1,33 @@
 import { z } from "zod"
 import { cnpjSchema } from "./shared"
 
+/** Endereço da empresa (coluna `endereco` JSONB). Campos opcionais. */
+export const enderecoEmpresaSchema = z
+  .object({
+    cep: z.string().optional().nullable(),
+    logradouro: z.string().optional().nullable(),
+    numero: z.string().optional().nullable(),
+    complemento: z.string().optional().nullable(),
+    bairro: z.string().optional().nullable(),
+    municipio: z.string().optional().nullable(),
+    uf: z.string().optional().nullable(),
+  })
+  .optional()
+  .nullable()
+
+/** Telefones da empresa (coluna `telefones` JSONB). */
+export const telefonesEmpresaSchema = z
+  .object({ principal: z.string().optional().nullable() })
+  .optional()
+  .nullable()
+
 export const empresaSchema = z.object({
   razao_social: z.string().min(3, "Mínimo 3 caracteres"),
   nome_fantasia: z.string().optional().nullable(),
   cnpj: cnpjSchema,
   inscricao_estadual: z.string().optional().nullable(),
+  endereco: enderecoEmpresaSchema,
+  telefones: telefonesEmpresaSchema,
   tipo: z.enum(["propria", "contratante", "terceira"]),
   /**
    * Dona do sistema (multi-tenant). Se true, a empresa hospeda seus próprios

@@ -32,7 +32,15 @@ export function NovoUsuarioForm({
   const [mostrarSenha, setMostrarSenha] = useState(true)
   const [perfilId, setPerfilId] = useState("")
   const [empresaId, setEmpresaId] = useState(empresas[0]?.id ?? "")
+  // Empresas adicionais (além da principal) que o usuário poderá operar/alternar.
+  const [empresasExtras, setEmpresasExtras] = useState<string[]>([])
   const [colaboradorId, setColaboradorId] = useState("")
+
+  function toggleEmpresaExtra(id: string) {
+    setEmpresasExtras((atual) =>
+      atual.includes(id) ? atual.filter((x) => x !== id) : [...atual, id],
+    )
+  }
 
   const [criadoOk, setCriadoOk] = useState<{ email: string; senha: string } | null>(null)
 
@@ -69,6 +77,7 @@ export function NovoUsuarioForm({
         senha,
         perfil_id: perfilId,
         empresa_id: empresaId,
+        empresas_ids: empresasExtras,
         colaborador_id: colaboradorId || null,
         ativo: true,
       })
@@ -211,14 +220,36 @@ export function NovoUsuarioForm({
             </Select>
           </div>
           <div className="space-y-2">
-            <Label>Empresa *</Label>
+            <Label>Empresa principal *</Label>
             <Select value={empresaId} onValueChange={setEmpresaId}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
                 {empresas.map((e) => <SelectItem key={e.id} value={e.id}>{e.razao_social}</SelectItem>)}
               </SelectContent>
             </Select>
+            <p className="text-xs text-muted-foreground">Empresa-empregadora e empresa ativa inicial.</p>
           </div>
+          {empresas.length > 1 && (
+            <div className="space-y-2 md:col-span-2">
+              <Label>Outras empresas que pode operar (grupo)</Label>
+              <div className="grid gap-2 sm:grid-cols-2 rounded-md border p-3">
+                {empresas.filter((e) => e.id !== empresaId).map((e) => (
+                  <label key={e.id} className="flex items-center gap-2 text-sm">
+                    <input
+                      type="checkbox"
+                      className="h-4 w-4 rounded border-input"
+                      checked={empresasExtras.includes(e.id)}
+                      onChange={() => toggleEmpresaExtra(e.id)}
+                    />
+                    {e.razao_social}
+                  </label>
+                ))}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Marque para permitir que este usuário alterne entre empresas pelo seletor no topo.
+              </p>
+            </div>
+          )}
           <div className="space-y-2 md:col-span-2">
             <Label>Colaborador vinculado (opcional)</Label>
             <Select value={colaboradorId || "__none__"} onValueChange={(v) => preencherDoColaborador(v === "__none__" ? "" : v)}>

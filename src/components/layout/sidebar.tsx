@@ -8,7 +8,7 @@ import {
   HardHat, FileText, AlertTriangle, ClipboardCheck, Clock, Grid3x3,
   History, MessageSquare, FileBarChart, MapPin, Settings,
   HardDrive, ListTodo, BookMarked, ShieldCheck, Brain, BookOpen,
-  Stethoscope, Hospital, School, UserCheck,
+  Stethoscope, Hospital, School, UserCheck, Gauge, BadgeCheck,
   type LucideIcon,
 } from "lucide-react"
 import { SistengeLogo } from "@/components/sistenge-logo"
@@ -43,6 +43,7 @@ const sections: NavSection[] = [
       { href: "/exames", label: "Exames médicos", icon: HeartPulse },
       { href: "/medicos", label: "Médicos", icon: Stethoscope },
       { href: "/clinicas", label: "Clínicas", icon: Hospital },
+      { href: "/gro", label: "Painel GRO", icon: Gauge },
       { href: "/pgr", label: "PGR", icon: ShieldCheck },
       { href: "/psicossocial", label: "Psicossocial (NR-01)", icon: Brain },
       { href: "/documentos", label: "Documentos SST", icon: FileText },
@@ -56,6 +57,7 @@ const sections: NavSection[] = [
     items: [
       { href: "/matriz-treinamentos", label: "Matriz treinamentos", icon: Grid3x3 },
       { href: "/nao-conformidades", label: "Não-Conformidades", icon: ShieldCheck },
+      { href: "/iso-45001", label: "Aderência ISO 45001", icon: BadgeCheck },
       { href: "/relatorios/mensal", label: "Relatório mensal", icon: FileBarChart },
       { href: "/relatorios/heatmap-ocorrencias", label: "Heatmap ocorrências", icon: MapPin },
     ],

@@ -11,6 +11,7 @@ import {
   Stethoscope, Hospital, School, UserCheck, Gauge, BadgeCheck,
   type LucideIcon,
 } from "lucide-react"
+import Image from "next/image"
 import { SistengeLogo } from "@/components/sistenge-logo"
 import { APP_VERSION } from "@/lib/version"
 
@@ -107,9 +108,9 @@ export function Sidebar({
       "
     >
       <div className="flex h-16 items-center border-b overflow-hidden">
-        {/* Recolhida: ícone oficial SISTENGE centralizado (theme-aware) no trilho de 72px */}
+        {/* Recolhida: ícone oficial SISTENGE centralizado no trilho de 72px */}
         <div className="flex w-[72px] shrink-0 items-center justify-center group-hover/sidebar:hidden 2xl:hidden">
-          <SistengeLogo variant="icon" height={34} />
+          <Image src="/logos/sistenge-icone-principal.svg" alt="SISTENGE" width={34} height={34} priority />
         </div>
         {/* Expandida: logo da empresa ativa (igual People); fallback SISTENGE */}
         <div className="hidden min-w-0 items-center px-[22px] group-hover/sidebar:flex 2xl:flex">

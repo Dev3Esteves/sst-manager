@@ -13,3 +13,11 @@ export const parteInteressadaSchema = z.object({
   requisitos: z.string().optional().nullable(),
 })
 export type ParteInteressadaInput = z.infer<typeof parteInteressadaSchema>
+
+export const escopoSchema = z.object({
+  conteudo: z.string().min(20, "Descreva o escopo (mín. 20 caracteres)"),
+  exclusoes: z.string().optional().nullable(),
+  aprovado_por_nome: z.string().optional().nullable(),
+  data_aprovacao: z.string().optional().nullable(),
+})
+export type EscopoInput = z.infer<typeof escopoSchema>

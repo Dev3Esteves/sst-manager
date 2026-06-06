@@ -9,7 +9,8 @@ import { formatDate } from "@/lib/utils/vencimento"
 import { OCORRENCIA_TIPOS, GRAVIDADE_LABEL } from "@/lib/validations/ocorrencia"
 import { ExportCsvButton } from "@/components/shared/export-csv-button"
 import { ListFilters } from "@/components/shared/list-filters"
-import { Plus, AlertTriangle } from "lucide-react"
+import { getAuthWithRole } from "@/lib/auth/guards"
+import { Plus, AlertTriangle, Settings2 } from "lucide-react"
 
 function gravidadeVariant(g: string | null): BadgeProps["variant"] {
   switch (g) {
@@ -49,6 +50,7 @@ export default async function OcorrenciasPage({
   if (sp.ate) query = query.lte("data_ocorrencia", sp.ate)
 
   const { data: ocorrencias } = await query
+  const podeGerenciarTemplates = await getAuthWithRole(["admin", "tec_seguranca", "engenheiro_seg"])
 
   return (
     <div className="container py-8 space-y-6">
@@ -80,6 +82,11 @@ export default async function OcorrenciasPage({
             ]}
             filename="ocorrencias"
           />
+          {podeGerenciarTemplates && (
+            <Button variant="outline" asChild>
+              <Link href="/ocorrencias/templates"><Settings2 className="h-4 w-4" />Templates</Link>
+            </Button>
+          )}
           <Button asChild>
             <Link href="/ocorrencias/new"><Plus className="h-4 w-4" />Registrar ocorrência</Link>
           </Button>

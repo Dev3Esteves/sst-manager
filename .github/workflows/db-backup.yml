@@ -1,0 +1,55 @@
+name: DB backup (encrypted)
+
+# Backup diário do banco de PRODUÇÃO, criptografado (AES-256) e guardado como
+# artifact privado do GitHub. Roda na nuvem (NÃO depende do notebook ligado).
+#
+# INERTE até você:
+#   1) Autorizar e definir o secret BACKUP_DB_URL (conexão de prod), e
+#   2) Definir VOCÊ MESMO o secret BACKUP_PASSPHRASE (a chave dos backups —
+#      guarde no gerenciador de senhas; sem ela o backup é irrecuperável).
+# Ver docs/BACKUP.md para restaurar.
+#
+# ⚠️ Dados sensíveis (LGPD): o dump contém PII. Por isso é SEMPRE criptografado
+# antes de sair do runner. O artifact guarda apenas o .gpg (texto cifrado).
+
+on:
+  schedule:
+    - cron: "0 6 * * *" # 06:00 UTC = 03:00 BRT, diário
+  workflow_dispatch: {} # permite rodar manualmente para testar
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Instalar pg_dump (PGDG client 17)
+        run: |
+          sudo install -d /usr/share/postgresql-common/pgdg
+          sudo curl -fsSL -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc https://www.postgresql.org/media/keys/ACCC4CF8.asc
+          echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list >/dev/null
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq postgresql-client-17
+
+      - name: Dump + criptografar
+        env:
+          DB_URL: ${{ secrets.BACKUP_DB_URL }}
+          PASSPHRASE: ${{ secrets.BACKUP_PASSPHRASE }}
+        run: |
+          test -n "$DB_URL" || { echo "::error::secret BACKUP_DB_URL ausente"; exit 1; }
+          test -n "$PASSPHRASE" || { echo "::error::secret BACKUP_PASSPHRASE ausente"; exit 1; }
+          STAMP=$(date -u +%Y%m%d-%H%M%S)
+          echo "STAMP=$STAMP" >> "$GITHUB_ENV"
+          # Formato custom (-Fc): comprimido e restaurável seletivamente com pg_restore
+          pg_dump "$DB_URL" -Fc -f "backup-$STAMP.dump"
+          gpg --batch --yes --symmetric --cipher-algo AES256 \
+            --passphrase "$PASSPHRASE" -o "backup-$STAMP.dump.gpg" "backup-$STAMP.dump"
+          rm -f "backup-$STAMP.dump" # nunca sobe o dump em claro
+          ls -lh "backup-$STAMP.dump.gpg"
+
+      - name: Subir artifact criptografado
+        uses: actions/upload-artifact@v4
+        with:
+          name: db-backup-${{ env.STAMP }}
+          path: "*.dump.gpg"
+          retention-days: 90 # máximo no plano padrão; ver doc para retenção maior
+          if-no-files-found: error

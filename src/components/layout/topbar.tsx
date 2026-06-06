@@ -1,4 +1,7 @@
+import Link from "next/link"
+import { GraduationCap, BookOpen } from "lucide-react"
 import { createClient } from "@/lib/supabase/server"
+import { Button } from "@/components/ui/button"
 import { LogoutButton } from "./logout-button"
 import { MobileNav } from "./mobile-nav"
 import { OfflineStatus } from "./offline-status"
@@ -48,8 +51,14 @@ export async function Topbar() {
             <CommandPaletteTrigger />
           </div>
           <OfflineStatus />
-          <NotificationsBell />
           <ThemeToggle />
+          <Button asChild variant="ghost" size="icon" className="h-9 w-9" title="Treinamento">
+            <Link href="/treinamento" aria-label="Treinamento"><GraduationCap className="h-5 w-5" /></Link>
+          </Button>
+          <Button asChild variant="ghost" size="icon" className="h-9 w-9" title="Ajuda / Manuais">
+            <Link href="/ajuda" aria-label="Ajuda / Manuais"><BookOpen className="h-5 w-5" /></Link>
+          </Button>
+          <NotificationsBell />
           <div className="hidden lg:flex items-center gap-3 ml-2 pl-3 border-l">
             <span
               className="text-sm truncate max-w-[220px] text-muted-foreground"

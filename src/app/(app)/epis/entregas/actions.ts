@@ -31,11 +31,25 @@ export async function createEntrega(payload: EpiEntregaInput) {
     motivo: parsed.data.motivo,
     observacoes: parsed.data.observacoes,
     assinatura_url: assinaturaUrl,
+    ciencia: parsed.data.ciencia ?? false,
   })
   if (error) return { error: { _form: [error.message] } }
 
   revalidatePath("/epis/entregas")
   redirect("/epis/entregas")
+}
+
+/** Marca um EPI entregue como devolvido (controle de devolução — NR-6). */
+export async function devolverEpi(id: string, dataDevolucao: string) {
+  const supabase = await createClient()
+  const { error } = await supabase
+    .from("epi_entregas")
+    .update({ devolvido: true, data_devolucao: dataDevolucao || new Date().toISOString().slice(0, 10) })
+    .eq("id", id)
+  if (error) return { error: { _form: [error.message] } }
+  revalidatePath("/epis/entregas")
+  revalidatePath(`/epis/entregas/${id}`)
+  return { ok: true as const }
 }
 
 export async function updateEntrega(id: string, payload: EpiEntregaInput) {

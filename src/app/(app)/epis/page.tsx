@@ -6,7 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { classificarVencimento, urgenciaBadgeVariant, urgenciaLabel, formatDate } from "@/lib/utils/vencimento"
 import { ExportCsvButton } from "@/components/shared/export-csv-button"
-import { Plus, Pencil, FileSpreadsheet } from "lucide-react"
+import { Plus, Pencil, FileSpreadsheet, HardHat } from "lucide-react"
 
 export default async function EpisPage() {
   const supabase = await createClient()
@@ -40,6 +40,9 @@ export default async function EpisPage() {
             ]}
             filename="epis"
           />
+          <Button variant="outline" asChild>
+            <Link href="/epis/matriz"><HardHat className="h-4 w-4" />Matriz EPI×Cargo</Link>
+          </Button>
           <Button variant="outline" asChild>
             <Link href="/epis/importar"><FileSpreadsheet className="h-4 w-4" />Importar</Link>
           </Button>

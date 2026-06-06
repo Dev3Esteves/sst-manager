@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useTransition } from "react"
+import { hojeBrasilia } from "@/lib/utils/data-brasilia"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -255,7 +256,7 @@ export function NcForm({
                 type="date"
                 defaultValue={
                   nc?.data_identificacao?.slice(0, 10) ??
-                  new Date().toISOString().slice(0, 10)
+                  hojeBrasilia()
                 }
                 required
               />

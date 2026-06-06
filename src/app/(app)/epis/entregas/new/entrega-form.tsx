@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { hojeBrasilia } from "@/lib/utils/data-brasilia"
 import { useState, useTransition } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -38,7 +39,7 @@ export function EntregaForm({
   const [pending, startTransition] = useTransition()
   const [colabId, setColabId] = useState(entrega?.colaborador_id ?? "")
   const [epiId, setEpiId] = useState(entrega?.epi_id ?? "")
-  const [dataEntrega, setDataEntrega] = useState(entrega?.data_entrega ?? new Date().toISOString().slice(0, 10))
+  const [dataEntrega, setDataEntrega] = useState(entrega?.data_entrega ?? hojeBrasilia())
   const [quantidade, setQuantidade] = useState(entrega?.quantidade ?? 1)
   const [motivo, setMotivo] = useState<string>(entrega?.motivo ?? "primeiro_fornecimento")
   const [observacoes, setObservacoes] = useState(entrega?.observacoes ?? "")

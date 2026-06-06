@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { hojeBrasilia } from "@/lib/utils/data-brasilia"
 import { useState, useTransition, useMemo } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -29,7 +30,7 @@ export function LoteForm({
   const [errors, setErrors] = useState<FormErrors>({})
   const [pending, startTransition] = useTransition()
   const [treinamentoId, setTreinamentoId] = useState("")
-  const [data, setData] = useState(new Date().toISOString().slice(0, 10))
+  const [data, setData] = useState(hojeBrasilia())
   const [instrutorId, setInstrutorId] = useState(NENHUM)
   const [entidadeId, setEntidadeId] = useState(NENHUM)
   const [local, setLocal] = useState("")

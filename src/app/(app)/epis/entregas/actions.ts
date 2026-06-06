@@ -1,6 +1,7 @@
 "use server"
 
 import { revalidatePath } from "next/cache"
+import { hojeBrasilia } from "@/lib/utils/data-brasilia"
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { epiEntregaSchema, type EpiEntregaInput } from "@/lib/validations/epi-entrega"
@@ -44,7 +45,7 @@ export async function devolverEpi(id: string, dataDevolucao: string) {
   const supabase = await createClient()
   const { error } = await supabase
     .from("epi_entregas")
-    .update({ devolvido: true, data_devolucao: dataDevolucao || new Date().toISOString().slice(0, 10) })
+    .update({ devolvido: true, data_devolucao: dataDevolucao || hojeBrasilia() })
     .eq("id", id)
   if (error) return { error: { _form: [error.message] } }
   revalidatePath("/epis/entregas")

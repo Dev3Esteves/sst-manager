@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Loader2, AlertTriangle, Lightbulb } from "lucide-react"
 import { OCORRENCIA_TIPOS, GRAVIDADE_LABEL, type OcorrenciaInput, type TemplateOcorrenciaInit } from "@/lib/validations/ocorrencia"
 import { BodyRegionSelector, regioesToString, type RegiaoCorpo } from "@/components/body-region-selector"
+import { agoraBrasiliaInput } from "@/lib/utils/data-brasilia"
 
 type Empresa = { id: string; razao_social: string }
 type Colaborador = { id: string; nome_completo: string }
@@ -50,7 +51,7 @@ export function OcorrenciaForm({
   const [tipo, setTipo] = useState<string>(ocorrencia?.tipo ?? templateInit?.tipo ?? "quase_acidente")
   const [colabId, setColabId] = useState(ocorrencia?.colaborador_id ?? "")
   const [gravidade, setGravidade] = useState<string>(ocorrencia?.gravidade ?? templateInit?.gravidade_sugerida ?? "")
-  const [data, setData] = useState(ocorrencia ? ocorrencia.data_ocorrencia.slice(0, 16) : new Date().toISOString().slice(0, 16))
+  const [data, setData] = useState(ocorrencia ? ocorrencia.data_ocorrencia.slice(0, 16) : agoraBrasiliaInput())
   const [local, setLocal] = useState(ocorrencia?.local ?? "")
   const [obraLocalId, setObraLocalId] = useState(ocorrencia?.obra_local_id ?? "")
   const [descricao, setDescricao] = useState(ocorrencia?.descricao ?? templateInit?.descricao_modelo ?? "")

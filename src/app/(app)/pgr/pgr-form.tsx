@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useTransition } from "react"
+import { hojeBrasilia } from "@/lib/utils/data-brasilia"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -65,7 +66,7 @@ export function PgrForm({
   }
 
   // Default data_vencimento = data_emissao + 12 meses
-  const defaultEmissao = pgr?.data_emissao ?? new Date().toISOString().slice(0, 10)
+  const defaultEmissao = pgr?.data_emissao ?? hojeBrasilia()
   const defaultVencimento =
     pgr?.data_vencimento ??
     (() => {

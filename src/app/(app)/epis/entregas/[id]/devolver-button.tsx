@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useTransition } from "react"
+import { hojeBrasilia } from "@/lib/utils/data-brasilia"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -17,7 +18,7 @@ export function DevolverButton({
 }) {
   const [pending, startTransition] = useTransition()
   const [abrindo, setAbrindo] = useState(false)
-  const [data, setData] = useState(new Date().toISOString().slice(0, 10))
+  const [data, setData] = useState(hojeBrasilia())
 
   if (devolvido) {
     return <Badge variant="secondary">Devolvido{dataDevolucao ? ` em ${dataDevolucao}` : ""}</Badge>

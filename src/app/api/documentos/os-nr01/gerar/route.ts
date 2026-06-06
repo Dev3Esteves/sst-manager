@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { hojeBrasilia } from "@/lib/utils/data-brasilia"
 import { renderToBuffer } from "@react-pdf/renderer"
 import { createClient } from "@/lib/supabase/server"
 import { renderOsNr01Pdf } from "@/lib/pdf/os-nr01"
@@ -46,7 +47,7 @@ export async function POST(req: Request) {
       ? body.numero.trim()
       : `OS-${new Date().getFullYear()}-${String(Date.now()).slice(-4)}`
     const revisao = body.revisao?.trim() || "00"
-    const dataEmissao = new Date().toISOString().slice(0, 10)
+    const dataEmissao = hojeBrasilia()
 
     const endBuild = scoped.time("build-data")
     const built = await buildOsNr01Data(supabase, {

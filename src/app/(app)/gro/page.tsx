@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { hojeBrasilia } from "@/lib/utils/data-brasilia"
 import { createClient } from "@/lib/supabase/server"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -66,7 +67,7 @@ export default async function GroPage() {
   const acTotal = acoesCorretivas?.length ?? 0
   const acConcluidas = (acoesCorretivas ?? []).filter((a) => a.status === "concluida").length
   const acEficazes = (acoesCorretivas ?? []).filter((a) => a.eficaz === true).length
-  const hoje = new Date().toISOString().slice(0, 10)
+  const hoje = hojeBrasilia()
   const acAtrasadas = (acoesCorretivas ?? []).filter((a) => a.status !== "concluida" && a.status !== "cancelada" && a.data_prazo && a.data_prazo < hoje).length
   const ocorrenciasAno = ocorrencias?.length ?? 0
 

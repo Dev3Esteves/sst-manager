@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { classificarVencimento, urgenciaBadgeVariant, urgenciaLabel, formatDate } from "@/lib/utils/vencimento"
-import { Plus, Award } from "lucide-react"
+import { Plus, Award, Users } from "lucide-react"
 
 export default async function RealizacoesPage() {
   const supabase = await createClient()
@@ -21,9 +21,14 @@ export default async function RealizacoesPage() {
           <h1 className="text-3xl font-bold tracking-tight">Treinamentos realizados</h1>
           <p className="text-muted-foreground">Histórico de capacitações por colaborador.</p>
         </div>
-        <Button asChild>
-          <Link href="/treinamentos/realizacoes/new"><Plus className="h-4 w-4" />Registrar realização</Link>
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" asChild>
+            <Link href="/treinamentos/realizacoes/lote"><Users className="h-4 w-4" />Aplicar em lote</Link>
+          </Button>
+          <Button asChild>
+            <Link href="/treinamentos/realizacoes/new"><Plus className="h-4 w-4" />Registrar realização</Link>
+          </Button>
+        </div>
       </div>
 
       <Card>

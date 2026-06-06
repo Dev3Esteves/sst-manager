@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { treinamentoSchema, treinamentoRealizadoSchema } from "@/lib/validations/treinamento"
+import { treinamentoLoteSchema, type TreinamentoLoteInput } from "@/lib/validations/treinamento-cargo"
 
 function parseTreinamento(formData: FormData) {
   const conteudoRaw = (formData.get("conteudo_programatico_raw") as string) || ""
@@ -59,6 +60,32 @@ export async function cancelarRealizacao(id: string) {
   if (error) return { error: { _form: [error.message] } }
   revalidatePath("/treinamentos/realizacoes")
   revalidatePath("/vencimentos")
+  redirect("/treinamentos/realizacoes")
+}
+
+/**
+ * Aplica um treinamento a vários colaboradores de uma vez. O vencimento de cada
+ * realização é calculado pelo trigger trg_treinamentos_realizados_vencimento.
+ */
+export async function aplicarTreinamentoEmLote(payload: TreinamentoLoteInput) {
+  const parsed = treinamentoLoteSchema.safeParse(payload)
+  if (!parsed.success) return { error: { _form: [parsed.error.errors[0]?.message || "Dados inválidos"] } }
+  const supabase = await createClient()
+  const rows = parsed.data.colaborador_ids.map((colaborador_id) => ({
+    colaborador_id,
+    treinamento_id: parsed.data.treinamento_id,
+    data_realizacao: parsed.data.data_realizacao,
+    instrutor: parsed.data.instrutor || null,
+    entidade: parsed.data.entidade || null,
+    instrutor_id: parsed.data.instrutor_id || null,
+    entidade_id: parsed.data.entidade_id || null,
+    local: parsed.data.local || null,
+  }))
+  const { error } = await supabase.from("treinamentos_realizados").insert(rows)
+  if (error) return { error: { _form: [error.message] } }
+  revalidatePath("/treinamentos/realizacoes")
+  revalidatePath("/vencimentos")
+  revalidatePath("/matriz-treinamentos")
   redirect("/treinamentos/realizacoes")
 }
 

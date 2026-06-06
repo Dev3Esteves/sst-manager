@@ -21,7 +21,7 @@ const CLAUSULAS: Clausula[] = [
   {
     numero: "4", titulo: "Contexto da organização",
     itens: [
-      { requisito: "4.1/4.2 Questões internas/externas e partes interessadas", como: "Definido no escopo do SGSST (processo); empresas e contratantes cadastrados.", status: "manual" },
+      { requisito: "4.1/4.2 Questões internas/externas e partes interessadas", como: "Módulo Contexto (/contexto): registro de questões internas/externas e matriz de partes interessadas com necessidades e requisitos.", status: "atende" },
       { requisito: "4.3/4.4 Escopo e sistema de gestão de SST", como: "Estrutura multiempresa por obra; PGR por obra delimita o escopo operacional.", status: "parcial" },
     ],
   },

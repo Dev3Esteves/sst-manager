@@ -31,6 +31,11 @@ function toRow(d: GestaoMudancaInput) {
     responsavel_nome: t(d.responsavel_nome),
     envolve_aquisicao: d.envolve_aquisicao,
     criterios_aquisicao: t(d.criterios_aquisicao),
+    adkar_consciencia: t(d.adkar_consciencia),
+    adkar_desejo: t(d.adkar_desejo),
+    adkar_conhecimento: t(d.adkar_conhecimento),
+    adkar_habilidade: t(d.adkar_habilidade),
+    adkar_reforco: t(d.adkar_reforco),
     status: d.status,
   }
 }

@@ -53,6 +53,11 @@ export function MudancaForm({
   const [avaliacao, setAvaliacao] = useState(mudanca?.avaliacao_pos ?? "")
   const [envolveAq, setEnvolveAq] = useState(mudanca?.envolve_aquisicao ?? false)
   const [criteriosAq, setCriteriosAq] = useState(mudanca?.criterios_aquisicao ?? "")
+  const [adkarC, setAdkarC] = useState(mudanca?.adkar_consciencia ?? "")
+  const [adkarD, setAdkarD] = useState(mudanca?.adkar_desejo ?? "")
+  const [adkarK, setAdkarK] = useState(mudanca?.adkar_conhecimento ?? "")
+  const [adkarA, setAdkarA] = useState(mudanca?.adkar_habilidade ?? "")
+  const [adkarR, setAdkarR] = useState(mudanca?.adkar_reforco ?? "")
 
   function handleSubmit() {
     const payload: GestaoMudancaInput = {
@@ -70,6 +75,11 @@ export function MudancaForm({
       responsavel_nome: responsavel || null,
       envolve_aquisicao: envolveAq,
       criterios_aquisicao: envolveAq ? (criteriosAq || null) : null,
+      adkar_consciencia: adkarC || null,
+      adkar_desejo: adkarD || null,
+      adkar_conhecimento: adkarK || null,
+      adkar_habilidade: adkarA || null,
+      adkar_reforco: adkarR || null,
       status: status as GestaoMudancaInput["status"],
     }
     startTransition(async () => {
@@ -171,6 +181,20 @@ export function MudancaForm({
             Envolve aquisição / contratação (8.1.4)
           </label>
           {envolveAq && <Area id="aq" label="Critérios de SST na aquisição/contratação" value={criteriosAq} onChange={setCriteriosAq} rows={2} />}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">4. Gestão da mudança nas pessoas (ADKAR)</CardTitle>
+          <CardDescription>Endereça o engajamento e a resistência (ISO 8.1.3). Preencha conforme aplicável.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <Area id="adk-c" label="Consciência (Awareness) — por que a mudança é necessária" value={adkarC} onChange={setAdkarC} rows={2} />
+          <Area id="adk-d" label="Desejo (Desire) — patrocínio e engajamento das pessoas" value={adkarD} onChange={setAdkarD} rows={2} />
+          <Area id="adk-k" label="Conhecimento (Knowledge) — treinamento/capacitação necessários" value={adkarK} onChange={setAdkarK} rows={2} />
+          <Area id="adk-a" label="Habilidade (Ability) — capacidade de executar no desempenho exigido" value={adkarA} onChange={setAdkarA} rows={2} />
+          <Area id="adk-r" label="Reforço (Reinforcement) — como sustentar e consolidar a mudança" value={adkarR} onChange={setAdkarR} rows={2} />
         </CardContent>
       </Card>
 

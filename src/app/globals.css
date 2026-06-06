@@ -81,6 +81,15 @@
   .text-balance {
     text-wrap: balance;
   }
+  /* Esconde a barra de rolagem (mantendo o scroll) — usado no menu lateral,
+   * para igualar o comportamento do Sistenge People (sem barra visível). */
+  .scrollbar-hide {
+    -ms-overflow-style: none; /* IE/Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+  }
 }
 
 /* ============================================================

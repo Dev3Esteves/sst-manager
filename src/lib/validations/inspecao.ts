@@ -20,6 +20,7 @@ export const inspecaoSchema = z.object({
   data_inspecao: z.string().min(1),
   respostas: z.array(respostaItemSchema).min(1, "Responda pelo menos um item"),
   observacoes_gerais: z.string().optional().nullable(),
+  obra_local_id: z.string().uuid().optional().nullable(),
 })
 
 export type InspecaoInput = z.infer<typeof inspecaoSchema>

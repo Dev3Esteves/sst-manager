@@ -13,6 +13,7 @@ import { BodyRegionSelector, regioesToString, type RegiaoCorpo } from "@/compone
 
 type Empresa = { id: string; razao_social: string }
 type Colaborador = { id: string; nome_completo: string }
+type ObraLocal = { id: string; nome: string; obra_nome: string }
 type FormErrors = { _form?: string[] }
 
 type OcorrenciaExistente = {
@@ -28,15 +29,19 @@ type OcorrenciaExistente = {
   natureza_lesao: string | null
   agente_causador: string | null
   dias_afastamento: number | null
+  obra_local_id?: string | null
 }
 
+const SEM_LOCAL = "__sem_local__"
+
 export function OcorrenciaForm({
-  empresas, colaboradores, action, ocorrencia,
+  empresas, colaboradores, action, ocorrencia, obraLocais = [],
 }: {
   empresas: Empresa[]
   colaboradores: Colaborador[]
   action: (payload: OcorrenciaInput) => Promise<{ error?: FormErrors } | void>
   ocorrencia?: OcorrenciaExistente
+  obraLocais?: ObraLocal[]
 }) {
   const [errors, setErrors] = useState<FormErrors>({})
   const [pending, startTransition] = useTransition()
@@ -46,7 +51,15 @@ export function OcorrenciaForm({
   const [gravidade, setGravidade] = useState<string>(ocorrencia?.gravidade ?? "")
   const [data, setData] = useState(ocorrencia ? ocorrencia.data_ocorrencia.slice(0, 16) : new Date().toISOString().slice(0, 16))
   const [local, setLocal] = useState(ocorrencia?.local ?? "")
+  const [obraLocalId, setObraLocalId] = useState(ocorrencia?.obra_local_id ?? "")
   const [descricao, setDescricao] = useState(ocorrencia?.descricao ?? "")
+
+  function selecionarObraLocal(id: string) {
+    if (id === SEM_LOCAL) { setObraLocalId(""); return }
+    setObraLocalId(id)
+    const ol = obraLocais.find((o) => o.id === id)
+    if (ol) setLocal(`${ol.obra_nome} — ${ol.nome}`)
+  }
   const [regioesAtingidas, setRegioesAtingidas] = useState<RegiaoCorpo[]>([])
   const [parteCorpoAtingida, setParteCorpoAtingida] = useState(ocorrencia?.parte_corpo_atingida ?? "")
   const [naturezaLesao, setNaturezaLesao] = useState(ocorrencia?.natureza_lesao ?? "")
@@ -73,6 +86,7 @@ export function OcorrenciaForm({
       parte_corpo_atingida: parteCorpoFinal,
       natureza_lesao: naturezaLesao || null,
       agente_causador: agenteCausador || null,
+      obra_local_id: obraLocalId || null,
       dias_afastamento: diasAfastamento ? parseInt(diasAfastamento, 10) : null,
     }
     startTransition(async () => {
@@ -141,6 +155,20 @@ export function OcorrenciaForm({
             <Label htmlFor="dt">Data e hora *</Label>
             <Input id="dt" type="datetime-local" value={data} onChange={(e) => setData(e.target.value)} />
           </div>
+          {obraLocais.length > 0 && (
+            <div className="space-y-2">
+              <Label>Obra / Local</Label>
+              <Select value={obraLocalId || SEM_LOCAL} onValueChange={selecionarObraLocal}>
+                <SelectTrigger><SelectValue placeholder="Vincular a um local da obra" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={SEM_LOCAL}>— Não vincular —</SelectItem>
+                  {obraLocais.map((ol) => (
+                    <SelectItem key={ol.id} value={ol.id}>{ol.obra_nome} — {ol.nome}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
           <div className="space-y-2">
             <Label htmlFor="local">Local *</Label>
             <Input id="local" value={local} onChange={(e) => setLocal(e.target.value)} placeholder="Ex: Subestação Sala 3" />

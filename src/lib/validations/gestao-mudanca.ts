@@ -42,6 +42,11 @@ export const gestaoMudancaSchema = z.object({
   responsavel_nome: z.string().optional().nullable(),
   envolve_aquisicao: z.boolean().default(false),
   criterios_aquisicao: z.string().optional().nullable(),
+  adkar_consciencia: z.string().optional().nullable(),
+  adkar_desejo: z.string().optional().nullable(),
+  adkar_conhecimento: z.string().optional().nullable(),
+  adkar_habilidade: z.string().optional().nullable(),
+  adkar_reforco: z.string().optional().nullable(),
   status: z.enum([
     "proposta", "em_analise", "aprovada", "implementada", "em_monitoramento", "concluida", "rejeitada", "cancelada",
   ]).default("proposta"),

@@ -29,7 +29,7 @@ const CLAUSULAS: Clausula[] = [
     numero: "5", titulo: "Liderança e participação dos trabalhadores",
     itens: [
       { requisito: "5.1 Liderança e comprometimento", como: "Painel GRO e indicadores para a diretoria (perfil gestor_diretoria).", status: "parcial" },
-      { requisito: "5.2 Política de SST", como: "Documento de política (processo); não há módulo dedicado.", status: "gap" },
+      { requisito: "5.2 Política de SST", como: "Módulo Política de SST (/politica): documento versionado com os compromissos da 5.2, aprovação da direção, publicação e registro de ciência dos trabalhadores.", status: "atende" },
       { requisito: "5.4 Consulta e participação", como: "DDS (diálogos), participantes e assinaturas registrados.", status: "parcial" },
     ],
   },

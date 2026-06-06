@@ -1,6 +1,7 @@
 "use server"
 
 import { revalidatePath } from "next/cache"
+import { hojeBrasilia } from "@/lib/utils/data-brasilia"
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import {
@@ -30,7 +31,7 @@ function parseNcForm(formData: FormData) {
     origem: (formData.get("origem") as string) || "outro",
     data_identificacao:
       (formData.get("data_identificacao") as string) ||
-      new Date().toISOString().slice(0, 10),
+      hojeBrasilia(),
     identificado_por_nome: opt(formData, "identificado_por_nome"),
     identificado_por_id: opt(formData, "identificado_por_id"),
     severidade: (formData.get("severidade") as string) || "media",

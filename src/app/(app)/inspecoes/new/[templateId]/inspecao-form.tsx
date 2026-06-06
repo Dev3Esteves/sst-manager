@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { hojeBrasilia } from "@/lib/utils/data-brasilia"
 import { useRouter } from "next/navigation"
 import { useState, useTransition, useMemo, useRef } from "react"
 import { Button } from "@/components/ui/button"
@@ -42,7 +43,7 @@ export function InspecaoForm({
     const ol = obraLocais.find((o) => o.id === id)
     if (ol) setLocal(`${ol.obra_nome} — ${ol.nome}`)
   }
-  const [dataInspecao, setDataInspecao] = useState(new Date().toISOString().slice(0, 10))
+  const [dataInspecao, setDataInspecao] = useState(hojeBrasilia())
   const [observacoes, setObservacoes] = useState("")
   const [respostas, setRespostas] = useState<RespostaItem[]>(
     template.itens.map((it, i) => ({

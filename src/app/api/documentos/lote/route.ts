@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { hojeBrasilia } from "@/lib/utils/data-brasilia"
 import { renderToBuffer } from "@react-pdf/renderer"
 import JSZip from "jszip"
 import { z } from "zod"
@@ -84,8 +85,8 @@ export async function POST(req: Request) {
 
     const buffer = await zip.generateAsync({ type: "nodebuffer", compression: "DEFLATE" })
     const zipName = parsed.data.tipo === "autorizacao_nr"
-      ? `Autorizacoes_${parsed.data.nr}_${new Date().toISOString().slice(0, 10)}.zip`
-      : `Certificados_${new Date().toISOString().slice(0, 10)}.zip`
+      ? `Autorizacoes_${parsed.data.nr}_${hojeBrasilia()}.zip`
+      : `Certificados_${hojeBrasilia()}.zip`
 
     scoped.info("lote finalizado", { gerados, pulados, zipBytes: buffer.length })
 
@@ -167,7 +168,7 @@ async function gerarAutorizacoesNr(
       continue
     }
 
-    const dataEmissao = new Date().toISOString().slice(0, 10)
+    const dataEmissao = hojeBrasilia()
     const conteudo = {
       nr,
       colaborador: {
@@ -222,7 +223,7 @@ async function gerarAutorizacoesNr(
     const meta = {
       numero: numeroSeq
         ? `${nr.toUpperCase()}-${new Date().getFullYear()}-${String(numeroSeq).padStart(4, "0")}`
-        : `${nr.toUpperCase()}-LOTE-${new Date().toISOString().slice(0, 10)}`,
+        : `${nr.toUpperCase()}-LOTE-${hojeBrasilia()}`,
       titulo: `Autorização ${nr}`,
       empresaRazaoSocial: empresa?.razao_social ?? "—",
       empresaCnpj: empresa?.cnpj ? formatCNPJ(empresa.cnpj) : "—",

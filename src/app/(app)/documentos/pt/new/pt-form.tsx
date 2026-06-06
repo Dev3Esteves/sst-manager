@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { hojeBrasilia } from "@/lib/utils/data-brasilia"
 import { useState, useTransition } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -28,7 +29,7 @@ export function PtForm({
   const [empresaId, setEmpresaId] = useState(empresas[0]?.id || "")
   const [local, setLocal] = useState("")
   const [tarefa, setTarefa] = useState("")
-  const [dataEmissao, setDataEmissao] = useState(new Date().toISOString().slice(0, 10))
+  const [dataEmissao, setDataEmissao] = useState(hojeBrasilia())
   const [horaInicio, setHoraInicio] = useState("08:00")
   const [horaFim, setHoraFim] = useState("17:00")
   const [solicitante, setSolicitante] = useState("")

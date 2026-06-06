@@ -13,11 +13,17 @@ export default async function NewOcorrenciaPage({
 }) {
   const sp = await searchParams
   const supabase = await createClient()
-  const [{ data: empresas }, { data: colaboradores }, { data: templates }] = await Promise.all([
+  const [{ data: empresas }, { data: colaboradores }, { data: templates }, { data: locais }] = await Promise.all([
     supabase.from("empresas").select("id, razao_social").eq("ativo", true).order("razao_social"),
     supabase.from("colaboradores").select("id, nome_completo").eq("status", "ativo").order("nome_completo"),
     supabase.from("templates_ocorrencia").select("id, tipo, titulo, descricao_modelo").eq("ativo", true).order("titulo"),
+    supabase.from("obra_locais").select("id, nome, obras(nome)").eq("ativo", true).order("nome"),
   ])
+
+  const obraLocais = (locais ?? []).map((l) => ({
+    id: l.id, nome: l.nome,
+    obra_nome: (Array.isArray(l.obras) ? l.obras[0] : l.obras)?.nome ?? "Obra",
+  }))
 
   // Etapa 1 — sem escolha ainda e há templates: mostra o seletor.
   if (sp.template === undefined && (templates?.length ?? 0) > 0) {
@@ -90,6 +96,7 @@ export default async function NewOcorrenciaPage({
       <OcorrenciaForm
         empresas={empresas ?? []}
         colaboradores={colaboradores ?? []}
+        obraLocais={obraLocais}
         action={createOcorrencia}
         templateInit={templateInit}
       />

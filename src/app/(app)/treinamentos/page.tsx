@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ExportCsvButton } from "@/components/shared/export-csv-button"
-import { Plus, Pencil, ListChecks, FileSpreadsheet } from "lucide-react"
+import { Plus, Pencil, ListChecks, FileSpreadsheet, Grid3x3 } from "lucide-react"
 
 const TIPO_LABEL: Record<string, string> = {
   obrigatorio: "Obrigatório",
@@ -48,6 +48,9 @@ export default async function TreinamentosPage() {
           />
           <Button variant="outline" asChild>
             <Link href="/treinamentos/importar"><FileSpreadsheet className="h-4 w-4" />Importar</Link>
+          </Button>
+          <Button variant="outline" asChild>
+            <Link href="/treinamentos/matriz"><Grid3x3 className="h-4 w-4" />Matriz por cargo</Link>
           </Button>
           <Button variant="outline" asChild>
             <Link href="/treinamentos/realizacoes"><ListChecks className="h-4 w-4" />Realizações</Link>

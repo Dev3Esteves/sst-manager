@@ -26,12 +26,13 @@ type EntregaExistente = {
 }
 
 export function EntregaForm({
-  colaboradores, epis, action, entrega,
+  colaboradores, epis, action, entrega, obrigatoriosPorColaborador = {},
 }: {
   colaboradores: Colaborador[]
   epis: Epi[]
   action: (payload: EpiEntregaInput) => Promise<{ error?: FormErrors } | void>
   entrega?: EntregaExistente
+  obrigatoriosPorColaborador?: Record<string, string[]>
 }) {
   const [errors, setErrors] = useState<FormErrors>({})
   const [pending, startTransition] = useTransition()
@@ -42,8 +43,12 @@ export function EntregaForm({
   const [motivo, setMotivo] = useState<string>(entrega?.motivo ?? "primeiro_fornecimento")
   const [observacoes, setObservacoes] = useState(entrega?.observacoes ?? "")
   const [assinatura, setAssinatura] = useState<string | null>(null)
+  const [ciencia, setCiencia] = useState(false)
 
   const epiSelecionado = epis.find(e => e.id === epiId)
+  const obrigatorios = colabId ? (obrigatoriosPorColaborador[colabId] ?? []) : []
+  // Na edição, a assinatura/ciência já foram coletadas no registro original.
+  const podeSalvar = !!entrega || (!!assinatura && ciencia)
 
   function handleSubmit() {
     const payload: EpiEntregaInput = {
@@ -54,6 +59,7 @@ export function EntregaForm({
       motivo: motivo as EpiEntregaInput["motivo"],
       observacoes: observacoes || null,
       assinatura_data_url: assinatura,
+      ciencia,
     }
     startTransition(async () => {
       const result = await action(payload)
@@ -96,6 +102,12 @@ export function EntregaForm({
               <p className="text-xs text-muted-foreground">Validade do CA: {epiSelecionado.ca_validade}</p>
             )}
           </div>
+          {obrigatorios.length > 0 && (
+            <div className="md:col-span-2 rounded-md border border-primary/30 bg-primary/5 p-3 text-sm">
+              <p className="font-medium text-primary mb-1">EPIs obrigatórios do cargo</p>
+              <p className="text-muted-foreground text-xs">{obrigatorios.join(" · ")}</p>
+            </div>
+          )}
           <div className="space-y-2">
             <Label htmlFor="de">Data da entrega *</Label>
             <Input id="de" type="date" value={dataEntrega} onChange={(e) => setDataEntrega(e.target.value)} />
@@ -131,8 +143,19 @@ export function EntregaForm({
           <CardTitle className="text-lg">2. Assinatura do colaborador</CardTitle>
           <CardDescription>O colaborador declara ter recebido o EPI em perfeito estado e estar ciente de sua obrigação de uso.</CardDescription>
         </CardHeader>
-        <CardContent>
-          <SignatureCanvas onChange={setAssinatura} />
+        <CardContent className="space-y-3">
+          {!entrega && <SignatureCanvas onChange={setAssinatura} />}
+          {entrega && <p className="text-sm text-muted-foreground">Assinatura coletada no registro original.</p>}
+          {!entrega && (
+            <label className="flex items-start gap-2 text-sm cursor-pointer rounded-md border p-3">
+              <input type="checkbox" checked={ciencia} onChange={(e) => setCiencia(e.target.checked)} className="h-4 w-4 mt-0.5" />
+              <span>
+                <strong>Termo de ciência (NR-6.6.1):</strong> o colaborador declara ter recebido o(s) EPI(s) em
+                perfeito estado, foi orientado sobre o uso correto, guarda e conservação, e está ciente da
+                obrigatoriedade de uso.
+              </span>
+            </label>
+          )}
         </CardContent>
       </Card>
 
@@ -142,11 +165,14 @@ export function EntregaForm({
         </div>
       )}
 
-      <div className="flex gap-2 justify-end">
+      <div className="flex items-center gap-3 justify-end">
+        {!entrega && !podeSalvar && (
+          <span className="text-xs text-muted-foreground">Assine e marque o termo de ciência para registrar.</span>
+        )}
         <Button type="button" variant="outline" asChild>
           <Link href="/epis/entregas">Cancelar</Link>
         </Button>
-        <Button type="button" onClick={handleSubmit} disabled={pending || !colabId || !epiId}>
+        <Button type="button" onClick={handleSubmit} disabled={pending || !colabId || !epiId || !podeSalvar}>
           {pending && <Loader2 className="h-4 w-4 animate-spin" />}
           {entrega ? "Salvar" : "Registrar entrega"}
         </Button>

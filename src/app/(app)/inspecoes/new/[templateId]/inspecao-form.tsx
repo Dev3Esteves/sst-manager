@@ -15,14 +15,18 @@ import { enqueueMutation } from "@/lib/offline/db"
 import { compressImage } from "@/lib/image/compress"
 
 type Empresa = { id: string; razao_social: string }
+type ObraLocal = { id: string; nome: string; obra_nome: string }
 type FormErrors = { _form?: string[] }
 
+const SEM_LOCAL = "__sem_local__"
+
 export function InspecaoForm({
-  template, empresas, action,
+  template, empresas, action, obraLocais = [],
 }: {
   template: { id: string; titulo: string; categoria: string | null; itens: TemplateItem[] }
   empresas: Empresa[]
   action: (payload: InspecaoInput) => Promise<{ error?: FormErrors } | void>
+  obraLocais?: ObraLocal[]
 }) {
   const router = useRouter()
   const online = useOnline()
@@ -30,6 +34,14 @@ export function InspecaoForm({
   const [pending, startTransition] = useTransition()
   const [empresaId, setEmpresaId] = useState(empresas[0]?.id || "")
   const [local, setLocal] = useState("")
+  const [obraLocalId, setObraLocalId] = useState("")
+
+  function selecionarObraLocal(id: string) {
+    if (id === SEM_LOCAL) { setObraLocalId(""); return }
+    setObraLocalId(id)
+    const ol = obraLocais.find((o) => o.id === id)
+    if (ol) setLocal(`${ol.obra_nome} — ${ol.nome}`)
+  }
   const [dataInspecao, setDataInspecao] = useState(new Date().toISOString().slice(0, 10))
   const [observacoes, setObservacoes] = useState("")
   const [respostas, setRespostas] = useState<RespostaItem[]>(
@@ -57,6 +69,7 @@ export function InspecaoForm({
       data_inspecao: dataInspecao,
       respostas,
       observacoes_gerais: observacoes || null,
+      obra_local_id: obraLocalId || null,
     }
 
     // Offline → fila IndexedDB; volta para listagem com toast de "pendente"
@@ -131,6 +144,20 @@ export function InspecaoForm({
               </SelectContent>
             </Select>
           </div>
+          {obraLocais.length > 0 && (
+            <div className="space-y-2">
+              <Label>Obra / Local</Label>
+              <Select value={obraLocalId || SEM_LOCAL} onValueChange={selecionarObraLocal}>
+                <SelectTrigger><SelectValue placeholder="Vincular a um local da obra" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={SEM_LOCAL}>— Não vincular —</SelectItem>
+                  {obraLocais.map((ol) => (
+                    <SelectItem key={ol.id} value={ol.id}>{ol.obra_nome} — {ol.nome}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
           <div className="space-y-2">
             <Label htmlFor="local">Local *</Label>
             <Input id="local" value={local} onChange={(e) => setLocal(e.target.value)} placeholder="Obra/área/equipamento" />

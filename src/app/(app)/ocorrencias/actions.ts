@@ -23,6 +23,7 @@ export async function createOcorrencia(payload: OcorrenciaInput) {
     natureza_lesao: parsed.data.natureza_lesao,
     agente_causador: parsed.data.agente_causador,
     dias_afastamento: parsed.data.dias_afastamento,
+    obra_local_id: parsed.data.obra_local_id ?? null,
     status: "aberta",
   }).select("id").single()
 
@@ -49,6 +50,7 @@ export async function updateOcorrencia(id: string, payload: OcorrenciaInput) {
     natureza_lesao: parsed.data.natureza_lesao,
     agente_causador: parsed.data.agente_causador,
     dias_afastamento: parsed.data.dias_afastamento,
+    obra_local_id: parsed.data.obra_local_id ?? null,
   }).eq("id", id)
 
   if (error) return { error: { _form: [error.message] } }

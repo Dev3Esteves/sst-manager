@@ -46,6 +46,7 @@ export async function POST(req: Request) {
       local: parsed.data.local,
       data_inspecao: parsed.data.data_inspecao,
       respostas: parsed.data.respostas,
+      obra_local_id: parsed.data.obra_local_id ?? null,
       percentual_conformidade: percentual,
       observacoes_gerais: parsed.data.observacoes_gerais,
       status: "concluida",

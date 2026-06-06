@@ -5,6 +5,7 @@ import { manuaisDocumentos } from "./documentos"
 import { manuaisRelatorios } from "./relatorios"
 import { manuaisReferencias } from "./referencias"
 import { manuaisAdministracao } from "./administracao"
+import { manuaisMelhorias2026 } from "./melhorias-2026"
 
 /** Todos os manuais, em ordem de categoria. */
 export const MANUAIS: Manual[] = [
@@ -14,6 +15,7 @@ export const MANUAIS: Manual[] = [
   ...manuaisRelatorios,
   ...manuaisReferencias,
   ...manuaisAdministracao,
+  ...manuaisMelhorias2026,
 ]
 
 export const CATEGORIAS = [

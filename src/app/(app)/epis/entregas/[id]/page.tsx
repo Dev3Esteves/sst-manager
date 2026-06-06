@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server"
 import { EntregaForm } from "../new/entrega-form"
 import { updateEntrega, inativarEntrega } from "../actions"
 import { InativarButton } from "@/components/shared/inativar-button"
+import { DevolverButton } from "./devolver-button"
 import type { EpiEntregaInput } from "@/lib/validations/epi-entrega"
 
 export default async function EditEntregaPage({ params }: { params: Promise<{ id: string }> }) {
@@ -22,7 +23,8 @@ export default async function EditEntregaPage({ params }: { params: Promise<{ id
 
   return (
     <div className="container py-8 max-w-3xl">
-      <div className="flex justify-end mb-4">
+      <div className="flex items-center justify-between gap-2 mb-4">
+        <DevolverButton id={id} devolvido={!!entrega.devolvido} dataDevolucao={entrega.data_devolucao ?? null} />
         <InativarButton action={inativarEntrega.bind(null, id)} entityName="entrega" />
       </div>
       <EntregaForm

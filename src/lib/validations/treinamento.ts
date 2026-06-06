@@ -20,6 +20,8 @@ export const treinamentoRealizadoSchema = z.object({
   data_realizacao: z.string().min(1, "Data obrigatória"),
   instrutor: z.string().optional().nullable(),
   entidade: z.string().optional().nullable(),
+  instrutor_id: z.string().uuid().optional().nullable(),
+  entidade_id: z.string().uuid().optional().nullable(),
   local: z.string().optional().nullable(),
   nota_avaliacao: z.coerce.number().min(0).max(10).optional().nullable(),
 })

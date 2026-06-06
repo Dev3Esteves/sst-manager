@@ -8,6 +8,7 @@ export const epiEntregaSchema = z.object({
   motivo: z.enum(["primeiro_fornecimento", "substituicao", "desgaste", "extravio", "devolucao"]),
   observacoes: z.string().optional().nullable(),
   assinatura_data_url: z.string().optional().nullable(),
+  ciencia: z.boolean().optional(),
 })
 
 export type EpiEntregaInput = z.infer<typeof epiEntregaSchema>

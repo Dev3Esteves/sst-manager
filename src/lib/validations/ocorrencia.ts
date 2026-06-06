@@ -23,6 +23,7 @@ export const ocorrenciaSchema = z.object({
   natureza_lesao: z.string().optional().nullable(),
   agente_causador: z.string().optional().nullable(),
   dias_afastamento: z.coerce.number().int().min(0).optional().nullable(),
+  obra_local_id: z.string().uuid().optional().nullable(),
 })
 
 export type OcorrenciaInput = z.infer<typeof ocorrenciaSchema>

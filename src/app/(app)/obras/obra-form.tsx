@@ -7,7 +7,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Loader2 } from "lucide-react"
+import { Loader2, Search } from "lucide-react"
+import { toast } from "sonner"
 import { UFS } from "@/lib/validations/obra"
 
 type Obra = {
@@ -16,8 +17,15 @@ type Obra = {
   contratante_id?: string | null
   nome: string
   codigo?: string | null
+  cnpj?: string | null
+  cep?: string | null
+  logradouro?: string | null
+  numero?: string | null
+  complemento?: string | null
+  bairro?: string | null
   cidade?: string | null
   uf?: string | null
+  empreitada?: string | null
   data_inicio?: string | null
   data_fim?: string | null
   ativa: boolean
@@ -39,11 +47,59 @@ export function ObraForm({
   const [empresaId, setEmpresaId] = useState(obra?.empresa_id || donas[0]?.id || "")
   const [contratanteId, setContratanteId] = useState(obra?.contratante_id || "")
   const [uf, setUf] = useState(obra?.uf || "")
+  const [empreitada, setEmpreitada] = useState(obra?.empreitada || "")
+  const [cnpj, setCnpj] = useState(obra?.cnpj ?? "")
+  const [cep, setCep] = useState(obra?.cep ?? "")
+  const [logradouro, setLogradouro] = useState(obra?.logradouro ?? "")
+  const [numero, setNumero] = useState(obra?.numero ?? "")
+  const [complemento, setComplemento] = useState(obra?.complemento ?? "")
+  const [bairro, setBairro] = useState(obra?.bairro ?? "")
+  const [cidade, setCidade] = useState(obra?.cidade ?? "")
+  const [buscandoCnpj, setBuscandoCnpj] = useState(false)
+  const [buscandoCep, setBuscandoCep] = useState(false)
+
+  async function buscarCnpj() {
+    const limpo = cnpj.replace(/\D/g, "")
+    if (limpo.length !== 14) { toast.warning("Informe um CNPJ com 14 dígitos."); return }
+    setBuscandoCnpj(true)
+    try {
+      const r = await fetch(`/api/integracoes/brasilapi/cnpj?cnpj=${limpo}`)
+      const j = await r.json()
+      if (!r.ok || !j.ok) { toast.error(j.erro ?? "CNPJ não encontrado"); return }
+      const d = j.data as Record<string, string | null>
+      if (d.cep) setCep(d.cep)
+      if (d.logradouro) setLogradouro(d.logradouro)
+      if (d.numero) setNumero(d.numero)
+      if (d.complemento) setComplemento(d.complemento)
+      if (d.bairro) setBairro(d.bairro)
+      if (d.municipio) setCidade(d.municipio)
+      if (d.uf) setUf(d.uf)
+      toast.success("Dados da Receita preenchidos. Confira antes de salvar.")
+    } catch { toast.error("Falha ao consultar a Receita.") } finally { setBuscandoCnpj(false) }
+  }
+
+  async function buscarCep() {
+    const limpo = cep.replace(/\D/g, "")
+    if (limpo.length !== 8) { toast.warning("Informe um CEP com 8 dígitos."); return }
+    setBuscandoCep(true)
+    try {
+      const r = await fetch(`/api/integracoes/brasilapi/cep?cep=${limpo}`)
+      const j = await r.json()
+      if (!r.ok || !j.ok) { toast.error(j.erro ?? "CEP não encontrado"); return }
+      const d = j.data as Record<string, string | null>
+      if (d.street) setLogradouro(d.street)
+      if (d.neighborhood) setBairro(d.neighborhood)
+      if (d.city) setCidade(d.city)
+      if (d.state) setUf(d.state)
+      toast.success("Endereço do CEP preenchido.")
+    } catch { toast.error("Falha ao consultar o CEP.") } finally { setBuscandoCep(false) }
+  }
 
   async function handleSubmit(formData: FormData) {
     formData.set("empresa_id", empresaId)
     formData.set("contratante_id", contratanteId || "none")
     formData.set("uf", uf || "none")
+    formData.set("empreitada", empreitada || "none")
     startTransition(async () => {
       const result = await action(formData)
       if (result?.error) setErrors(result.error)
@@ -102,18 +158,16 @@ export function ObraForm({
             <Input id="codigo" name="codigo" defaultValue={obra?.codigo ?? ""} placeholder="OBR-001" />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="cidade">Cidade</Label>
-            <Input id="cidade" name="cidade" defaultValue={obra?.cidade ?? ""} placeholder="Hortolândia" />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="uf">UF</Label>
-            <Select value={uf || "none"} onValueChange={(v) => setUf(v === "none" ? "" : v)}>
-              <SelectTrigger id="uf"><SelectValue placeholder="—" /></SelectTrigger>
+            <Label htmlFor="empreitada">Empreitada</Label>
+            <Select value={empreitada || "none"} onValueChange={(v) => setEmpreitada(v === "none" ? "" : v)}>
+              <SelectTrigger id="empreitada"><SelectValue placeholder="—" /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="none">—</SelectItem>
-                {UFS.map((u) => <SelectItem key={u} value={u}>{u}</SelectItem>)}
+                <SelectItem value="total">Total</SelectItem>
+                <SelectItem value="parcial">Parcial</SelectItem>
               </SelectContent>
             </Select>
+            <p className="text-xs text-muted-foreground">Conforme o registro CNO (Receita).</p>
           </div>
           <div className="space-y-2">
             <Label htmlFor="data_inicio">Início</Label>
@@ -136,6 +190,67 @@ export function ObraForm({
           {errors._form && (
             <p className="text-sm text-destructive md:col-span-2" role="alert">{errors._form[0]}</p>
           )}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>CNPJ e endereço da obra</CardTitle>
+          <CardDescription>Busque pelo CNPJ (CNO/obra) para autopreencher o endereço.</CardDescription>
+        </CardHeader>
+        <CardContent className="grid gap-4 md:grid-cols-12">
+          <div className="space-y-2 md:col-span-5">
+            <Label htmlFor="cnpj">CNPJ da obra</Label>
+            <Input id="cnpj" name="cnpj" value={cnpj} onChange={(e) => setCnpj(e.target.value)} placeholder="00.000.000/0000-00" />
+          </div>
+          <div className="space-y-2 md:col-span-3 flex flex-col justify-end">
+            <Button type="button" variant="outline" onClick={buscarCnpj} disabled={buscandoCnpj}>
+              {buscandoCnpj ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
+              Buscar CNPJ
+            </Button>
+          </div>
+          <div className="md:col-span-4" />
+          <div className="space-y-2 md:col-span-3">
+            <Label htmlFor="cep">CEP</Label>
+            <Input id="cep" name="cep" value={cep} onChange={(e) => setCep(e.target.value)} />
+          </div>
+          <div className="space-y-2 md:col-span-3 flex flex-col justify-end">
+            <Button type="button" variant="outline" onClick={buscarCep} disabled={buscandoCep}>
+              {buscandoCep ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
+              Buscar CEP
+            </Button>
+          </div>
+          <div className="md:col-span-6" />
+          <div className="space-y-2 md:col-span-8">
+            <Label htmlFor="logradouro">Logradouro</Label>
+            <Input id="logradouro" name="logradouro" value={logradouro} onChange={(e) => setLogradouro(e.target.value)} />
+          </div>
+          <div className="space-y-2 md:col-span-2">
+            <Label htmlFor="numero">Número</Label>
+            <Input id="numero" name="numero" value={numero} onChange={(e) => setNumero(e.target.value)} />
+          </div>
+          <div className="space-y-2 md:col-span-2">
+            <Label htmlFor="complemento">Compl.</Label>
+            <Input id="complemento" name="complemento" value={complemento} onChange={(e) => setComplemento(e.target.value)} />
+          </div>
+          <div className="space-y-2 md:col-span-5">
+            <Label htmlFor="bairro">Bairro</Label>
+            <Input id="bairro" name="bairro" value={bairro} onChange={(e) => setBairro(e.target.value)} />
+          </div>
+          <div className="space-y-2 md:col-span-5">
+            <Label htmlFor="cidade">Cidade</Label>
+            <Input id="cidade" name="cidade" value={cidade} onChange={(e) => setCidade(e.target.value)} placeholder="Hortolândia" />
+          </div>
+          <div className="space-y-2 md:col-span-2">
+            <Label htmlFor="uf">UF</Label>
+            <Select value={uf || "none"} onValueChange={(v) => setUf(v === "none" ? "" : v)}>
+              <SelectTrigger id="uf"><SelectValue placeholder="—" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">—</SelectItem>
+                {UFS.map((u) => <SelectItem key={u} value={u}>{u}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
         </CardContent>
       </Card>
 

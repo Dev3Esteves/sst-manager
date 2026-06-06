@@ -11,6 +11,8 @@ export const exameSchema = z.object({
   medico_nome: z.string().optional().nullable(),
   crm: z.string().optional().nullable(),
   clinica: z.string().optional().nullable(),
+  medico_id: z.string().uuid().optional().nullable(),
+  clinica_id: z.string().uuid().optional().nullable(),
   numero_aso: z.string().optional().nullable(),
   observacoes: z.string().optional().nullable(),
 })

@@ -15,6 +15,56 @@ function authErrorToResult(e: unknown): Result<never> {
   return err(e instanceof Error ? e.message : "Erro desconhecido")
 }
 
+/**
+ * Sincroniza as empresas que um usuário pode operar (tabela `usuario_empresas`).
+ * A empresa principal é sempre incluída. Garante que `empresa_ativa_id`
+ * continue válida (∈ conjunto); senão reseta para a principal.
+ *
+ * Recebe um admin client (service role) — chamado dentro de ações já
+ * autorizadas por `requireAdmin()`.
+ */
+async function sincronizarEmpresasDoUsuario(
+  admin: ReturnType<typeof createAdminClient>,
+  userId: string,
+  empresaPrincipal: string,
+  empresasAdicionais: string[],
+): Promise<{ error?: string }> {
+  const alvo = Array.from(new Set([empresaPrincipal, ...empresasAdicionais]))
+
+  // Remove vínculos que não estão mais no conjunto
+  const { error: delErr } = await admin
+    .from("usuario_empresas")
+    .delete()
+    .eq("usuario_id", userId)
+    .not("empresa_id", "in", `(${alvo.join(",")})`)
+  if (delErr) return { error: delErr.message }
+
+  // Insere/garante os vínculos do conjunto
+  const { error: insErr } = await admin
+    .from("usuario_empresas")
+    .upsert(
+      alvo.map((empresa_id) => ({ usuario_id: userId, empresa_id })),
+      { onConflict: "usuario_id,empresa_id", ignoreDuplicates: true },
+    )
+  if (insErr) return { error: insErr.message }
+
+  // Garante que a empresa ativa pertence ao conjunto
+  const { data: u } = await admin
+    .from("usuarios")
+    .select("empresa_ativa_id")
+    .eq("id", userId)
+    .maybeSingle()
+  const ativa = (u as { empresa_ativa_id?: string | null } | null)?.empresa_ativa_id
+  if (!ativa || !alvo.includes(ativa)) {
+    const { error: updErr } = await admin
+      .from("usuarios")
+      .update({ empresa_ativa_id: empresaPrincipal })
+      .eq("id", userId)
+    if (updErr) return { error: updErr.message }
+  }
+  return {}
+}
+
 export async function criarUsuario(
   payload: CriarUsuarioInput,
 ): Promise<Result<{ senha: string; userId: string }>> {
@@ -42,11 +92,12 @@ export async function criarUsuario(
     return err(authErr?.message ?? "Falha ao criar usuário em auth")
   }
 
-  // 2. Vincula em public.usuarios
+  // 2. Vincula em public.usuarios (empresa ativa = empresa principal)
   const { error: linkErr } = await admin.from("usuarios").insert({
     id: created.user.id,
     perfil_id: parsed.data.perfil_id,
     empresa_id: parsed.data.empresa_id,
+    empresa_ativa_id: parsed.data.empresa_id,
     colaborador_id: parsed.data.colaborador_id ?? null,
     ativo: parsed.data.ativo,
   })
@@ -55,6 +106,15 @@ export async function criarUsuario(
     // Rollback: tenta deletar o auth.user órfão
     await admin.auth.admin.deleteUser(created.user.id).catch(() => {})
     return err(`Falha ao vincular usuário: ${linkErr.message}`)
+  }
+
+  // 3. Sincroniza empresas operáveis (junção usuario_empresas)
+  const sync = await sincronizarEmpresasDoUsuario(
+    admin, created.user.id, parsed.data.empresa_id, parsed.data.empresas_ids,
+  )
+  if (sync.error) {
+    await admin.auth.admin.deleteUser(created.user.id).catch(() => {})
+    return err(`Falha ao vincular empresas: ${sync.error}`)
   }
 
   revalidatePath("/usuarios")
@@ -84,6 +144,11 @@ export async function editarUsuario(
   }).eq("id", id)
 
   if (error) return err(error.message)
+
+  const sync = await sincronizarEmpresasDoUsuario(
+    admin, id, parsed.data.empresa_id, parsed.data.empresas_ids,
+  )
+  if (sync.error) return err(`Falha ao vincular empresas: ${sync.error}`)
 
   revalidatePath("/usuarios")
   revalidatePath(`/usuarios/${id}`)

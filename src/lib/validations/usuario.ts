@@ -18,7 +18,14 @@ export const criarUsuarioSchema = z.object({
   email: z.string().email("E-mail inválido"),
   senha: z.string().min(8, "Senha deve ter no mínimo 8 caracteres"),
   perfil_id: z.string().uuid("Perfil obrigatório"),
+  // Empresa principal (empregadora). É sempre uma das empresas operáveis.
   empresa_id: z.string().uuid("Empresa obrigatória"),
+  /**
+   * Empresas adicionais que este usuário pode operar (grupo). A empresa
+   * principal é incluída automaticamente. Usado para alimentar o seletor de
+   * empresa ativa no topo do app.
+   */
+  empresas_ids: z.array(z.string().uuid()).optional().default([]),
   colaborador_id: z.string().uuid().optional().nullable(),
   ativo: z.boolean().default(true),
 })
@@ -27,6 +34,7 @@ export type CriarUsuarioInput = z.infer<typeof criarUsuarioSchema>
 export const editarUsuarioSchema = z.object({
   perfil_id: z.string().uuid(),
   empresa_id: z.string().uuid(),
+  empresas_ids: z.array(z.string().uuid()).optional().default([]),
   colaborador_id: z.string().uuid().optional().nullable(),
   ativo: z.boolean(),
 })

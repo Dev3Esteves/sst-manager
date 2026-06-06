@@ -1,5 +1,12 @@
+import { createRequire } from "node:module";
+const pkg = createRequire(import.meta.url)("./package.json");
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  env: {
+    // Expõe a versão do package.json para a UI (ver src/lib/version.ts).
+    NEXT_PUBLIC_APP_VERSION: pkg.version,
+  },
   headers: async () => [
     {
       source: "/(.*)",

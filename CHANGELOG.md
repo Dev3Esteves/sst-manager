@@ -8,6 +8,17 @@ e o versionamento segue [Semantic Versioning](https://semver.org/lang/pt-BR/).
 ## [Não lançado]
 
 ### Adicionado
+- **Multiempresa — seletor de empresa ativa** (migration `0020`): tabela de vínculo
+  `usuario_empresas` (N:N) + coluna `usuarios.empresa_ativa_id`; `user_empresa_id()`
+  passa a retornar `COALESCE(empresa_ativa_id, empresa_id)`, tornando **todos os
+  submenus filtrados pela empresa ativa** sem reescrever as policies RLS. Seletor
+  de empresa no topbar (só aparece para quem opera >1 empresa); ação
+  `definirEmpresaAtiva` valida o vínculo. Forms de usuário atribuem múltiplas empresas.
+- **Cadastro de empresa com BrasilAPI** — cliente `src/lib/integracoes/brasilapi.ts`
+  + rotas-proxy CNPJ/CEP; `empresa-form` redesenhado em seções com **busca por
+  CNPJ/CEP** (auto-preenche razão social e endereço, gravado no JSONB `endereco`).
+- **Versão exibida na UI** — `src/lib/version.ts` (lê `NEXT_PUBLIC_APP_VERSION` do
+  `package.json` via next.config); mostrada no rodapé da sidebar.
 - **Tela de Configurações** (`/configuracoes`) — preenche o link que já existia no menu
   - 4 abas: **Empresa** (edita a empresa-dona reusando `EmpresaForm`/`updateEmpresa`),
     **Minha conta** (troca a própria senha via Supabase Auth), **Aparência**

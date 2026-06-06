@@ -11,6 +11,7 @@ import {
   type LucideIcon,
 } from "lucide-react"
 import { SistengeLogo } from "@/components/sistenge-logo"
+import { APP_VERSION } from "@/lib/version"
 
 type NavItem = { href: string; label: string; icon: LucideIcon; disabled?: boolean }
 type NavSection = { label?: string; items: NavItem[] }
@@ -131,12 +132,15 @@ export function Sidebar() {
           </div>
         ))}
       </nav>
-      <div className="border-t p-3 text-[10px] text-muted-foreground">
+      <div className="border-t p-3 text-[10px] text-muted-foreground space-y-2">
         <div className="flex items-center justify-between">
           <span>Pressione</span>
           <kbd className="inline-flex items-center rounded border bg-background px-1.5 py-0.5 font-mono">
             Ctrl + K
           </kbd>
+        </div>
+        <div className="text-center text-muted-foreground/70">
+          SST Manager · v{APP_VERSION}
         </div>
       </div>
     </aside>

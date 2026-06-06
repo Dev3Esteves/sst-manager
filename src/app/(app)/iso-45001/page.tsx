@@ -56,7 +56,7 @@ const CLAUSULAS: Clausula[] = [
     itens: [
       { requisito: "8.1.1 Controles operacionais (hierarquia)", como: "PGR: medidas de controle por nível NIOSH (1–5); matriz EPI×GHE e EPI×Cargo.", status: "atende" },
       { requisito: "8.1.2 Eliminação de perigos e redução de riscos", como: "Hierarquia NIOSH no PGR; inspeções de campo (checklists).", status: "atende" },
-      { requisito: "8.1.3 Gestão de mudança / 8.1.4 Aquisição", como: "Não há módulo dedicado de gestão de mudança.", status: "gap" },
+      { requisito: "8.1.3 Gestão de mudança / 8.1.4 Aquisição", como: "Módulo Gestão de Mudança (/gestao-mudanca): registra mudanças temporárias/permanentes com avaliação de perigos/riscos, controles, comunicação, implementação e monitoramento; inclui critérios de SST na aquisição.", status: "atende" },
       { requisito: "8.2 Preparação e resposta a emergências", como: "Ocorrências tipo 'emergência' + template; plano de emergência é processo.", status: "parcial" },
     ],
   },

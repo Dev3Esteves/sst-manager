@@ -30,8 +30,9 @@ export function SistengeLogo({
   const width = Math.round(height * aspect)
   const alt = "SISTENGE"
 
-  const srcLight = variant === "full" ? "/logos/sistenge-claro.svg" : "/logos/sistenge-icone.svg"
-  const srcDark = variant === "full" ? "/logos/sistenge-escuro.svg" : "/logos/sistenge-icone.svg"
+  // Tema claro (fundo claro) → logo escuro/colorido; tema escuro → logo claro/branco.
+  const srcLight = variant === "full" ? "/logos/sistenge-claro.svg" : "/logos/sistenge-icone-principal.svg"
+  const srcDark = variant === "full" ? "/logos/sistenge-escuro.svg" : "/logos/sistenge-icone-branco.svg"
 
   return (
     <span className={cn("inline-block leading-none", className)}>

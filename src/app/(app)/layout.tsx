@@ -7,7 +7,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex h-screen w-full">
       <Sidebar />
-      <div className="flex flex-1 flex-col overflow-hidden lg:pl-[72px]">
+      <div className="flex flex-1 flex-col overflow-hidden lg:pl-[72px] 2xl:pl-64">
         <Topbar />
         <main className="flex-1 overflow-y-auto bg-muted/30 pb-20 lg:pb-0">{children}</main>
         <Toaster richColors position="top-right" />

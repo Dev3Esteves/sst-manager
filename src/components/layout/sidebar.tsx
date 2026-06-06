@@ -80,6 +80,7 @@ const sections: NavSection[] = [
   },
   {
     items: [
+      { href: "/treinamento", label: "Treinamento", icon: GraduationCap },
       { href: "/ajuda", label: "Ajuda / Manuais", icon: BookOpen },
     ],
   },

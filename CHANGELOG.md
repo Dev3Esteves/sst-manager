@@ -7,6 +7,12 @@ e o versionamento segue [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Não lançado]
 
+_Mudanças em desenvolvimento na branch `master` ainda não publicadas numa tag._
+
+---
+
+## [0.8.0] — 2026-06-06
+
 ### Adicionado
 - **Multiempresa — seletor de empresa ativa** (migration `0020`): tabela de vínculo
   `usuario_empresas` (N:N) + coluna `usuarios.empresa_ativa_id`; `user_empresa_id()`
@@ -47,7 +53,6 @@ e o versionamento segue [Semantic Versioning](https://semver.org/lang/pt-BR/).
 > **Deploy:** aplicar `0016_template_certificado.sql` e configurar `RESEND_API_KEY`/`EMAIL_FROM`.
 
 ---
-
 ## [0.7.0] — 2026-05-11
 
 Sprint A do roadmap SST entregue em 3 sub-sprints integrados, mais infraestrutura
@@ -360,7 +365,8 @@ npm run release:major   # 0.4.0 → 1.0.0
 O script faz: bump no `package.json`, atualiza este `CHANGELOG.md`,
 cria commit de release e cria tag git anotada. Depois é só `git push --tags`.
 
-[Não lançado]: https://github.com/EvandroEstevesFerreira/sst-manager/compare/v0.6.0...HEAD
+[Não lançado]: https://github.com/EvandroEstevesFerreira/sst-manager/compare/v0.8.0...HEAD
+[0.8.0]: https://github.com/EvandroEstevesFerreira/sst-manager/compare/v0.7.0...v0.8.0
 [0.6.0]: https://github.com/EvandroEstevesFerreira/sst-manager/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/EvandroEstevesFerreira/sst-manager/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/EvandroEstevesFerreira/sst-manager/compare/v0.3.1...v0.4.0

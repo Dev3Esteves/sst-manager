@@ -101,8 +101,8 @@ export function Sidebar() {
       "
     >
       <div className="flex h-16 items-center gap-2 border-b px-[22px]">
-        <SistengeLogo variant="icon" height={30} />
-        <div className="opacity-0 transition-opacity duration-150 group-hover/sidebar:opacity-100 2xl:opacity-100 whitespace-nowrap">
+        <SistengeLogo variant="icon" height={30} className="shrink-0" />
+        <div className="min-w-0 opacity-0 transition-opacity duration-150 group-hover/sidebar:opacity-100 2xl:opacity-100 whitespace-nowrap">
           <div className="text-sm font-semibold leading-tight">SST Manager</div>
           <div className="text-xs text-muted-foreground leading-tight">SISTENGE</div>
         </div>

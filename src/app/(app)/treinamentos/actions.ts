@@ -69,6 +69,8 @@ export async function createRealizacao(formData: FormData) {
     data_realizacao: formData.get("data_realizacao"),
     instrutor: (formData.get("instrutor") as string) || null,
     entidade: (formData.get("entidade") as string) || null,
+    instrutor_id: (formData.get("instrutor_id") as string) || null,
+    entidade_id: (formData.get("entidade_id") as string) || null,
     local: (formData.get("local") as string) || null,
     nota_avaliacao: (formData.get("nota_avaliacao") as string) || null,
   })

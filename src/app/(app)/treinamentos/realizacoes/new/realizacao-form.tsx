@@ -11,21 +11,40 @@ import { Loader2 } from "lucide-react"
 
 type Colaborador = { id: string; nome_completo: string }
 type Treinamento = { id: string; titulo: string; nr_referencia?: string | null; validade_meses?: number | null }
+type Instrutor = { id: string; nome: string }
+type Entidade = { id: string; nome: string }
 type FormErrors = Record<string, string[] | undefined> & { _form?: string[] }
 
 export function RealizacaoForm({
-  colaboradores, treinamentos, action,
+  colaboradores, treinamentos, instrutores, entidades, action,
 }: {
   colaboradores: Colaborador[]
   treinamentos: Treinamento[]
+  instrutores: Instrutor[]
+  entidades: Entidade[]
   action: (formData: FormData) => Promise<{ error?: FormErrors } | void>
 }) {
   const [errors, setErrors] = useState<FormErrors>({})
   const [pending, startTransition] = useTransition()
   const [colabId, setColabId] = useState("")
   const [trnId, setTrnId] = useState("")
+  const [instrutorId, setInstrutorId] = useState("")
+  const [instrutorNome, setInstrutorNome] = useState("")
+  const [entidadeId, setEntidadeId] = useState("")
+  const [entidadeNome, setEntidadeNome] = useState("")
 
   const trnSelecionado = treinamentos.find(t => t.id === trnId)
+
+  function selecionarInstrutor(id: string) {
+    setInstrutorId(id)
+    const i = instrutores.find((x) => x.id === id)
+    if (i) setInstrutorNome(i.nome)
+  }
+  function selecionarEntidade(id: string) {
+    setEntidadeId(id)
+    const e = entidades.find((x) => x.id === id)
+    if (e) setEntidadeNome(e.nome)
+  }
 
   async function handleSubmit(formData: FormData) {
     formData.set("colaborador_id", colabId)
@@ -80,13 +99,41 @@ export function RealizacaoForm({
             <Label htmlFor="nota_avaliacao">Nota (0-10)</Label>
             <Input id="nota_avaliacao" name="nota_avaliacao" type="number" step="0.1" min="0" max="10" />
           </div>
+          <input type="hidden" name="instrutor_id" value={instrutorId} />
+          <input type="hidden" name="entidade_id" value={entidadeId} />
           <div className="space-y-2">
-            <Label htmlFor="instrutor">Instrutor</Label>
-            <Input id="instrutor" name="instrutor" />
+            <div className="flex items-center justify-between">
+              <Label>Instrutor (cadastro)</Label>
+              <Link href="/instrutores/new" target="_blank" className="text-xs text-primary hover:underline">+ Cadastrar</Link>
+            </div>
+            <Select value={instrutorId} onValueChange={selecionarInstrutor}>
+              <SelectTrigger><SelectValue placeholder={instrutores.length ? "Selecione" : "Nenhum cadastrado"} /></SelectTrigger>
+              <SelectContent>
+                {instrutores.map((i) => <SelectItem key={i.id} value={i.id}>{i.nome}</SelectItem>)}
+              </SelectContent>
+            </Select>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="entidade">Entidade</Label>
-            <Input id="entidade" name="entidade" />
+            <Label htmlFor="instrutor">Instrutor (nome no certificado)</Label>
+            <Input id="instrutor" name="instrutor" value={instrutorNome}
+              onChange={(e) => { setInstrutorNome(e.target.value); setInstrutorId("") }} />
+          </div>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label>Entidade (cadastro)</Label>
+              <Link href="/entidades-treinamento/new" target="_blank" className="text-xs text-primary hover:underline">+ Cadastrar</Link>
+            </div>
+            <Select value={entidadeId} onValueChange={selecionarEntidade}>
+              <SelectTrigger><SelectValue placeholder={entidades.length ? "Selecione" : "Nenhuma cadastrada"} /></SelectTrigger>
+              <SelectContent>
+                {entidades.map((e) => <SelectItem key={e.id} value={e.id}>{e.nome}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="entidade">Entidade (nome no certificado)</Label>
+            <Input id="entidade" name="entidade" value={entidadeNome}
+              onChange={(e) => { setEntidadeNome(e.target.value); setEntidadeId("") }} />
           </div>
           <div className="space-y-2 md:col-span-2">
             <Label htmlFor="local">Local</Label>

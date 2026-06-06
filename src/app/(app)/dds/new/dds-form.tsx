@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { SignatureCanvas } from "@/components/signature-canvas"
-import { Loader2, Plus, Trash2, Search, CheckCircle2, PenLine, UserPlus, MessageSquare } from "lucide-react"
+import { Loader2, Plus, Trash2, Search, CheckCircle2, PenLine, UserPlus, MessageSquare, Settings2, ListChecks } from "lucide-react"
 import { TEMAS_SUGERIDOS, type DdsInput, type DdsParticipante } from "@/lib/validations/dds"
 
 type Empresa = { id: string; razao_social: string }
@@ -20,13 +20,18 @@ type Colaborador = {
   empresa_id: string
   cargo_titulo: string | null
 }
+type Mediador = { id: string; nome: string; cargo: string | null }
 type ParticipanteLocal = DdsParticipante & { id: string } // ID local para key/tracking
 
+const MEDIADOR_MANUAL = "__manual__"
+
 export function DDSForm({
-  empresas, colaboradores, action,
+  empresas, colaboradores, temas = [], mediadores = [], action,
 }: {
   empresas: Empresa[]
   colaboradores: Colaborador[]
+  temas?: string[]
+  mediadores?: Mediador[]
   action: (payload: DdsInput) => Promise<{ ok: false; error: string } | void>
 }) {
   const [pending, startTransition] = useTransition()
@@ -61,6 +66,17 @@ export function DDSForm({
     })
   }, [colaboradores, busca, colabSelecionadosIds])
 
+  // Temas: cadastrados (empresa) primeiro, depois sugestões padrão, sem duplicar
+  const temasOpcoes = useMemo(() => {
+    const vistos = new Set<string>()
+    const out: string[] = []
+    for (const t of [...temas, ...TEMAS_SUGERIDOS]) {
+      const k = t.trim().toLowerCase()
+      if (t.trim() && !vistos.has(k)) { vistos.add(k); out.push(t.trim()) }
+    }
+    return out
+  }, [temas])
+
   function adicionarColaborador(c: Colaborador) {
     setParticipantes((prev) => [...prev, {
       id: crypto.randomUUID(),
@@ -70,6 +86,27 @@ export function DDSForm({
       cargo: c.cargo_titulo,
       assinatura_data_url: null,
     }])
+  }
+
+  function adicionarTodos() {
+    const novos = colaboradoresFiltrados.map((c) => ({
+      id: crypto.randomUUID(),
+      colaborador_id: c.id,
+      nome: c.nome_completo,
+      cpf: c.cpf,
+      cargo: c.cargo_titulo,
+      assinatura_data_url: null,
+    }))
+    if (novos.length > 0) setParticipantes((prev) => [...prev, ...novos])
+  }
+
+  function selecionarMediador(id: string) {
+    if (id === MEDIADOR_MANUAL) return
+    const m = mediadores.find((x) => x.id === id)
+    if (m) {
+      setMediadorNome(m.nome)
+      if (m.cargo) setMediadorCargo(m.cargo)
+    }
   }
 
   function adicionarAvulso() {
@@ -170,12 +207,17 @@ export function DDSForm({
             <Input id="local" value={local} onChange={(e) => setLocal(e.target.value)} placeholder="Ex: Data Center ABC — Sala 3" />
           </div>
           <div className="space-y-2 md:col-span-2">
-            <Label htmlFor="tema">Tema *</Label>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="tema">Tema *</Label>
+              <Link href="/dds-catalogo" target="_blank" className="text-xs text-primary hover:underline inline-flex items-center gap-1">
+                <Settings2 className="h-3 w-3" /> Gerenciar catálogo
+              </Link>
+            </div>
             <Input id="tema" value={tema} onChange={(e) => setTema(e.target.value)} list="temas-sugeridos" placeholder="Ex: NR-10 — Riscos em trabalho com eletricidade" />
             <datalist id="temas-sugeridos">
-              {TEMAS_SUGERIDOS.map((t) => <option key={t} value={t} />)}
+              {temasOpcoes.map((t) => <option key={t} value={t} />)}
             </datalist>
-            <p className="text-xs text-muted-foreground">Comece a digitar para ver sugestões.</p>
+            <p className="text-xs text-muted-foreground">Comece a digitar para ver os temas cadastrados e sugestões.</p>
           </div>
           <div className="space-y-2">
             <Label htmlFor="data_dds">Data *</Label>
@@ -191,6 +233,20 @@ export function DDSForm({
               <Input id="duracao" type="number" min="1" max="240" value={duracao} onChange={(e) => setDuracao(+e.target.value)} />
             </div>
           </div>
+          {mediadores.length > 0 && (
+            <div className="space-y-2 md:col-span-2">
+              <Label>Mediador cadastrado</Label>
+              <Select value={MEDIADOR_MANUAL} onValueChange={selecionarMediador}>
+                <SelectTrigger><SelectValue placeholder="Selecione para preencher" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={MEDIADOR_MANUAL}>— Preencher manualmente —</SelectItem>
+                  {mediadores.map((m) => (
+                    <SelectItem key={m.id} value={m.id}>{m.nome}{m.cargo ? ` — ${m.cargo}` : ""}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
           <div className="space-y-2">
             <Label htmlFor="mediador_nome">Mediador (nome) *</Label>
             <Input id="mediador_nome" value={mediadorNome} onChange={(e) => setMediadorNome(e.target.value)} />
@@ -225,10 +281,16 @@ export function DDSForm({
               {participantes.length} adicionado(s) · {totalAssinados} assinatura(s) coletada(s)
             </CardDescription>
           </div>
-          <Button type="button" variant="outline" size="sm" onClick={adicionarAvulso}>
-            <UserPlus className="h-4 w-4" />
-            Avulso
-          </Button>
+          <div className="flex gap-2">
+            <Button type="button" variant="outline" size="sm" onClick={adicionarTodos} disabled={colaboradoresFiltrados.length === 0}>
+              <ListChecks className="h-4 w-4" />
+              Selecionar todos{busca ? " (filtrados)" : ""}
+            </Button>
+            <Button type="button" variant="outline" size="sm" onClick={adicionarAvulso}>
+              <UserPlus className="h-4 w-4" />
+              Avulso
+            </Button>
+          </div>
         </CardHeader>
         <CardContent className="space-y-4">
           {/* Busca de colaboradores cadastrados */}

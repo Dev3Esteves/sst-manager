@@ -86,7 +86,13 @@ const sections: NavSection[] = [
   },
 ]
 
-export function Sidebar() {
+export function Sidebar({
+  empresaLogoUrl = null,
+  empresaNome = null,
+}: {
+  empresaLogoUrl?: string | null
+  empresaNome?: string | null
+} = {}) {
   const pathname = usePathname()
 
   return (
@@ -101,11 +107,24 @@ export function Sidebar() {
       "
     >
       <div className="flex h-16 items-center gap-2 border-b px-[22px]">
-        <SistengeLogo variant="icon" height={30} className="shrink-0" />
-        <div className="min-w-0 opacity-0 transition-opacity duration-150 group-hover/sidebar:opacity-100 2xl:opacity-100 whitespace-nowrap">
-          <div className="text-sm font-semibold leading-tight">SST Manager</div>
-          <div className="text-xs text-muted-foreground leading-tight">SISTENGE</div>
-        </div>
+        {empresaLogoUrl ? (
+          // Logo da empresa ativa (igual ao People). Recolhida: object-left +
+          // overflow-hidden do aside mostram o canto esquerdo do logo.
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={empresaLogoUrl}
+            alt={empresaNome ?? "Empresa"}
+            className="h-9 w-auto max-w-[190px] object-contain object-left shrink-0"
+          />
+        ) : (
+          <>
+            <SistengeLogo variant="icon" height={30} className="shrink-0" />
+            <div className="min-w-0 opacity-0 transition-opacity duration-150 group-hover/sidebar:opacity-100 2xl:opacity-100 whitespace-nowrap">
+              <div className="text-sm font-semibold leading-tight">SST Manager</div>
+              <div className="text-xs text-muted-foreground leading-tight">SISTENGE</div>
+            </div>
+          </>
+        )}
       </div>
       <nav className="flex-1 space-y-4 p-3 overflow-y-auto overflow-x-hidden scrollbar-hide">
         {sections.map((section, si) => (

@@ -11,6 +11,7 @@ import {
   Stethoscope, Hospital, School, UserCheck, Gauge, BadgeCheck,
   type LucideIcon,
 } from "lucide-react"
+import Image from "next/image"
 import { SistengeLogo } from "@/components/sistenge-logo"
 import { APP_VERSION } from "@/lib/version"
 
@@ -106,25 +107,24 @@ export function Sidebar({
         overflow-hidden print:hidden
       "
     >
-      <div className="flex h-16 items-center gap-2 border-b px-[22px]">
-        {empresaLogoUrl ? (
-          // Logo da empresa ativa (igual ao People). Recolhida: object-left +
-          // overflow-hidden do aside mostram o canto esquerdo do logo.
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={empresaLogoUrl}
-            alt={empresaNome ?? "Empresa"}
-            className="h-9 w-auto max-w-[190px] object-contain object-left shrink-0"
-          />
-        ) : (
-          <>
-            <SistengeLogo variant="icon" height={30} className="shrink-0" />
-            <div className="min-w-0 opacity-0 transition-opacity duration-150 group-hover/sidebar:opacity-100 2xl:opacity-100 whitespace-nowrap">
-              <div className="text-sm font-semibold leading-tight">SST Manager</div>
-              <div className="text-xs text-muted-foreground leading-tight">SISTENGE</div>
-            </div>
-          </>
-        )}
+      <div className="flex h-16 items-center border-b overflow-hidden">
+        {/* Recolhida: ícone oficial SISTENGE centralizado no trilho de 72px */}
+        <div className="flex w-[72px] shrink-0 items-center justify-center group-hover/sidebar:hidden 2xl:hidden">
+          <Image src="/logos/sistenge-icone-principal.svg" alt="SISTENGE" width={34} height={34} priority />
+        </div>
+        {/* Expandida: logo da empresa ativa (igual People); fallback SISTENGE */}
+        <div className="hidden min-w-0 items-center px-[22px] group-hover/sidebar:flex 2xl:flex">
+          {empresaLogoUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={empresaLogoUrl}
+              alt={empresaNome ?? "Empresa"}
+              className="h-9 w-auto max-w-[200px] object-contain"
+            />
+          ) : (
+            <SistengeLogo variant="full" height={26} />
+          )}
+        </div>
       </div>
       <nav className="flex-1 space-y-4 p-3 overflow-y-auto overflow-x-hidden scrollbar-hide">
         {sections.map((section, si) => (

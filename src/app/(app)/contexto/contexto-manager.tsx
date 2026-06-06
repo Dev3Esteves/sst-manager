@@ -8,18 +8,70 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Loader2, Plus, Globe, Users } from "lucide-react"
-import { createQuestao, toggleQuestao, createParte, toggleParte } from "./actions"
+import { Loader2, Plus, Globe, Users, Save, Target } from "lucide-react"
+import { createQuestao, toggleQuestao, createParte, toggleParte, salvarEscopo } from "./actions"
 
 type Questao = { id: string; tipo: string; descricao: string; ativo: boolean }
 type Parte = { id: string; nome: string; tipo: string; necessidades: string | null; requisitos: string | null; ativo: boolean }
+type Escopo = { conteudo: string; exclusoes: string | null; aprovado_por_nome: string | null; data_aprovacao: string | null } | null
 
-export function ContextoManager({ questoes, partes }: { questoes: Questao[]; partes: Parte[] }) {
+export function ContextoManager({ questoes, partes, escopo }: { questoes: Questao[]; partes: Parte[]; escopo: Escopo }) {
   return (
     <div className="space-y-6">
       <QuestoesCard questoes={questoes} />
       <PartesCard partes={partes} />
+      <EscopoCard escopo={escopo} />
     </div>
+  )
+}
+
+function EscopoCard({ escopo }: { escopo: Escopo }) {
+  const [pending, startTransition] = useTransition()
+  const [conteudo, setConteudo] = useState(escopo?.conteudo ?? "")
+  const [exclusoes, setExclusoes] = useState(escopo?.exclusoes ?? "")
+  const [aprovado, setAprovado] = useState(escopo?.aprovado_por_nome ?? "")
+  const [data, setData] = useState(escopo?.data_aprovacao?.slice(0, 10) ?? "")
+  const [erro, setErro] = useState<string | null>(null)
+  function salvar() {
+    setErro(null)
+    startTransition(async () => {
+      const r = await salvarEscopo({ conteudo, exclusoes: exclusoes || null, aprovado_por_nome: aprovado || null, data_aprovacao: data || null })
+      if ("error" in r && r.error) setErro(r.error._form[0]); else toast.success("Escopo do SGSST salvo.")
+    })
+  }
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-base flex items-center gap-2"><Target className="h-4 w-4" /> Escopo do SGSST (4.3/4.4)</CardTitle>
+        <CardDescription>Limites e aplicabilidade do sistema de gestão de SST, com exclusões justificadas.</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        <div className="space-y-1.5">
+          <Label className="text-xs">Escopo</Label>
+          <textarea value={conteudo} onChange={(e) => setConteudo(e.target.value)} rows={5}
+            placeholder="Ex: O SGSST abrange todas as obras e atividades da [EMPRESA] no território nacional, incluindo trabalhadores próprios e terceiros sob seu controle..."
+            className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm" />
+        </div>
+        <div className="space-y-1.5">
+          <Label className="text-xs">Exclusões (justificadas)</Label>
+          <Input value={exclusoes} onChange={(e) => setExclusoes(e.target.value)} placeholder="Opcional" />
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div className="space-y-1.5">
+            <Label className="text-xs">Aprovado por</Label>
+            <Input value={aprovado} onChange={(e) => setAprovado(e.target.value)} />
+          </div>
+          <div className="space-y-1.5">
+            <Label className="text-xs">Data de aprovação</Label>
+            <Input type="date" value={data} onChange={(e) => setData(e.target.value)} />
+          </div>
+        </div>
+        {erro && <p className="text-xs text-destructive">{erro}</p>}
+        <Button type="button" size="sm" onClick={salvar} disabled={pending || conteudo.trim().length < 20}>
+          {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />} Salvar escopo
+        </Button>
+      </CardContent>
+    </Card>
   )
 }
 

@@ -82,19 +82,28 @@ export function Sidebar() {
   const pathname = usePathname()
 
   return (
-    <aside className="hidden lg:flex lg:flex-col lg:w-64 lg:border-r lg:bg-background print:hidden">
-      <div className="flex h-16 items-center gap-2 border-b px-4">
-        <SistengeLogo variant="icon" height={32} />
-        <div>
+    <aside
+      className="
+        group/sidebar fixed inset-y-0 left-0 z-40
+        hidden lg:flex lg:flex-col
+        w-[72px] hover:w-64
+        border-r bg-background
+        transition-[width,box-shadow] duration-200 ease-out hover:shadow-md
+        overflow-hidden print:hidden
+      "
+    >
+      <div className="flex h-16 items-center gap-2 border-b px-[22px]">
+        <SistengeLogo variant="icon" height={30} />
+        <div className="opacity-0 transition-opacity duration-150 group-hover/sidebar:opacity-100 whitespace-nowrap">
           <div className="text-sm font-semibold leading-tight">SST Manager</div>
           <div className="text-xs text-muted-foreground leading-tight">SISTENGE</div>
         </div>
       </div>
-      <nav className="flex-1 space-y-4 p-3 overflow-y-auto">
+      <nav className="flex-1 space-y-4 p-3 overflow-y-auto overflow-x-hidden">
         {sections.map((section, si) => (
           <div key={si} className="space-y-0.5">
             {section.label && (
-              <div className="px-3 pt-2 pb-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70">
+              <div className="px-3 pt-2 pb-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70 whitespace-nowrap opacity-0 transition-opacity duration-150 group-hover/sidebar:opacity-100">
                 {section.label}
               </div>
             )}
@@ -107,9 +116,9 @@ export function Sidebar() {
                     className="flex items-center gap-3 rounded-md px-3 py-2 text-sm text-muted-foreground/60 cursor-not-allowed"
                     title="Em breve"
                   >
-                    <Icon className="h-4 w-4" />
-                    {label}
-                    <span className="ml-auto text-[10px] uppercase tracking-wider">soon</span>
+                    <Icon className="h-4 w-4 shrink-0" />
+                    <span className="whitespace-nowrap opacity-0 transition-opacity duration-150 group-hover/sidebar:opacity-100">{label}</span>
+                    <span className="ml-auto text-[10px] uppercase tracking-wider opacity-0 transition-opacity duration-150 group-hover/sidebar:opacity-100">soon</span>
                   </div>
                 )
               }
@@ -124,15 +133,15 @@ export function Sidebar() {
                       : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
                   )}
                 >
-                  <Icon className="h-4 w-4" />
-                  {label}
+                  <Icon className="h-4 w-4 shrink-0" />
+                  <span className="whitespace-nowrap opacity-0 transition-opacity duration-150 group-hover/sidebar:opacity-100">{label}</span>
                 </Link>
               )
             })}
           </div>
         ))}
       </nav>
-      <div className="border-t p-3 text-[10px] text-muted-foreground space-y-2">
+      <div className="border-t p-3 text-[10px] text-muted-foreground space-y-2 whitespace-nowrap opacity-0 transition-opacity duration-150 group-hover/sidebar:opacity-100">
         <div className="flex items-center justify-between">
           <span>Pressione</span>
           <kbd className="inline-flex items-center rounded border bg-background px-1.5 py-0.5 font-mono">

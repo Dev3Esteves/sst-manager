@@ -6,7 +6,6 @@ import { Badge, type BadgeProps } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { formatCPF } from "@/lib/validations/shared"
-import { EmpresaBadge } from "@/components/empresa-badge"
 import { Plus, Pencil, FileSpreadsheet, HardHat } from "lucide-react"
 import { ExportCsvButton } from "@/components/shared/export-csv-button"
 import { ListFilters } from "@/components/shared/list-filters"
@@ -116,7 +115,6 @@ export default async function ColaboradoresPage({
               <TableRow>
                 <TableHead>Nome</TableHead>
                 <TableHead>CPF</TableHead>
-                <TableHead>Empresa</TableHead>
                 <TableHead>Cargo / Obra</TableHead>
                 <TableHead>Vínculo</TableHead>
                 <TableHead>Status</TableHead>
@@ -125,7 +123,6 @@ export default async function ColaboradoresPage({
             </TableHeader>
             <TableBody>
               {colaboradores?.map((c) => {
-                const empresa = Array.isArray(c.empresas) ? c.empresas[0] : c.empresas
                 const cargo = Array.isArray(c.cargos) ? c.cargos[0] : c.cargos
                 const obra = Array.isArray(c.obras) ? c.obras[0] : c.obras
                 return (
@@ -137,9 +134,6 @@ export default async function ColaboradoresPage({
                       )}
                     </TableCell>
                     <TableCell className="font-mono text-sm">{formatCPF(c.cpf)}</TableCell>
-                    <TableCell>
-                      <EmpresaBadge empresaId={c.empresa_id} nome={empresa?.razao_social ?? "—"} />
-                    </TableCell>
                     <TableCell>
                       <div>{cargo?.titulo ?? "—"}</div>
                       {obra?.nome && (
@@ -178,7 +172,7 @@ export default async function ColaboradoresPage({
               })}
               {(!colaboradores || colaboradores.length === 0) && (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
+                  <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
                     Nenhum colaborador cadastrado.
                   </TableCell>
                 </TableRow>

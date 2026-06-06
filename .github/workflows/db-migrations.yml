@@ -1,0 +1,49 @@
+name: DB migrations
+
+# Valida que TODAS as migrations sobem do zero num Postgres Supabase efêmero
+# (com schemas auth/storage), em todo PR/push que toque o banco. É a rede de
+# segurança para nunca aplicarmos uma migration quebrada em produção.
+#
+# Nota: depende de Docker (provido pelos runners do GitHub). Numa primeira
+# execução, extensões usadas pelas migrations (ex.: pg_cron, pg_net) podem
+# exigir ajuste em supabase/config.toml — ver docs/MIGRATIONS.md.
+
+on:
+  pull_request:
+    branches: [master, main]
+    paths:
+      - "supabase/migrations/**"
+      - "supabase/config.toml"
+      - ".github/workflows/db-migrations.yml"
+  push:
+    branches: [master, main]
+    paths:
+      - "supabase/migrations/**"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-migrations:
+    name: Aplicar migrations do zero
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Subir stack local (aplica as migrations)
+        run: supabase start
+
+      - name: Reaplicar do zero (db reset) — falha se alguma migration quebrar
+        run: supabase db reset
+
+      - name: Parar stack
+        if: always()
+        run: supabase stop --no-backup

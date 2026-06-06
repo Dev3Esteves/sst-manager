@@ -28,7 +28,7 @@ const CLAUSULAS: Clausula[] = [
   {
     numero: "5", titulo: "Liderança e participação dos trabalhadores",
     itens: [
-      { requisito: "5.1 Liderança e comprometimento", como: "Painel GRO e indicadores para a diretoria (perfil gestor_diretoria).", status: "parcial" },
+      { requisito: "5.1 Liderança e comprometimento", como: "Política de SST aprovada pela direção (/politica) + análise crítica pela direção (/analise-critica) + Painel GRO/indicadores demonstram o comprometimento.", status: "atende" },
       { requisito: "5.2 Política de SST", como: "Módulo Política de SST (/politica): documento versionado com os compromissos da 5.2, aprovação da direção, publicação e registro de ciência dos trabalhadores.", status: "atende" },
       { requisito: "5.4 Consulta e participação", como: "DDS (diálogos), participantes e assinaturas registrados.", status: "parcial" },
     ],
@@ -66,7 +66,7 @@ const CLAUSULAS: Clausula[] = [
       { requisito: "9.1 Monitoramento, medição e avaliação", como: "Indicadores (TF/TG), inspeções com % conformidade, vencimentos, Painel GRO.", status: "atende" },
       { requisito: "9.1 Avaliação do atendimento legal", como: "Vencimentos de exames/treinamentos/CAs + matriz de treinamentos por NR.", status: "atende" },
       { requisito: "9.2 Auditoria interna", como: "Inspeções servem de base; programa formal de auditoria é processo.", status: "parcial" },
-      { requisito: "9.3 Análise crítica pela direção", como: "Relatório mensal + Painel GRO alimentam a análise crítica.", status: "parcial" },
+      { requisito: "9.3 Análise crítica pela direção", como: "Módulo Análise Crítica (/analise-critica): registra entradas (desempenho, NCs, auditorias, requisitos) e saídas (conclusões e decisões) das análises pela direção.", status: "atende" },
     ],
   },
   {

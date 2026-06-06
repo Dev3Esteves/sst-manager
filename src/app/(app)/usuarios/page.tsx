@@ -59,7 +59,9 @@ export default async function UsuariosPage({
   const [usuariosResult, authResult] = await Promise.all([
     admin.from("usuarios")
       .select(
-        "id, ativo, ultimo_acesso, created_at, perfis_acesso(nome, descricao), empresas(razao_social), colaboradores(nome_completo)",
+        // empresa_ativa_id (0020) criou uma 2ª FK usuarios→empresas; desambigua
+        // o embed apontando a FK da coluna empresa_id (empresa-empregadora).
+        "id, ativo, ultimo_acesso, created_at, perfis_acesso(nome, descricao), empresas!usuarios_empresa_id_fkey(razao_social), colaboradores(nome_completo)",
         { count: "exact" },
       )
       .order("created_at", { ascending: false })

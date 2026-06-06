@@ -24,8 +24,21 @@ export function EmpresaSwitcher({
   const router = useRouter()
   const [pending, startTransition] = useTransition()
 
-  // Sem seletor para quem opera uma única empresa (comportamento de hoje).
-  if (empresas.length <= 1) return null
+  if (empresas.length === 0) return null
+
+  // Uma empresa: selo estático — indicador SEMPRE visível da empresa ativa.
+  if (empresas.length === 1) {
+    const unica = empresas[0]
+    return (
+      <div
+        className="flex items-center gap-1.5 rounded-md border bg-muted/40 px-2.5 py-1 text-xs font-medium"
+        title="Empresa"
+      >
+        <Building2 className="h-3.5 w-3.5 text-muted-foreground" />
+        <span className="truncate max-w-[180px]">{unica?.razao_social ?? "—"}</span>
+      </div>
+    )
+  }
 
   function trocar(empresaId: string) {
     if (empresaId === ativaId) return

@@ -7,7 +7,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { formatDate } from "@/lib/utils/vencimento"
 import { ListFilters } from "@/components/shared/list-filters"
-import { Plus, ClipboardCheck } from "lucide-react"
+import { getAuthWithRole } from "@/lib/auth/guards"
+import { Plus, ClipboardCheck, Settings2 } from "lucide-react"
 
 function conformidadeVariant(p: number | null): BadgeProps["variant"] {
   if (p === null) return "secondary"
@@ -36,6 +37,7 @@ export default async function InspecoesPage({
   if (sp.busca) query = query.ilike("local", `%${sp.busca}%`)
 
   const { data: inspecoes } = await query
+  const podeGerenciarTemplates = await getAuthWithRole(["admin", "tec_seguranca", "engenheiro_seg"])
 
   return (
     <div className="container py-8 space-y-6">
@@ -44,9 +46,16 @@ export default async function InspecoesPage({
           <h1 className="text-3xl font-bold tracking-tight">Inspeções</h1>
           <p className="text-muted-foreground">Checklists executados em campo.</p>
         </div>
-        <Button asChild>
-          <Link href="/inspecoes/new"><Plus className="h-4 w-4" />Nova inspeção</Link>
-        </Button>
+        <div className="flex gap-2">
+          {podeGerenciarTemplates && (
+            <Button variant="outline" asChild>
+              <Link href="/inspecoes/templates"><Settings2 className="h-4 w-4" />Templates</Link>
+            </Button>
+          )}
+          <Button asChild>
+            <Link href="/inspecoes/new"><Plus className="h-4 w-4" />Nova inspeção</Link>
+          </Button>
+        </div>
       </div>
 
       <Suspense>

@@ -39,3 +39,36 @@ export function calcConformidade(respostas: RespostaItem[]): number {
   const conformes = considerados.filter(r => r.conforme === "sim").length
   return Math.round((conformes / considerados.length) * 10000) / 100
 }
+
+// --------------------------------------------------------------------------
+// CRUD de TEMPLATES de inspeção (catálogo global — admin/tec_seguranca)
+// --------------------------------------------------------------------------
+
+export const templateItemSchema = z.object({
+  grupo: z.string().optional().nullable(),
+  pergunta: z.string().min(1, "Pergunta obrigatória"),
+  tipo_resposta: z.string().optional().nullable(),
+  nr_referencia: z.string().optional().nullable(),
+  foto_obrigatoria: z.boolean().optional(),
+})
+
+export const templateInspecaoSchema = z.object({
+  titulo: z.string().min(3, "Título obrigatório (mín. 3 caracteres)"),
+  categoria: z.string().optional().nullable(),
+  periodicidade: z.string().optional().nullable(),
+  ativo: z.boolean().default(true),
+  itens: z.array(templateItemSchema).min(1, "Adicione pelo menos um item"),
+})
+
+export type TemplateInspecaoInput = z.infer<typeof templateInspecaoSchema>
+
+export const PERIODICIDADES: Record<string, string> = {
+  diario: "Diário",
+  semanal: "Semanal",
+  quinzenal: "Quinzenal",
+  mensal: "Mensal",
+  trimestral: "Trimestral",
+  semestral: "Semestral",
+  anual: "Anual",
+  sob_demanda: "Sob demanda",
+}

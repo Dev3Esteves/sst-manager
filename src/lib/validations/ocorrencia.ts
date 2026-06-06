@@ -53,3 +53,34 @@ export const OCORRENCIA_TIPOS: Record<string, string> = {
 export const GRAVIDADE_LABEL: Record<string, string> = {
   leve: "Leve", moderado: "Moderado", grave: "Grave", fatal: "Fatal",
 }
+
+// --------------------------------------------------------------------------
+// TEMPLATES de ocorrência (catálogo global — pré-configura o formulário)
+// --------------------------------------------------------------------------
+
+export const templateOcorrenciaSchema = z.object({
+  tipo: z.enum([
+    "acidente_tipico", "acidente_trajeto", "doenca_ocupacional",
+    "quase_acidente", "incidente", "condicao_insegura", "ato_inseguro",
+    "desvio", "emergencia",
+  ]),
+  titulo: z.string().min(3, "Título obrigatório (mín. 3 caracteres)"),
+  descricao_modelo: z.string().optional().nullable(),
+  gravidade_sugerida: z.enum(["leve", "moderado", "grave", "fatal"]).optional().nullable(),
+  natureza_lesao_sugerida: z.string().optional().nullable(),
+  agente_causador_sugerido: z.string().optional().nullable(),
+  roteiro_investigacao: z.array(z.string().min(1)).optional().nullable(),
+  ativo: z.boolean().default(true),
+})
+
+export type TemplateOcorrenciaInput = z.infer<typeof templateOcorrenciaSchema>
+
+/** Defaults que um template injeta no formulário de nova ocorrência. */
+export type TemplateOcorrenciaInit = {
+  tipo: OcorrenciaInput["tipo"]
+  descricao_modelo: string | null
+  gravidade_sugerida: OcorrenciaInput["gravidade"]
+  natureza_lesao_sugerida: string | null
+  agente_causador_sugerido: string | null
+  roteiro_investigacao: string[] | null
+}

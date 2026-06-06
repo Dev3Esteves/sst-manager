@@ -7,8 +7,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Loader2, AlertTriangle } from "lucide-react"
-import { OCORRENCIA_TIPOS, GRAVIDADE_LABEL, type OcorrenciaInput } from "@/lib/validations/ocorrencia"
+import { Loader2, AlertTriangle, Lightbulb } from "lucide-react"
+import { OCORRENCIA_TIPOS, GRAVIDADE_LABEL, type OcorrenciaInput, type TemplateOcorrenciaInit } from "@/lib/validations/ocorrencia"
 import { BodyRegionSelector, regioesToString, type RegiaoCorpo } from "@/components/body-region-selector"
 
 type Empresa = { id: string; razao_social: string }
@@ -31,26 +31,27 @@ type OcorrenciaExistente = {
 }
 
 export function OcorrenciaForm({
-  empresas, colaboradores, action, ocorrencia,
+  empresas, colaboradores, action, ocorrencia, templateInit,
 }: {
   empresas: Empresa[]
   colaboradores: Colaborador[]
   action: (payload: OcorrenciaInput) => Promise<{ error?: FormErrors } | void>
   ocorrencia?: OcorrenciaExistente
+  templateInit?: TemplateOcorrenciaInit
 }) {
   const [errors, setErrors] = useState<FormErrors>({})
   const [pending, startTransition] = useTransition()
   const [empresaId, setEmpresaId] = useState(ocorrencia?.empresa_id ?? empresas[0]?.id ?? "")
-  const [tipo, setTipo] = useState<string>(ocorrencia?.tipo ?? "quase_acidente")
+  const [tipo, setTipo] = useState<string>(ocorrencia?.tipo ?? templateInit?.tipo ?? "quase_acidente")
   const [colabId, setColabId] = useState(ocorrencia?.colaborador_id ?? "")
-  const [gravidade, setGravidade] = useState<string>(ocorrencia?.gravidade ?? "")
+  const [gravidade, setGravidade] = useState<string>(ocorrencia?.gravidade ?? templateInit?.gravidade_sugerida ?? "")
   const [data, setData] = useState(ocorrencia ? ocorrencia.data_ocorrencia.slice(0, 16) : new Date().toISOString().slice(0, 16))
   const [local, setLocal] = useState(ocorrencia?.local ?? "")
-  const [descricao, setDescricao] = useState(ocorrencia?.descricao ?? "")
+  const [descricao, setDescricao] = useState(ocorrencia?.descricao ?? templateInit?.descricao_modelo ?? "")
   const [regioesAtingidas, setRegioesAtingidas] = useState<RegiaoCorpo[]>([])
   const [parteCorpoAtingida, setParteCorpoAtingida] = useState(ocorrencia?.parte_corpo_atingida ?? "")
-  const [naturezaLesao, setNaturezaLesao] = useState(ocorrencia?.natureza_lesao ?? "")
-  const [agenteCausador, setAgenteCausador] = useState(ocorrencia?.agente_causador ?? "")
+  const [naturezaLesao, setNaturezaLesao] = useState(ocorrencia?.natureza_lesao ?? templateInit?.natureza_lesao_sugerida ?? "")
+  const [agenteCausador, setAgenteCausador] = useState(ocorrencia?.agente_causador ?? templateInit?.agente_causador_sugerido ?? "")
   const [diasAfastamento, setDiasAfastamento] = useState(ocorrencia?.dias_afastamento?.toString() ?? "")
 
   const ehAcidente = ["acidente_tipico", "acidente_trajeto", "doenca_ocupacional"].includes(tipo)
@@ -87,6 +88,23 @@ export function OcorrenciaForm({
         <h1 className="text-3xl font-bold tracking-tight">{ocorrencia ? "Editar ocorrência" : "Registrar ocorrência"}</h1>
         <p className="text-muted-foreground">{ocorrencia ? "Atualize os dados da ocorrência." : "Após salvar, você poderá fazer a investigação guiada (5 Porquês)."}</p>
       </div>
+
+      {templateInit?.roteiro_investigacao && templateInit.roteiro_investigacao.length > 0 && (
+        <Card className="border-primary/40 bg-primary/5">
+          <CardHeader>
+            <CardTitle className="text-sm flex items-center gap-2">
+              <Lightbulb className="h-4 w-4 text-primary" />
+              Roteiro de investigação sugerido
+            </CardTitle>
+            <CardDescription>Use estas perguntas-guia ao investigar a causa-raiz (5 Porquês) após salvar.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ol className="list-decimal pl-5 space-y-1 text-sm text-muted-foreground">
+              {templateInit.roteiro_investigacao.map((q, i) => <li key={i}>{q}</li>)}
+            </ol>
+          </CardContent>
+        </Card>
+      )}
 
       <Card>
         <CardHeader><CardTitle className="text-lg">1. Classificação</CardTitle></CardHeader>

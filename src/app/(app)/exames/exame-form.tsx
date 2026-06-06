@@ -12,6 +12,8 @@ import { toast } from "sonner"
 import type { AsoExtraido } from "@/lib/ocr/extrair-aso"
 
 type Colaborador = { id: string; nome_completo: string; cpf?: string }
+type Medico = { id: string; nome: string; crm: string; uf_crm: string | null; especialidade: string | null }
+type Clinica = { id: string; nome: string; municipio: string | null; uf: string | null }
 type FormErrors = Record<string, string[] | undefined> & { _form?: string[] }
 
 const OCR_DATA_KEY = "sst:ocr:aso:data"
@@ -37,14 +39,18 @@ type Exame = {
   medico_nome: string | null
   crm: string | null
   clinica: string | null
+  medico_id: string | null
+  clinica_id: string | null
   numero_aso: string | null
   observacoes: string | null
 }
 
 export function ExameForm({
-  colaboradores, action, exame,
+  colaboradores, medicos, clinicas, action, exame,
 }: {
   colaboradores: Colaborador[]
+  medicos: Medico[]
+  clinicas: Clinica[]
   action: (formData: FormData) => Promise<{ error?: FormErrors } | void>
   exame?: Exame
 }) {
@@ -56,10 +62,27 @@ export function ExameForm({
   const [dataRealizacao, setDataRealizacao] = useState(exame?.data_realizacao ?? "")
   const [dataVencimento, setDataVencimento] = useState(exame?.data_vencimento ?? "")
   const [prefilled, setPrefilled] = useState<string[]>([])
+  // Médico e clínica: estado controlado (texto = snapshot; id = vínculo ao cadastro)
+  const [medicoNome, setMedicoNome] = useState(exame?.medico_nome ?? "")
+  const [crm, setCrm] = useState(exame?.crm ?? "")
+  const [medicoId, setMedicoId] = useState(exame?.medico_id ?? "")
+  const [clinica, setClinica] = useState(exame?.clinica ?? "")
+  const [clinicaId, setClinicaId] = useState(exame?.clinica_id ?? "")
   const numeroAsoRef = useRef<HTMLInputElement>(null)
-  const medicoRef = useRef<HTMLInputElement>(null)
-  const crmRef = useRef<HTMLInputElement>(null)
-  const clinicaRef = useRef<HTMLInputElement>(null)
+
+  function selecionarMedico(id: string) {
+    setMedicoId(id)
+    const m = medicos.find((x) => x.id === id)
+    if (m) {
+      setMedicoNome(m.nome)
+      setCrm(m.uf_crm ? `${m.crm}/${m.uf_crm}` : m.crm)
+    }
+  }
+  function selecionarClinica(id: string) {
+    setClinicaId(id)
+    const c = clinicas.find((x) => x.id === id)
+    if (c) setClinica(c.nome)
+  }
 
   // Ao montar, verifica se há dados do OCR em sessionStorage e pré-preenche
   useEffect(() => {
@@ -83,23 +106,16 @@ export function ExameForm({
         if (match) { setColabId(match.id); preenchidos.push("colaborador (via CPF)") }
       }
 
-      // Uncontrolled inputs: popula via ref após o próximo tick
+      // Médico/CRM/clínica via OCR → estado controlado (sem vínculo a cadastro)
+      if (data.medico_nome) { setMedicoNome(data.medico_nome); setMedicoId(""); preenchidos.push("medico") }
+      if (data.crm) { setCrm(data.crm); preenchidos.push("crm") }
+      if (data.clinica) { setClinica(data.clinica); setClinicaId(""); preenchidos.push("clinica") }
+
+      // numero_aso é input não-controlado: popula via ref após o próximo tick
       setTimeout(() => {
         if (data.numero_aso && numeroAsoRef.current) {
           numeroAsoRef.current.value = data.numero_aso
           preenchidos.push("numero_aso")
-        }
-        if (data.medico_nome && medicoRef.current) {
-          medicoRef.current.value = data.medico_nome
-          preenchidos.push("medico")
-        }
-        if (data.crm && crmRef.current) {
-          crmRef.current.value = data.crm
-          preenchidos.push("crm")
-        }
-        if (data.clinica && clinicaRef.current) {
-          clinicaRef.current.value = data.clinica
-          preenchidos.push("clinica")
         }
         setPrefilled(preenchidos)
         if (preenchidos.length > 0) {
@@ -224,17 +240,54 @@ export function ExameForm({
             <Label htmlFor="numero_aso">Número do ASO</Label>
             <Input id="numero_aso" name="numero_aso" ref={numeroAsoRef} defaultValue={exame?.numero_aso ?? ""} />
           </div>
+          <input type="hidden" name="medico_id" value={medicoId} />
+          <input type="hidden" name="clinica_id" value={clinicaId} />
+          <div className="space-y-2 md:col-span-2">
+            <div className="flex items-center justify-between">
+              <Label>Médico responsável (cadastro)</Label>
+              <Link href="/medicos/new" target="_blank" className="text-xs text-primary hover:underline">+ Cadastrar médico</Link>
+            </div>
+            <Select value={medicoId} onValueChange={selecionarMedico}>
+              <SelectTrigger><SelectValue placeholder={medicos.length ? "Selecione um médico cadastrado" : "Nenhum médico cadastrado"} /></SelectTrigger>
+              <SelectContent>
+                {medicos.map((m) => (
+                  <SelectItem key={m.id} value={m.id}>
+                    {m.nome} — CRM {m.crm}{m.uf_crm ? `/${m.uf_crm}` : ""}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
           <div className="space-y-2">
-            <Label htmlFor="medico_nome">Médico responsável</Label>
-            <Input id="medico_nome" name="medico_nome" ref={medicoRef} defaultValue={exame?.medico_nome ?? ""} />
+            <Label htmlFor="medico_nome">Médico (nome no ASO)</Label>
+            <Input
+              id="medico_nome" name="medico_nome" value={medicoNome}
+              onChange={(e) => { setMedicoNome(e.target.value); setMedicoId("") }}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="crm">CRM</Label>
-            <Input id="crm" name="crm" ref={crmRef} defaultValue={exame?.crm ?? ""} />
+            <Input id="crm" name="crm" value={crm} onChange={(e) => { setCrm(e.target.value); setMedicoId("") }} />
           </div>
           <div className="space-y-2 md:col-span-2">
-            <Label htmlFor="clinica">Clínica</Label>
-            <Input id="clinica" name="clinica" ref={clinicaRef} defaultValue={exame?.clinica ?? ""} />
+            <div className="flex items-center justify-between">
+              <Label>Clínica (cadastro)</Label>
+              <Link href="/clinicas/new" target="_blank" className="text-xs text-primary hover:underline">+ Cadastrar clínica</Link>
+            </div>
+            <Select value={clinicaId} onValueChange={selecionarClinica}>
+              <SelectTrigger><SelectValue placeholder={clinicas.length ? "Selecione uma clínica cadastrada" : "Nenhuma clínica cadastrada"} /></SelectTrigger>
+              <SelectContent>
+                {clinicas.map((c) => (
+                  <SelectItem key={c.id} value={c.id}>
+                    {c.nome}{c.municipio ? ` — ${c.municipio}${c.uf ? `/${c.uf}` : ""}` : ""}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2 md:col-span-2">
+            <Label htmlFor="clinica">Clínica (nome no ASO)</Label>
+            <Input id="clinica" name="clinica" value={clinica} onChange={(e) => { setClinica(e.target.value); setClinicaId("") }} />
           </div>
           <div className="space-y-2 md:col-span-2">
             <Label htmlFor="restricoes">Restrições</Label>

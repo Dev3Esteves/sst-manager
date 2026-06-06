@@ -17,6 +17,8 @@ function parseForm(formData: FormData) {
     medico_nome: (formData.get("medico_nome") as string) || null,
     crm: (formData.get("crm") as string) || null,
     clinica: (formData.get("clinica") as string) || null,
+    medico_id: (formData.get("medico_id") as string) || null,
+    clinica_id: (formData.get("clinica_id") as string) || null,
     numero_aso: (formData.get("numero_aso") as string) || null,
     observacoes: (formData.get("observacoes") as string) || null,
   }

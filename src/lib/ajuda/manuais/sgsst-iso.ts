@@ -2,7 +2,7 @@ import type { Manual } from "../tipos"
 
 /**
  * Manuais dos módulos de SGSST / ISO 45001 (programa de aderência).
- * Cada módulo evidencia uma cláusula da ISO 45001:2018.
+ * Cada módulo evidencia uma cláusula da ISO 45001:2018, com exemplos de uso.
  */
 export const manuaisSgsstIso: Manual[] = [
   {
@@ -32,6 +32,15 @@ export const manuaisSgsstIso: Manual[] = [
           "Os trabalhadores leem e clicam em 'Declarar ciência' — fica registrada a comunicação.",
         ] },
       ] },
+      { titulo: "Exemplo de uso", blocos: [
+        { tipo: "exemplo", titulo: "Primeira política da empresa", texto: "A direção aprova a política em reunião de 02/06. Você cria a revisão 1, marca os 5 compromissos, informa 'Aprovada pela diretoria em 02/06/2026' e publica. No mural e no DDS, os encarregados pedem que cada trabalhador entre em /politica e clique em 'Declarar ciência'. Em duas semanas, 92% declararam — o número aparece no topo da política." },
+        { tipo: "cenario", situacao: "A política mudou (ex.: incluiu compromisso com saúde mental).", orientacao: "Crie uma NOVA revisão (revisão 2) em vez de editar a vigente. Ao publicar, a revisão 1 vira histórico e a ciência é solicitada novamente." },
+        { tipo: "atencao", texto: "Publicar substitui a revisão vigente. O histórico das revisões anteriores é preservado para auditoria — nunca é apagado." },
+        { tipo: "faq", itens: [
+          { p: "Posso ter duas políticas publicadas ao mesmo tempo?", r: "Não. Só uma revisão fica vigente; publicar uma nova arquiva a anterior." },
+          { p: "Quem precisa declarar ciência?", r: "Todos os trabalhadores. O percentual de ciência é o indicador de comunicação da política (5.2/7.4)." },
+        ] },
+      ] },
     ],
   },
   {
@@ -52,6 +61,21 @@ export const manuaisSgsstIso: Manual[] = [
         ] },
         { tipo: "dica", texto: "Marque 'envolve aquisição' para registrar os critérios de SST na compra/contratação (8.1.4)." },
       ] },
+      { titulo: "Campos", blocos: [
+        { tipo: "campos", itens: [
+          { campo: "Tipo", descricao: "Processo, equipamento, layout, pessoas, fornecedor, legal...", obrigatorio: true },
+          { campo: "Caráter", descricao: "Temporário ou permanente." },
+          { campo: "Riscos identificados", descricao: "Novos perigos que a mudança introduz e os controles." },
+          { campo: "ADKAR", descricao: "Consciência, Desejo, Conhecimento, Habilidade e Reforço — o lado humano da mudança." },
+        ] },
+      ] },
+      { titulo: "Exemplo de uso", blocos: [
+        { tipo: "exemplo", titulo: "Troca de solvente na pintura", texto: "A produção quer trocar o solvente por um de secagem mais rápida (mudança de processo, permanente). Antes de implementar você registra: novo risco de inflamabilidade e exposição respiratória; controles = ventilação reforçada + respirador com filtro adequado + revisão da FISPQ. No ADKAR: 'Conhecimento' = treinar a equipe no novo manuseio; 'Reforço' = inspeção semanal nas primeiras 4 semanas. Como envolve compra, marca 'envolve aquisição' e registra o critério de SST exigido do fornecedor." },
+        { tipo: "cenario", situacao: "Mudança urgente já aconteceu no campo sem avaliação.", orientacao: "Registre mesmo assim (retroativa), avalie as consequências não intencionais e, se gerou risco não controlado, abra uma não-conformidade." },
+        { tipo: "faq", itens: [
+          { p: "Toda mudança precisa de MOC?", r: "As que podem afetar a SST: processo, equipamento, layout, insumos, equipe-chave, requisitos legais. Pequenos ajustes sem impacto em risco não precisam." },
+        ] },
+      ] },
     ],
   },
   {
@@ -70,6 +94,11 @@ export const manuaisSgsstIso: Manual[] = [
           { campo: "Escopo do SGSST", descricao: "Limites, aplicabilidade e exclusões justificadas." },
         ] },
       ] },
+      { titulo: "Exemplo de uso", blocos: [
+        { tipo: "exemplo", titulo: "Montando o contexto de uma construtora", texto: "Questão externa: 'clientes exigem certificação ISO 45001 em licitações' (oportunidade). Questão interna: 'alta rotatividade de ajudantes' (ameaça à competência em SST). Parte interessada: 'Sindicato da construção' → requisito: cumprir a convenção coletiva sobre EPIs. Escopo: 'SGSST aplica-se às obras de edificação no estado de SP; exclui-se a fabricação de pré-moldados (terceirizada)'." },
+        { tipo: "cenario", situacao: "A empresa entrou num novo segmento (ex.: obras industriais).", orientacao: "Revise as questões de contexto e o escopo: novos riscos, novos requisitos legais e novas partes interessadas (ex.: cliente industrial com regras próprias)." },
+        { tipo: "dica", texto: "Releia o contexto na Análise crítica pela direção (9.3) — ele é entrada obrigatória dessa reunião." },
+      ] },
     ],
   },
   {
@@ -83,6 +112,17 @@ export const manuaisSgsstIso: Manual[] = [
     secoes: [
       { titulo: "Como conduzir", blocos: [
         { tipo: "paragrafo", texto: "Registre a reunião, as entradas consideradas, o resumo do desempenho e as decisões. As saídas alimentam objetivos, recursos e melhoria contínua." },
+      ] },
+      { titulo: "Exemplo de uso", blocos: [
+        { tipo: "exemplo", titulo: "Análise crítica semestral", texto: "Reunião de 30/06 com diretoria e engenheiro. Entradas: TF caiu de 12 para 8; 3 não-conformidades de auditoria (2 fechadas); 95% dos ASOs em dia; objetivo de DDS atingido. Saídas (decisões): aprovar verba para 2 novos chuveiros lava-olhos; criar objetivo de reduzir TF para 5 no 2º semestre; reforçar treinamento de NR-35. Tudo fica registrado com data e responsáveis." },
+        { tipo: "checklist", itens: [
+          "Status das ações da análise crítica anterior",
+          "Mudanças no contexto e partes interessadas",
+          "Desempenho de SST (indicadores, incidentes, NCs)",
+          "Resultados de auditorias e do atendimento legal",
+          "Consulta/participação e oportunidades de melhoria",
+        ] },
+        { tipo: "atencao", texto: "Análise crítica sem decisões registradas não evidencia a 9.3. Sempre conclua com 'o que foi decidido, por quem e até quando'." },
       ] },
     ],
   },
@@ -102,6 +142,13 @@ export const manuaisSgsstIso: Manual[] = [
           "Requisitos 'não atendidos' devem virar não-conformidade.",
         ] },
       ] },
+      { titulo: "Exemplo de uso", blocos: [
+        { tipo: "exemplo", titulo: "Avaliando a NR-35 (trabalho em altura)", texto: "Requisito: 'NR-35 — capacitação de trabalho em altura, validade 2 anos'. Aplicabilidade: 'montadores e eletricistas'. Avaliação: 'Atende parcialmente — 18 de 22 trabalhadores com capacitação válida'. Evidência: matriz de treinamentos. Como não está 100%, você abre uma NC para capacitar os 4 pendentes antes de liberá-los para a atividade." },
+        { tipo: "cenario", situacao: "Saiu uma atualização de NR.", orientacao: "Atualize o requisito (nova redação/validade), reavalie o atendimento e, se a empresa ficou em desacordo, registre a NC e o plano para se adequar." },
+        { tipo: "faq", itens: [
+          { p: "Preciso cadastrar todas as NRs?", r: "Só as aplicáveis às suas atividades. Use a aplicabilidade para deixar claro a quem cada uma se refere." },
+        ] },
+      ] },
     ],
   },
   {
@@ -115,6 +162,18 @@ export const manuaisSgsstIso: Manual[] = [
     secoes: [
       { titulo: "Boas práticas", blocos: [
         { tipo: "dica", texto: "Use indicadores já existentes (TF/TG, % de conformidade, vencimentos) como meta e acompanhe o valor atual." },
+      ] },
+      { titulo: "Campos", blocos: [
+        { tipo: "campos", itens: [
+          { campo: "Indicador", descricao: "O que será medido (ex.: taxa de frequência de acidentes)." , obrigatorio: true },
+          { campo: "Linha de base", descricao: "Valor atual no início (ponto de partida)." },
+          { campo: "Meta", descricao: "Valor a alcançar e até quando.", obrigatorio: true },
+          { campo: "Responsável / recursos", descricao: "Quem conduz e do que precisa." },
+        ] },
+      ] },
+      { titulo: "Exemplo de uso", blocos: [
+        { tipo: "exemplo", titulo: "Objetivo SMART de redução de acidentes", texto: "Indicador: Taxa de Frequência (TF). Linha de base: 8 (1º semestre). Meta: ≤ 5 até 31/12/2026. Responsável: Engenheiro de Segurança. Recursos: campanha de DDS quinzenal + 2 inspeções/mês. O valor atual é acompanhado mês a mês; se não evoluir, vira pauta da análise crítica." },
+        { tipo: "padrao", recomendado: "Reduzir a TF de 8 para ≤5 até dez/2026 (mensurável, com prazo).", evitar: "Melhorar a segurança da obra (vago, sem como medir)." },
       ] },
     ],
   },
@@ -135,6 +194,11 @@ export const manuaisSgsstIso: Manual[] = [
           { campo: "Simulados", descricao: "Último/próximo simulado e lições aprendidas." },
         ] },
       ] },
+      { titulo: "Exemplo de uso", blocos: [
+        { tipo: "exemplo", titulo: "Cenário de incêndio no canteiro", texto: "Cenário: 'Princípio de incêndio no almoxarifado de inflamáveis'. Procedimento: acionar alarme → brigada combate com extintor PQS → não controlado em 1 min, evacuar pela rota A até o ponto de encontro (portão) → ligar 193. Recursos: 4 extintores PQS, brigada de 6 (lista anexa), contatos Bombeiros/SAMU. Simulado: último em 10/05, próximo em 10/11; lição aprendida: melhorar a sinalização da rota." },
+        { tipo: "cenario", situacao: "A obra mudou de fase (ex.: começou a usar empilhadeira a gás).", orientacao: "Revise os cenários: inclua 'vazamento de GLP' com procedimento próprio e atualize a brigada/recursos." },
+        { tipo: "atencao", texto: "Plano sem simulado é só papel. Registre cada simulado e as lições aprendidas — é o que comprova a eficácia (8.2)." },
+      ] },
     ],
   },
   {
@@ -153,6 +217,13 @@ export const manuaisSgsstIso: Manual[] = [
           "Não-conformidades devem ser tratadas no módulo de Não-Conformidades.",
         ] },
       ] },
+      { titulo: "Exemplo de uso", blocos: [
+        { tipo: "exemplo", titulo: "Auditoria do processo de EPIs", texto: "Escopo: 'gestão de EPIs na Obra Centro'. Critérios: 'NR-06 + procedimento interno PR-07'. Auditor: técnico de segurança de outra obra (independência). Constatações: 1 conformidade (fichas assinadas em dia), 1 NC ('3 CAs vencidos em uso'), 1 oportunidade ('digitalizar a entrega no app'). A NC vira registro em Não-Conformidades com ação corretiva e prazo." },
+        { tipo: "dica", texto: "O auditor não deve auditar o próprio trabalho. Use alguém de outra obra/área para garantir a imparcialidade exigida pela 9.2." },
+        { tipo: "faq", itens: [
+          { p: "Qual a diferença entre observação e não-conformidade?", r: "NC = requisito descumprido (precisa de ação corretiva). Observação = ponto de atenção que ainda não é descumprimento. Oportunidade = sugestão de melhoria." },
+        ] },
+      ] },
     ],
   },
   {
@@ -166,6 +237,11 @@ export const manuaisSgsstIso: Manual[] = [
     secoes: [
       { titulo: "Como usar", blocos: [
         { tipo: "paragrafo", texto: "Registre cada comunicação ou consulta com data, tipo, assunto, público-alvo, canal e responsável — formando o histórico exigido pela ISO 45001." },
+      ] },
+      { titulo: "Exemplo de uso", blocos: [
+        { tipo: "exemplo", titulo: "Consulta sobre novo procedimento", texto: "Tipo: 'Consulta e participação'. Assunto: 'Revisão do procedimento de bloqueio (LOTO)'. Público: 'eletricistas e mantenedores'. Canal: 'reunião + formulário'. Descrição: 'a equipe sugeriu cadeados individuais nominais; aceito e incorporado ao procedimento'. Responsável: engenheiro. Isso evidencia a participação dos trabalhadores (5.4)." },
+        { tipo: "cenario", situacao: "Comunicação externa de um acidente ao órgão competente.", orientacao: "Tipo 'Comunicação externa', público 'órgão/seguradora', canal 'ofício/e-mail', com a data — guarda a evidência do cumprimento do dever de comunicar." },
+        { tipo: "padrao", recomendado: "Consulta sobre LOTO — eletricistas — reunião 12/06 — sugestões acatadas (cadeado nominal).", evitar: "Reunião de segurança (sem assunto, público ou resultado)." },
       ] },
     ],
   },

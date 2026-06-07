@@ -8,7 +8,7 @@ import {
   HardHat, FileText, AlertTriangle, ClipboardCheck, Clock, Grid3x3,
   History, MessageSquare, FileBarChart, MapPin, Settings,
   HardDrive, ListTodo, BookMarked, ShieldCheck, Brain, BookOpen,
-  Stethoscope, Hospital, School, UserCheck, Gauge, BadgeCheck, ScrollText, Replace, Network, Landmark, Scale, Target, Siren,
+  Stethoscope, Hospital, School, UserCheck, Gauge, BadgeCheck, ScrollText, Replace, Network, Landmark, Scale, Target, Siren, SearchCheck,
   type LucideIcon,
 } from "lucide-react"
 import { SistengeLogo } from "@/components/sistenge-logo"
@@ -63,6 +63,7 @@ const sections: NavSection[] = [
     items: [
       { href: "/matriz-treinamentos", label: "Matriz treinamentos", icon: Grid3x3 },
       { href: "/nao-conformidades", label: "Não-Conformidades", icon: ShieldCheck },
+      { href: "/auditorias", label: "Auditorias internas", icon: SearchCheck },
       { href: "/iso-45001", label: "Aderência ISO 45001", icon: BadgeCheck },
       { href: "/relatorios/mensal", label: "Relatório mensal", icon: FileBarChart },
       { href: "/relatorios/heatmap-ocorrencias", label: "Heatmap ocorrências", icon: MapPin },

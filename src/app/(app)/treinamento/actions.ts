@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache"
 import { requireAuth, AuthError } from "@/lib/auth/guards"
 import { getModulo } from "@/lib/treinamento/trilha"
+import { getQuiz } from "@/lib/treinamento/quizzes"
 
 type Result = { error?: string } | { ok: true }
 
@@ -16,6 +17,9 @@ export async function concluirModulo(slug: string): Promise<Result> {
     if (e instanceof AuthError) return { error: e.message }
     throw e
   }
+  // Se o módulo tem quiz, não pode ser concluído por aqui — use concluirComQuiz.
+  if (getQuiz(slug).length > 0) return { error: "Este módulo exige responder o quiz." }
+
   const { error } = await supabase
     .from("treinamento_sistema_progresso")
     .upsert({ usuario_id: user.id, modulo_slug: slug }, { onConflict: "usuario_id,modulo_slug" })
@@ -23,4 +27,37 @@ export async function concluirModulo(slug: string): Promise<Result> {
   revalidatePath("/treinamento")
   revalidatePath(`/treinamento/${slug}`)
   return { ok: true }
+}
+
+type QuizResult = { error: string } | { ok: true; acertos: number; total: number }
+
+/**
+ * Conclui um módulo validando o quiz no servidor (o cliente não decide a nota).
+ * Só grava o progresso se TODAS as respostas estiverem corretas.
+ */
+export async function concluirComQuiz(slug: string, respostas: number[]): Promise<QuizResult> {
+  if (!getModulo(slug)) return { error: "Módulo inválido" }
+  const quiz = getQuiz(slug)
+  if (quiz.length === 0) return { error: "Este módulo não tem quiz." }
+
+  let acertos = 0
+  quiz.forEach((q, i) => { if (respostas[i] === q.correta) acertos++ })
+  if (acertos < quiz.length) {
+    return { error: `Você acertou ${acertos} de ${quiz.length}. Revise o conteúdo e tente novamente.` }
+  }
+
+  let supabase, user
+  try {
+    ;({ supabase, user } = await requireAuth())
+  } catch (e) {
+    if (e instanceof AuthError) return { error: e.message }
+    throw e
+  }
+  const { error } = await supabase
+    .from("treinamento_sistema_progresso")
+    .upsert({ usuario_id: user.id, modulo_slug: slug }, { onConflict: "usuario_id,modulo_slug" })
+  if (error) return { error: error.message }
+  revalidatePath("/treinamento")
+  revalidatePath(`/treinamento/${slug}`)
+  return { ok: true, acertos, total: quiz.length }
 }

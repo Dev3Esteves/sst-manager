@@ -65,7 +65,7 @@ const CLAUSULAS: Clausula[] = [
     itens: [
       { requisito: "9.1 Monitoramento, medição e avaliação", como: "Indicadores (TF/TG), inspeções com % conformidade, vencimentos, Painel GRO.", status: "atende" },
       { requisito: "9.1 Avaliação do atendimento legal", como: "Vencimentos de exames/treinamentos/CAs + matriz de treinamentos por NR.", status: "atende" },
-      { requisito: "9.2 Auditoria interna", como: "Inspeções servem de base; programa formal de auditoria é processo.", status: "parcial" },
+      { requisito: "9.2 Auditoria interna", como: "Módulo Auditorias internas (/auditorias): programa/execução com escopo, critérios, auditor e constatações (conformidades, NCs, observações, oportunidades).", status: "atende" },
       { requisito: "9.3 Análise crítica pela direção", como: "Módulo Análise Crítica (/analise-critica): registra entradas (desempenho, NCs, auditorias, requisitos) e saídas (conclusões e decisões) das análises pela direção.", status: "atende" },
     ],
   },

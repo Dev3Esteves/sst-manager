@@ -6,6 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ShieldAlert, GraduationCap, CheckCircle2, AlertTriangle } from "lucide-react"
 import { TRILHA } from "@/lib/treinamento/trilha"
+import { TravaConfig } from "./trava-config"
 
 export const dynamic = "force-dynamic"
 
@@ -36,13 +37,15 @@ export default async function ControleTreinamentoPage() {
 
   // Service-role: lê todos os usuários e todo o progresso (a página já é admin-only).
   const admin = createAdminClient()
-  const [usuariosResult, authResult, progressoResult] = await Promise.all([
+  const [usuariosResult, authResult, progressoResult, configResult, isencoesResult] = await Promise.all([
     admin.from("usuarios")
       .select("id, ativo, perfis_acesso(nome), colaboradores(nome_completo)")
       .order("created_at", { ascending: false })
       .range(0, 999),
     admin.auth.admin.listUsers({ page: 1, perPage: 1000 }),
     admin.from("treinamento_sistema_progresso").select("usuario_id, modulo_slug, concluido_em"),
+    admin.from("treinamento_config").select("trava_ativa, carencia_dias, data_ativacao").eq("id", true).maybeSingle(),
+    admin.from("treinamento_isencao").select("id, usuario_id, modulo_slug, motivo").order("created_at", { ascending: false }),
   ])
 
   const emailPorId = new Map<string, string | undefined>()
@@ -97,6 +100,24 @@ export default async function ControleTreinamentoPage() {
     pendentes: ativos.filter((r) => r.pendentes.includes(m.titulo)).length,
   })).sort((a, b) => b.pendentes - a.pendentes)
 
+  // Dados para o card de configuração da trava.
+  const config = {
+    trava_ativa: configResult.data?.trava_ativa ?? false,
+    carencia_dias: configResult.data?.carencia_dias ?? 7,
+    data_ativacao: configResult.data?.data_ativacao ?? null,
+  }
+  const usuariosParaForm = rows
+    .map((r) => ({ id: r.id, email: r.email }))
+    .sort((a, b) => a.email.localeCompare(b.email))
+  const modulosParaForm = MODULOS.map((m) => ({ slug: m.slug, titulo: m.titulo }))
+  const isencoes = (isencoesResult.data ?? []).map((i) => ({
+    id: i.id,
+    usuario_id: i.usuario_id,
+    modulo_slug: i.modulo_slug,
+    motivo: i.motivo,
+    email: emailPorId.get(i.usuario_id) ?? "(sem e-mail)",
+  }))
+
   return (
     <div className="container py-8 space-y-6">
       <div>
@@ -107,6 +128,8 @@ export default async function ControleTreinamentoPage() {
           Acompanhe a conclusão da trilha por usuário. Usuários precisam concluir o treinamento de cada módulo para liberar o uso.
         </p>
       </div>
+
+      <TravaConfig config={config} usuarios={usuariosParaForm} modulos={modulosParaForm} isencoes={isencoes} />
 
       <div className="grid gap-4 sm:grid-cols-3">
         <Card>

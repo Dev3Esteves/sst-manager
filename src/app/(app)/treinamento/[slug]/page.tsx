@@ -3,15 +3,23 @@ import { notFound } from "next/navigation"
 import { getAuth } from "@/lib/auth/guards"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, Lock, BookOpen, ExternalLink, CheckCircle2 } from "lucide-react"
+import { ArrowLeft, Lock, BookOpen, ExternalLink, CheckCircle2, ShieldAlert } from "lucide-react"
 import { TRILHA } from "@/lib/treinamento/trilha"
 import { getManual } from "@/lib/ajuda/manuais"
 import { ConcluirButton } from "./concluir-button"
 
 export const dynamic = "force-dynamic"
 
-export default async function ModuloTreinamentoPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function ModuloTreinamentoPage({
+  params, searchParams,
+}: {
+  params: Promise<{ slug: string }>
+  searchParams: Promise<{ bloqueio?: string }>
+}) {
   const { slug } = await params
+  const { bloqueio } = await searchParams
+  // Rota que o usuário tentou acessar e foi barrado pela trava (volta pra lá ao concluir).
+  const returnTo = bloqueio && bloqueio.startsWith("/") ? bloqueio : null
   const ctx = await getAuth()
   if (!ctx) return <div className="container py-10 text-center text-muted-foreground">Sessão expirada.</div>
 
@@ -30,7 +38,9 @@ export default async function ModuloTreinamentoPage({ params }: { params: Promis
   const desbloqueado = !anterior || concluidos.has(anterior.slug)
   const jaConcluido = concluidos.has(modulo.slug)
 
-  if (!desbloqueado) {
+  // Quando o usuário chega aqui barrado pela trava (?bloqueio=), liberamos este
+  // módulo mesmo fora da ordem da trilha — a trava é por módulo (independente).
+  if (!desbloqueado && !returnTo) {
     return (
       <div className="container py-10 max-w-2xl text-center space-y-4">
         <Lock className="mx-auto h-10 w-10 text-muted-foreground" />
@@ -57,6 +67,16 @@ export default async function ModuloTreinamentoPage({ params }: { params: Promis
           <h1 className="text-3xl font-bold tracking-tight">{modulo.titulo}</h1>
         </div>
       </div>
+
+      {returnTo && !jaConcluido && (
+        <div className="rounded-md border border-status-alerta/40 bg-status-alerta/10 p-3 text-sm flex items-start gap-2">
+          <ShieldAlert className="h-4 w-4 text-status-alerta mt-0.5 shrink-0" />
+          <span>
+            Para usar esse recurso você precisa concluir este treinamento primeiro.
+            Ao marcar como concluído, você volta automaticamente para onde estava.
+          </span>
+        </div>
+      )}
 
       <Card>
         <CardHeader><CardTitle className="text-base">Objetivo</CardTitle></CardHeader>
@@ -113,7 +133,7 @@ export default async function ModuloTreinamentoPage({ params }: { params: Promis
         {anterior
           ? <Button variant="ghost" asChild><Link href={`/treinamento/${anterior.slug}`}><ArrowLeft className="h-4 w-4" />Anterior</Link></Button>
           : <span />}
-        <ConcluirButton slug={modulo.slug} jaConcluido={jaConcluido} nextSlug={proximo?.slug ?? null} />
+        <ConcluirButton slug={modulo.slug} jaConcluido={jaConcluido} nextSlug={proximo?.slug ?? null} returnTo={returnTo} />
       </div>
     </div>
   )

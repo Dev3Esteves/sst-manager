@@ -8,11 +8,12 @@ import { CheckCircle2, Loader2, ArrowRight } from "lucide-react"
 import { concluirModulo } from "../actions"
 
 export function ConcluirButton({
-  slug, jaConcluido, nextSlug,
+  slug, jaConcluido, nextSlug, returnTo = null,
 }: {
   slug: string
   jaConcluido: boolean
   nextSlug: string | null
+  returnTo?: string | null
 }) {
   const router = useRouter()
   const [pending, startTransition] = useTransition()
@@ -22,7 +23,8 @@ export function ConcluirButton({
       const r = await concluirModulo(slug)
       if ("error" in r) { toast.error(r.error); return }
       toast.success("Módulo concluído!")
-      router.push(nextSlug ? `/treinamento/${nextSlug}` : "/treinamento")
+      // Veio barrado pela trava → volta pro recurso que tentou usar.
+      router.push(returnTo ?? (nextSlug ? `/treinamento/${nextSlug}` : "/treinamento"))
       router.refresh()
     })
   }
@@ -33,11 +35,13 @@ export function ConcluirButton({
         <span className="inline-flex items-center gap-1.5 text-sm text-status-regular font-medium">
           <CheckCircle2 className="h-4 w-4" /> Concluído
         </span>
-        {nextSlug && (
-          <Button variant="outline" onClick={() => router.push(`/treinamento/${nextSlug}`)}>
-            Próximo módulo <ArrowRight className="h-4 w-4" />
-          </Button>
-        )}
+        {returnTo
+          ? <Button variant="outline" onClick={() => router.push(returnTo)}>Voltar ao recurso <ArrowRight className="h-4 w-4" /></Button>
+          : nextSlug && (
+            <Button variant="outline" onClick={() => router.push(`/treinamento/${nextSlug}`)}>
+              Próximo módulo <ArrowRight className="h-4 w-4" />
+            </Button>
+          )}
       </div>
     )
   }
@@ -45,7 +49,7 @@ export function ConcluirButton({
   return (
     <Button onClick={concluir} disabled={pending}>
       {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle2 className="h-4 w-4" />}
-      Marcar como concluído{nextSlug ? " e avançar" : ""}
+      Marcar como concluído{returnTo ? " e voltar" : nextSlug ? " e avançar" : ""}
     </Button>
   )
 }

@@ -1,5 +1,6 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+import { moduloExigidoParaRota } from '@/lib/treinamento/modulos-app'
 
 type CookieItem = { name: string; value: string; options?: CookieOptions }
 
@@ -47,6 +48,23 @@ export async function updateSession(request: NextRequest) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     return NextResponse.redirect(url)
+  }
+
+  // ── Trava de treinamento ──────────────────────────────────────────────────
+  // Em navegações GET para um módulo travado, o usuário só passa se concluiu o
+  // treinamento (ou é admin/isento/está na carência). Só roda quando a rota tem
+  // módulo exigido (registry), economizando round-trips no resto.
+  if (user && !isPublicRoute && request.method === 'GET') {
+    const exigido = moduloExigidoParaRota(pathname)
+    if (exigido) {
+      const { data: status } = await supabase.rpc('treinamento_status_modulo', { p_slug: exigido.slug })
+      if (status === 'bloqueado') {
+        const url = request.nextUrl.clone()
+        url.pathname = `/treinamento/${exigido.slug}`
+        url.search = `?bloqueio=${encodeURIComponent(pathname)}`
+        return NextResponse.redirect(url)
+      }
+    }
   }
 
   return response

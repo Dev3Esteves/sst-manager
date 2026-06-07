@@ -5,8 +5,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft, Lock, BookOpen, ExternalLink, CheckCircle2, ShieldAlert } from "lucide-react"
 import { TRILHA } from "@/lib/treinamento/trilha"
+import { getQuiz } from "@/lib/treinamento/quizzes"
 import { getManual } from "@/lib/ajuda/manuais"
 import { ConcluirButton } from "./concluir-button"
+import { QuizModulo } from "./quiz-modulo"
 
 export const dynamic = "force-dynamic"
 
@@ -57,6 +59,8 @@ export default async function ModuloTreinamentoPage({
   }
 
   const manuais = (modulo.manuais ?? []).map((s) => getManual(s)).filter(Boolean)
+  // O quiz vai ao cliente sem a resposta correta (validação é no servidor).
+  const quiz = getQuiz(modulo.slug).map((q) => ({ pergunta: q.pergunta, opcoes: q.opcoes }))
 
   return (
     <div className="container py-8 max-w-3xl space-y-6">
@@ -129,12 +133,16 @@ export default async function ModuloTreinamentoPage({
         </Card>
       )}
 
-      <div className="flex items-center justify-between gap-2 border-t pt-4">
-        {anterior
-          ? <Button variant="ghost" asChild><Link href={`/treinamento/${anterior.slug}`}><ArrowLeft className="h-4 w-4" />Anterior</Link></Button>
-          : <span />}
-        <ConcluirButton slug={modulo.slug} jaConcluido={jaConcluido} nextSlug={proximo?.slug ?? null} returnTo={returnTo} />
-      </div>
+      {quiz.length > 0
+        ? <QuizModulo slug={modulo.slug} perguntas={quiz} jaConcluido={jaConcluido} nextSlug={proximo?.slug ?? null} returnTo={returnTo} />
+        : (
+          <div className="flex items-center justify-between gap-2 border-t pt-4">
+            {anterior
+              ? <Button variant="ghost" asChild><Link href={`/treinamento/${anterior.slug}`}><ArrowLeft className="h-4 w-4" />Anterior</Link></Button>
+              : <span />}
+            <ConcluirButton slug={modulo.slug} jaConcluido={jaConcluido} nextSlug={proximo?.slug ?? null} returnTo={returnTo} />
+          </div>
+        )}
     </div>
   )
 }

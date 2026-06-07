@@ -30,7 +30,7 @@ const CLAUSULAS: Clausula[] = [
     itens: [
       { requisito: "5.1 Liderança e comprometimento", como: "Política de SST aprovada pela direção (/politica) + análise crítica pela direção (/analise-critica) + Painel GRO/indicadores demonstram o comprometimento.", status: "atende" },
       { requisito: "5.2 Política de SST", como: "Módulo Política de SST (/politica): documento versionado com os compromissos da 5.2, aprovação da direção, publicação e registro de ciência dos trabalhadores.", status: "atende" },
-      { requisito: "5.4 Consulta e participação", como: "DDS (diálogos), participantes e assinaturas registrados.", status: "parcial" },
+      { requisito: "5.4 Consulta e participação", como: "Módulo Comunicação e Consulta (/comunicacao) registra eventos de consulta/participação; + DDS, política (ciência) e auditorias.", status: "atende" },
     ],
   },
   {
@@ -47,7 +47,7 @@ const CLAUSULAS: Clausula[] = [
     itens: [
       { requisito: "7.1/7.2 Recursos e competência", como: "Treinamentos: catálogo, matriz por cargo, realizações e gap analysis.", status: "atende" },
       { requisito: "7.3 Conscientização", como: "DDS + treinamentos de integração registrados.", status: "atende" },
-      { requisito: "7.4 Comunicação", como: "Parcial: ocorrências/NCs; comunicação formal externa é processo.", status: "parcial" },
+      { requisito: "7.4 Comunicação", como: "Módulo Comunicação e Consulta (/comunicacao): registro de comunicações internas e externas (assunto, público, canal, responsável).", status: "atende" },
       { requisito: "7.5 Informação documentada", como: "Documentos SST, PGR (PDF + hash), manuais; versionamento de docs.", status: "atende" },
     ],
   },
@@ -72,9 +72,9 @@ const CLAUSULAS: Clausula[] = [
   {
     numero: "10", titulo: "Melhoria",
     itens: [
-      { requisito: "10.1 Generalidades", como: "Painel GRO consolida oportunidades de melhoria.", status: "parcial" },
+      { requisito: "10.1 Generalidades", como: "Painel GRO + objetivos + análise crítica consolidam oportunidades de melhoria.", status: "atende" },
       { requisito: "10.2 Incidente, não-conformidade e ação corretiva", como: "Módulo de NCs: 5 Porquês/Ishikawa + ações corretivas com verificação de eficácia.", status: "atende" },
-      { requisito: "10.3 Melhoria contínua", como: "Ciclo PDCA do GRO sobre o PGR + tratamento de recorrências.", status: "parcial" },
+      { requisito: "10.3 Melhoria contínua", como: "Ciclo PDCA do GRO sobre o PGR + NCs (ações corretivas/eficácia) + análise crítica + auditorias internas.", status: "atende" },
     ],
   },
 ]

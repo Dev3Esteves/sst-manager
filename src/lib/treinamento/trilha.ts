@@ -183,9 +183,24 @@ export const TRILHA: ModuloTrilha[] = [
     rotas: [{ label: "Documentos", href: "/documentos" }, { label: "ISO 45001", href: "/iso-45001" }],
   },
 
+  {
+    slug: "governanca-sgsst", ordem: 14, secao: "SST — Segurança",
+    titulo: "Governança do SGSST (ISO 45001)",
+    objetivo: "Operar a camada de gestão do sistema de SST exigida pela ISO 45001: contexto, política, mudança, objetivos, auditoria e análise crítica.",
+    topicos: [
+      "Contexto & Partes: registre questões internas/externas, partes interessadas e o escopo do SGSST (cláusulas 4.1–4.4).",
+      "Política de SST: publique a política versionada e colete a ciência dos trabalhadores (5.2).",
+      "Gestão de Mudança (MOC): avalie riscos antes de mudar e planeje a dimensão humana via ADKAR (8.1.3).",
+      "Objetivos e Requisitos legais: defina metas mensuráveis (6.2) e avalie o atendimento legal (6.1.3).",
+      "Plano de Emergência, Auditorias internas, Comunicação/Consulta e Análise crítica pela direção (8.2 / 9.2 / 7.4 / 9.3).",
+    ],
+    manuais: ["contexto-sgsst", "politica-sst", "gestao-mudanca", "objetivos-sst", "requisitos-legais", "plano-emergencia", "auditorias-internas", "comunicacao-consulta", "analise-critica"],
+    rotas: [{ label: "Contexto & Partes", href: "/contexto" }, { label: "Política de SST", href: "/politica" }, { label: "Análise Crítica", href: "/analise-critica" }],
+  },
+
   // ───────────────────────── People — RH ─────────────────────────
   {
-    slug: "people-visao-geral", ordem: 14, secao: "People — RH", externo: true,
+    slug: "people-visao-geral", ordem: 15, secao: "People — RH", externo: true,
     titulo: "Sistenge People (RH) — visão geral",
     objetivo: "Saber o que é tratado no People e como ele se conecta ao SST.",
     topicos: [
@@ -196,7 +211,7 @@ export const TRILHA: ModuloTrilha[] = [
     ],
   },
   {
-    slug: "people-psicossocial", ordem: 15, secao: "People — RH", externo: true,
+    slug: "people-psicossocial", ordem: 16, secao: "People — RH", externo: true,
     titulo: "Psicossocial no People (RH)",
     objetivo: "Consultar resultados psicossociais e conduzir o plano de ação no RH.",
     topicos: [

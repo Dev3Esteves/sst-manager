@@ -6,6 +6,7 @@ import { manuaisRelatorios } from "./relatorios"
 import { manuaisReferencias } from "./referencias"
 import { manuaisAdministracao } from "./administracao"
 import { manuaisMelhorias2026 } from "./melhorias-2026"
+import { manuaisSgsstIso } from "./sgsst-iso"
 
 /** Todos os manuais, em ordem de categoria. */
 export const MANUAIS: Manual[] = [
@@ -16,6 +17,7 @@ export const MANUAIS: Manual[] = [
   ...manuaisReferencias,
   ...manuaisAdministracao,
   ...manuaisMelhorias2026,
+  ...manuaisSgsstIso,
 ]
 
 export const CATEGORIAS = [

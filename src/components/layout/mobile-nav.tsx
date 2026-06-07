@@ -6,46 +6,11 @@ import { usePathname } from "next/navigation"
 import { Drawer } from "vaul"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import {
-  LayoutDashboard, Building2, Users, UserCog, HeartPulse, GraduationCap,
-  HardHat, FileText, AlertTriangle, ClipboardCheck, Clock, Grid3x3,
-  History, MessageSquare, FileBarChart, MapPin, Settings, Menu, X,
-  type LucideIcon,
-} from "lucide-react"
+import { Menu, X } from "lucide-react"
+import { NAV_SECTIONS } from "./nav-config"
 import { SistengeLogo } from "@/components/sistenge-logo"
 
-type Item = { href: string; label: string; icon: LucideIcon; disabled?: boolean }
-
-const sections: { label?: string; items: Item[] }[] = [
-  { items: [
-    { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { href: "/vencimentos", label: "Vencimentos", icon: Clock },
-  ]},
-  { label: "Cadastros", items: [
-    { href: "/empresas", label: "Empresas", icon: Building2 },
-    { href: "/cargos", label: "Cargos", icon: Users },
-    { href: "/colaboradores", label: "Colaboradores", icon: Users },
-    { href: "/epis", label: "EPIs", icon: HardHat },
-    { href: "/treinamentos", label: "Treinamentos", icon: GraduationCap },
-  ]},
-  { label: "Operação", items: [
-    { href: "/exames", label: "Exames médicos", icon: HeartPulse },
-    { href: "/documentos", label: "Documentos SST", icon: FileText },
-    { href: "/dds", label: "DDS", icon: MessageSquare },
-    { href: "/ocorrencias", label: "Ocorrências", icon: AlertTriangle },
-    { href: "/inspecoes", label: "Inspeções", icon: ClipboardCheck },
-  ]},
-  { label: "Relatórios", items: [
-    { href: "/matriz-treinamentos", label: "Matriz treinamentos", icon: Grid3x3 },
-    { href: "/relatorios/mensal", label: "Relatório mensal", icon: FileBarChart },
-    { href: "/relatorios/heatmap-ocorrencias", label: "Heatmap ocorrências", icon: MapPin },
-  ]},
-  { label: "Administração", items: [
-    { href: "/usuarios", label: "Usuários", icon: UserCog },
-    { href: "/auditoria", label: "Auditoria", icon: History },
-    { href: "/configuracoes", label: "Configurações", icon: Settings, disabled: true },
-  ]},
-]
+const sections = NAV_SECTIONS
 
 export function MobileNav() {
   const [open, setOpen] = useState(false)

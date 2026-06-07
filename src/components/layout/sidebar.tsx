@@ -8,7 +8,7 @@ import {
   HardHat, FileText, AlertTriangle, ClipboardCheck, Clock, Grid3x3,
   History, MessageSquare, FileBarChart, MapPin, Settings,
   HardDrive, ListTodo, BookMarked, ShieldCheck, Brain, BookOpen,
-  Stethoscope, Hospital, School, UserCheck, Gauge, BadgeCheck, ScrollText, Replace, Network, Landmark, Scale, Target,
+  Stethoscope, Hospital, School, UserCheck, Gauge, BadgeCheck, ScrollText, Replace, Network, Landmark, Scale, Target, Siren,
   type LucideIcon,
 } from "lucide-react"
 import { SistengeLogo } from "@/components/sistenge-logo"
@@ -54,6 +54,7 @@ const sections: NavSection[] = [
       { href: "/documentos", label: "Documentos SST", icon: FileText },
       { href: "/dds", label: "DDS", icon: MessageSquare },
       { href: "/ocorrencias", label: "Ocorrências", icon: AlertTriangle },
+      { href: "/plano-emergencia", label: "Plano de Emergência", icon: Siren },
       { href: "/inspecoes", label: "Inspeções", icon: ClipboardCheck },
     ],
   },

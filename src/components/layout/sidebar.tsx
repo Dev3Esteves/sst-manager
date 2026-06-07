@@ -82,6 +82,7 @@ const sections: NavSection[] = [
     label: "Administração",
     items: [
       { href: "/usuarios", label: "Usuários", icon: UserCog },
+      { href: "/admin/treinamento", label: "Controle de treino", icon: GraduationCap },
       { href: "/jobs", label: "Fila de jobs", icon: ListTodo },
       { href: "/auditoria", label: "Auditoria", icon: History },
       { href: "/configuracoes", label: "Configurações", icon: Settings },

@@ -8,7 +8,7 @@ import {
   HardHat, FileText, AlertTriangle, ClipboardCheck, Clock, Grid3x3,
   History, MessageSquare, FileBarChart, MapPin, Settings,
   HardDrive, ListTodo, BookMarked, ShieldCheck, Brain, BookOpen,
-  Stethoscope, Hospital, School, UserCheck, Gauge, BadgeCheck, ScrollText, Replace, Network, Landmark,
+  Stethoscope, Hospital, School, UserCheck, Gauge, BadgeCheck, ScrollText, Replace, Network, Landmark, Scale,
   type LucideIcon,
 } from "lucide-react"
 import { SistengeLogo } from "@/components/sistenge-logo"
@@ -71,6 +71,7 @@ const sections: NavSection[] = [
     items: [
       { href: "/referencias/nrs", label: "Normas Regulamentadoras", icon: BookMarked },
       { href: "/referencias/esocial", label: "Tabela 22 eSocial", icon: BookMarked },
+      { href: "/requisitos-legais", label: "Requisitos legais", icon: Scale },
     ],
   },
   {

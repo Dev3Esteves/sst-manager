@@ -38,7 +38,7 @@ const CLAUSULAS: Clausula[] = [
     itens: [
       { requisito: "6.1.1 Ações para riscos e oportunidades", como: "PGR: inventário de riscos por GHE + plano de ação 5W1H.", status: "atende" },
       { requisito: "6.1.2 Identificação de perigos e avaliação de riscos", como: "PGR (pgr_risco) com categoria e classificação; NR-01 psicossocial integrado.", status: "atende" },
-      { requisito: "6.1.3 Requisitos legais e outros", como: "Catálogo de NRs e Tabela 22 eSocial (Referências).", status: "parcial" },
+      { requisito: "6.1.3 Requisitos legais e outros", como: "Módulo Requisitos legais (/requisitos-legais): registro dos requisitos aplicáveis (NRs/leis) com avaliação de atendimento; + catálogo de NRs e Tabela 22 eSocial.", status: "atende" },
       { requisito: "6.2 Objetivos de SST e planejamento", como: "Plano de ação do PGR + indicadores (TF/TG, conformidade).", status: "parcial" },
     ],
   },

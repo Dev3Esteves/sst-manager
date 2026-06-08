@@ -36,6 +36,8 @@ export type FakeState = {
     eq: [string, unknown] | null
     uploads: string[]
     authUpdate: Record<string, unknown> | null
+    /** Captura da última chamada `rpc(fn, args)` (null = nunca chamada). */
+    rpc?: { fn: string; args: unknown } | null
   }
 }
 
@@ -44,7 +46,7 @@ export function freshState(): FakeState {
     result: { data: null, error: null },
     uploadError: null,
     authError: null,
-    calls: { table: null, op: null, payload: null, eq: null, uploads: [], authUpdate: null },
+    calls: { table: null, op: null, payload: null, eq: null, uploads: [], authUpdate: null, rpc: null },
   }
 }
 
@@ -92,6 +94,10 @@ export function buildFakeClient(state: FakeState) {
     from(table: string) {
       state.calls.table = table
       return builder
+    },
+    rpc: async (fn: string, args: unknown) => {
+      state.calls.rpc = { fn, args }
+      return state.result
     },
     auth: {
       updateUser: async (payload: Record<string, unknown>) => {

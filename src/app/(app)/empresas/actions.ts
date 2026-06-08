@@ -3,12 +3,12 @@
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
-import { empresaSchema } from "@/lib/validations/empresa"
+import { empresaFormSchema } from "@/lib/validations/empresa"
 
 /**
  * Faz upload do logo no bucket `logos-empresa`.
- * Retorna a URL pública do arquivo, ou null se não houver arquivo ou falhar.
- * Se o upload falhar, loga erro e retorna null (não bloqueia o salvamento dos outros campos).
+ * Retorna a URL pública do arquivo, `null` se removido, ou `undefined` se não
+ * houver arquivo novo / falhar (não bloqueia o salvamento dos demais campos).
  */
 async function uploadLogo(
   formData: FormData,
@@ -16,13 +16,10 @@ async function uploadLogo(
 ): Promise<string | null | undefined> {
   const file = formData.get("logo") as File | null
 
-  // Valor "_REMOVER_" do hidden input significa que o usuário removeu explicitamente
   if (formData.get("logo_acao") === "remover") {
     return null
   }
-
   if (!file || !(file instanceof File) || file.size === 0) {
-    // Sem arquivo novo — mantém o atual
     return undefined
   }
 
@@ -44,56 +41,36 @@ async function uploadLogo(
   return publicData.publicUrl
 }
 
-function parseForm(formData: FormData) {
-  const donaSistema = formData.get("dona_sistema") === "on"
-  const empresaMaeRaw = (formData.get("empresa_mae_id") as string | null)?.trim() || null
-
-  const str = (k: string) => ((formData.get(k) as string | null)?.trim() || null)
-
-  // Endereço (coluna JSONB) — null se todos os campos vazios
-  const enderecoCampos = {
-    cep: str("cep"),
-    logradouro: str("logradouro"),
-    numero: str("numero"),
-    complemento: str("complemento"),
-    bairro: str("bairro"),
-    municipio: str("municipio"),
-    uf: str("uf"),
-  }
-  const endereco = Object.values(enderecoCampos).some(Boolean) ? enderecoCampos : null
-
-  const telefone = str("telefone")
-  const telefones = telefone ? { principal: telefone } : null
-
-  return {
-    razao_social: formData.get("razao_social") as string,
-    nome_fantasia: (formData.get("nome_fantasia") as string) || null,
-    cnpj: formData.get("cnpj") as string,
-    inscricao_estadual: (formData.get("inscricao_estadual") as string) || null,
-    endereco,
-    telefones,
-    tipo: formData.get("tipo") as string,
-    dona_sistema: donaSistema,
-    // Donas do sistema não têm mãe — força null
-    empresa_mae_id: donaSistema ? null : empresaMaeRaw,
-    ativo: formData.get("ativo") === "on",
+/** Lê o payload (modelo BP) enviado como JSON no campo `payload`. */
+function parsePayload(formData: FormData): unknown {
+  const raw = formData.get("payload")
+  if (typeof raw !== "string") return null
+  try {
+    return JSON.parse(raw)
+  } catch {
+    return null
   }
 }
 
 export async function createEmpresa(formData: FormData) {
-  const raw = parseForm(formData)
-  const parsed = empresaSchema.safeParse(raw)
+  const parsed = empresaFormSchema.safeParse(parsePayload(formData))
   if (!parsed.success) {
     return { error: parsed.error.flatten().fieldErrors }
   }
   const supabase = await createClient()
-  const { data: inserted, error } = await supabase
-    .from("empresas").insert(parsed.data).select("id").single()
-  if (error || !inserted) return { error: { _form: [error?.message ?? "Erro"] } }
 
-  const logoUrl = await uploadLogo(formData, inserted.id)
+  // Empresa + filhas numa transação só (RPC atômica, RLS admin-only aplicada).
+  const { data: novoId, error } = await supabase.rpc("empresa_bp_salvar", {
+    p_id: null,
+    p_payload: parsed.data,
+  })
+  if (error || !novoId) {
+    return { error: { _form: [error?.message ?? "Erro ao salvar a empresa."] } }
+  }
+
+  const logoUrl = await uploadLogo(formData, novoId as string)
   if (logoUrl !== undefined) {
-    await supabase.from("empresas").update({ logo_url: logoUrl }).eq("id", inserted.id)
+    await supabase.from("empresas").update({ logo_url: logoUrl }).eq("id", novoId)
   }
 
   revalidatePath("/empresas")
@@ -101,19 +78,25 @@ export async function createEmpresa(formData: FormData) {
 }
 
 export async function updateEmpresa(id: string, formData: FormData) {
-  const raw = parseForm(formData)
-  const parsed = empresaSchema.safeParse(raw)
+  const parsed = empresaFormSchema.safeParse(parsePayload(formData))
   if (!parsed.success) {
     return { error: parsed.error.flatten().fieldErrors }
   }
   const supabase = await createClient()
 
+  // Logo primeiro (fora da transação de dados; só atualiza a coluna se mudou).
   const logoUrl = await uploadLogo(formData, id)
-  const update: Record<string, unknown> = { ...parsed.data }
-  if (logoUrl !== undefined) update.logo_url = logoUrl
 
-  const { error } = await supabase.from("empresas").update(update).eq("id", id)
+  const { error } = await supabase.rpc("empresa_bp_salvar", {
+    p_id: id,
+    p_payload: parsed.data,
+  })
   if (error) return { error: { _form: [error.message] } }
+
+  if (logoUrl !== undefined) {
+    await supabase.from("empresas").update({ logo_url: logoUrl }).eq("id", id)
+  }
+
   revalidatePath("/empresas")
   redirect("/empresas")
 }

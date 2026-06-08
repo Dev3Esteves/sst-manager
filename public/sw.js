@@ -3,7 +3,7 @@
 // Evita cachear rotas API (/api/*) e auth (/login).
 
 const CACHE_NAME = "sst-manager-v1"
-const STATIC_ASSETS = ["/", "/manifest.json", "/icon.svg"]
+const STATIC_ASSETS = ["/", "/manifest.webmanifest", "/icon.svg"]
 
 self.addEventListener("install", (event) => {
   event.waitUntil(

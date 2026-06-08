@@ -2,6 +2,7 @@
 import { Document, Page, Text, View, StyleSheet, Image } from "@react-pdf/renderer"
 import QRCode from "qrcode"
 import type { ReactNode } from "react"
+import { brand } from "@/config/brand"
 
 export const pdfStyles = StyleSheet.create({
   page: {
@@ -148,7 +149,7 @@ export function PdfFooter({ qrDataUrl }: { qrDataUrl?: string }) {
   const now = new Date().toLocaleString("pt-BR")
   return (
     <View style={pdfStyles.footer} fixed>
-      <Text>Documento gerado pelo Sistema SST — SISTENGE — {now}</Text>
+      <Text>{`Documento gerado pelo ${brand.appName}${brand.companyName ? ` — ${brand.companyName}` : ""} — ${now}`}</Text>
       {qrDataUrl && <Image src={qrDataUrl} style={pdfStyles.qrBox} />}
       <Text render={({ pageNumber, totalPages }) => `Página ${pageNumber} / ${totalPages}`} />
     </View>

@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Loader2 } from "lucide-react"
+import { brand } from "@/config/brand"
 
 export function LoginForm() {
   const router = useRouter()
@@ -48,7 +49,7 @@ export function LoginForm() {
             <Input
               id="email"
               type="email"
-              placeholder="voce@sistenge.com"
+              placeholder={`voce@${brand.emailDomain}`}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required

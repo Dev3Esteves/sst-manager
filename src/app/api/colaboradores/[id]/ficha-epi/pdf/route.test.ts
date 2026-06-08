@@ -79,7 +79,7 @@ describe("GET /api/colaboradores/[id]/ficha-epi/pdf", () => {
       cpf: "11144477735",
       matricula: "EMP-001",
       data_admissao: "2022-03-15",
-      empresa: { razao_social: "SISTENGE", cnpj: "00.000.000/0001-00", logo_url: null },
+      empresa: { razao_social: "Empresa Demo", cnpj: "00.000.000/0001-00", logo_url: null },
       cargo: { titulo: "Encarregado" },
       obra: { nome: "DANTE / RACIONAL" },
     }

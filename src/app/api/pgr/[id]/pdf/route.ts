@@ -6,7 +6,7 @@ import { renderPgrFo121Pdf } from "@/lib/pdf/pgr-fo121"
 import { withRouteLogging } from "@/lib/logger"
 
 /**
- * Gera (sob demanda) o PDF fidedigno ao formulário FO-121-00 (PGR/GRO SISTENGE).
+ * Gera (sob demanda) o PDF fidedigno ao formulário FO-121-00 (PGR/GRO).
  *
  * GET é idempotente: lê o estado atual do PGR e renderiza. Não persiste o PDF
  * — a persistência (selo + hash + Storage) entra num passo posterior.

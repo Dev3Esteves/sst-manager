@@ -104,7 +104,7 @@ export default async function ModuloTreinamentoPage({
       {modulo.externo && (
         <div className="rounded-md border border-primary/30 bg-primary/5 p-3 text-sm flex items-start gap-2">
           <ExternalLink className="h-4 w-4 text-primary mt-0.5 shrink-0" />
-          <span>Este módulo trata do <strong>Sistenge People</strong> (sistema de RH), acessado no endereço próprio dele. Aqui está a visão geral para você entender o ecossistema.</span>
+          <span>Este módulo trata do <strong>People (RH)</strong> (sistema de RH), acessado no endereço próprio dele. Aqui está a visão geral para você entender o ecossistema.</span>
         </div>
       )}
 

@@ -5,16 +5,17 @@ import { PwaRegister } from "@/components/pwa-register"
 import { ThemeProvider } from "@/components/theme-provider"
 import { CommandPalette } from "@/components/command-palette"
 import { ErrorCapture } from "@/components/error-capture"
+import { brand, appTitle } from "@/config/brand"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
 
 export const metadata: Metadata = {
-  title: "SST Manager — SISTENGE",
+  title: appTitle,
   description: "Sistema de Gestão de Segurança e Saúde do Trabalho",
-  manifest: "/manifest.json",
+  // manifest é gerado dinamicamente por src/app/manifest.ts (white-label)
   appleWebApp: {
     capable: true,
-    title: "SST Manager",
+    title: brand.appName,
     statusBarStyle: "default",
   },
   icons: {
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: "#1e293b",
+  themeColor: brand.themeColor,
   width: "device-width",
   initialScale: 1,
 }

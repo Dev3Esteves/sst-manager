@@ -321,7 +321,7 @@ export function PgrForm({
               defaultValue={pgr?.codigo_formulario ?? "FO-121-00"}
             />
             <p className="text-xs text-muted-foreground mt-1">
-              Código do SGI da empresa (padrão SISTENGE: FO-121-00).
+              Código do SGI da empresa (ex.: FO-121-00).
             </p>
           </div>
         </CardContent>

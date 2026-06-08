@@ -27,6 +27,10 @@ const supabase = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.SUPABASE_SERVICE
   auth: { autoRefreshToken: false, persistSession: false },
 })
 
+// Branding (white-label): nome da empresa própria e domínio dos e-mails demo.
+const COMPANY = env.NEXT_PUBLIC_BRAND_COMPANY_NAME || "Empresa Demo"
+const EMAIL_DOMAIN = env.NEXT_PUBLIC_BRAND_EMAIL_DOMAIN || "exemplo.com.br"
+
 // ============================================================================
 // UTILITIES
 // ============================================================================
@@ -221,15 +225,15 @@ async function main() {
   const { data: empresasExistentes } = await supabase.from("empresas").select("id, cnpj, razao_social")
   const empresas = []
 
-  // Mantém SISTENGE se existir
-  const sistenge = empresasExistentes?.find((e) => e.razao_social.includes("SISTENGE"))
-  if (sistenge) {
-    empresas.push(sistenge)
-    console.log(`  ✓ SISTENGE existente (${sistenge.id.slice(0, 8)})`)
+  // Mantém a empresa própria se existir
+  const propria = empresasExistentes?.find((e) => e.razao_social.includes(COMPANY))
+  if (propria) {
+    empresas.push(propria)
+    console.log(`  ✓ ${COMPANY} existente (${propria.id.slice(0, 8)})`)
   } else {
     const { data } = await supabase.from("empresas").insert({
-      razao_social: "SISTENGE Engenharia Ltda",
-      nome_fantasia: "SISTENGE",
+      razao_social: COMPANY,
+      nome_fantasia: COMPANY,
       cnpj: "12.345.678/0001-90",
       tipo: "propria",
       ativo: true,
@@ -350,7 +354,7 @@ async function main() {
       data_admissao: randomDate(60, 365 * 8),
       tipo_vinculo: pickWeighted([["clt", 80], ["pj", 8], ["terceiro", 8], ["estagiario", 4]]),
       matricula: pad(1000 + i, 5),
-      email: `${nome.toLowerCase().split(" ").slice(0, 2).join(".").normalize("NFD").replace(/[\u0300-\u036f]/g, "")}@sistenge.com`,
+      email: `${nome.toLowerCase().split(" ").slice(0, 2).join(".").normalize("NFD").replace(/[\u0300-\u036f]/g, "")}@${EMAIL_DOMAIN}`,
       telefone: `(11) 9${pad(rnd(10000), 4)}-${pad(rnd(10000), 4)}`,
       status,
     }, { onConflict: "cpf" }).select().single()

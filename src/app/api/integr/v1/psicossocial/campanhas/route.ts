@@ -1,6 +1,6 @@
 /**
  * GET /api/integr/v1/psicossocial/campanhas
- * Lista campanhas psicossociais para o Sistenge People (auth por API key).
+ * Lista campanhas psicossociais para o People (RH) (auth por API key).
  * Filtro opcional ?empresa_cnpj=. Retorna metadados, nunca respostas.
  */
 import { NextResponse } from "next/server"

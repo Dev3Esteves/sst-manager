@@ -12,7 +12,7 @@ import { definirEmpresaAtiva } from "./empresa-switcher-actions"
 
 /**
  * Seletor de empresa ativa. Só aparece para usuários que podem operar mais de
- * uma empresa (ex.: operadores do grupo Sistenge/Paseli). Trocar a empresa
+ * uma empresa (ex.: operadores de um grupo com várias empresas). Trocar a empresa
  * refaz a navegação — todos os submenus passam a refletir a empresa escolhida.
  */
 export function EmpresaSwitcher({

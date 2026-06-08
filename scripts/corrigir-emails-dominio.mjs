@@ -1,12 +1,12 @@
 #!/usr/bin/env node
-// Corrige e-mails do domínio antigo @sistenge.com.br para @sistenge.com.
+// Corrige e-mails de um domínio antigo para um novo (informados por argumento).
 // Atualiza tanto o login (Supabase Auth) quanto a coluna colaboradores.email.
 //
 // Dry-run por padrão (apenas lista). Passe --apply para efetivar.
 //
 // Uso:
-//   node scripts/corrigir-emails-dominio.mjs           # lista o que mudaria
-//   node scripts/corrigir-emails-dominio.mjs --apply   # aplica as mudanças
+//   node scripts/corrigir-emails-dominio.mjs @antigo.com @novo.com           # lista
+//   node scripts/corrigir-emails-dominio.mjs @antigo.com @novo.com --apply   # aplica
 
 import { createClient } from '@supabase/supabase-js'
 import { readFileSync } from 'node:fs'
@@ -37,8 +37,13 @@ const supabase = createClient(SUPABASE_URL, SERVICE_KEY, {
 })
 
 const APPLY = process.argv.includes('--apply')
-const OLD = '@sistenge.com.br'
-const NEW = '@sistenge.com'
+const domainArgs = process.argv.slice(2).filter((a) => a !== '--apply')
+const OLD = domainArgs[0]
+const NEW = domainArgs[1]
+if (!OLD || !NEW) {
+  console.error('Informe o domínio antigo e o novo. Ex.: node scripts/corrigir-emails-dominio.mjs @antigo.com @novo.com')
+  process.exit(1)
+}
 const fix = (email) => email.slice(0, email.length - OLD.length) + NEW
 
 console.log(APPLY ? '== MODO APLICAR ==' : '== DRY-RUN (use --apply para efetivar) ==')

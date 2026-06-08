@@ -3,7 +3,8 @@ import { createAdminClient } from "@/lib/supabase/admin"
 import { itensDaVersao } from "@/lib/psicossocial/copsoq"
 import { logger } from "@/lib/logger"
 import { QuestionarioForm } from "./questionario-form"
-import { SistengeLogo } from "@/components/sistenge-logo"
+import { BrandLogo } from "@/components/brand-logo"
+import { brand } from "@/config/brand"
 
 export const dynamic = "force-dynamic"
 export const fetchCache = "force-no-store"
@@ -41,10 +42,10 @@ export default async function ColetaPage({ params }: { params: Promise<{ token: 
   return (
     <div className="min-h-screen bg-muted/40">
       <header className="bg-foreground text-background px-4 py-4 flex items-center gap-3">
-        <SistengeLogo variant="icon" height={28} />
+        <BrandLogo variant="icon" height={28} />
         <div>
           <div className="text-sm font-semibold leading-tight">Pesquisa de condições de trabalho</div>
-          <div className="text-xs opacity-70 leading-tight">SISTENGE · NR-01</div>
+          <div className="text-xs opacity-70 leading-tight">{brand.companyName ? `${brand.companyName} · NR-01` : "NR-01"}</div>
         </div>
       </header>
 

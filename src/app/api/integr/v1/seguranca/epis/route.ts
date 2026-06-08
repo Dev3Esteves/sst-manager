@@ -1,6 +1,6 @@
 /**
  * GET /api/integr/v1/seguranca/epis?cpf=...
- * EPIs entregues a um colaborador (NR-6), para o Sistenge People consultar
+ * EPIs entregues a um colaborador (NR-6), para o People (RH) consultar
  * (SST é a fonte de EPIs). Auth por API key (PEOPLE_API_KEY).
  */
 import { NextResponse } from "next/server"

@@ -8,7 +8,7 @@
  *
  * Uso:
  *   node scripts/convert-esocial-tabela22-csv.mjs \
- *     "C:/Users/estev/OneDrive/Sistenge/SMS/Referencias/Tabelas esocial/TABELA22_v4_Conteudo.csv" \
+ *     "caminho/para/TABELA22_v4_Conteudo.csv" \
  *     data/esocial-tabela22.json
  *
  * Idempotente — pode rodar várias vezes.

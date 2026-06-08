@@ -17,7 +17,7 @@ const varsExemplo: CertificadoVars = {
   cidade: "São Paulo",
   entidade: "Centro ABC",
   instrutor: "Maria",
-  empresa: "SISTENGE",
+  empresa: "Empresa Demo",
 }
 
 describe("interpolarTextoCertificado", () => {

@@ -6,7 +6,7 @@
 
 ## Fonte do seed
 
-`Referencias/Tabelas esocial/TABELA22_v4_Conteudo.csv` (CSV oficial fornecido pela SISTENGE) — 94 agentes ativos, separador pipe (`|`), layout:
+`Referencias/Tabelas esocial/TABELA22_v4_Conteudo.csv` (CSV oficial fornecido pelo cliente) — 94 agentes ativos, separador pipe (`|`), layout:
 
 ```
 CODIGO|DESCRICAO|DTINICIO|DTFIM|TIPO

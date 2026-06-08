@@ -5,8 +5,8 @@ import { fetchLogoAsDataUri } from "./fetch-logo"
 /**
  * Ficha de Controle e Fornecimento de EPI.
  *
- * Template inspirado no formulário SGI\Formulários\FO-008-00 da SISTENGE
- * (PDF "11.1 EPI ATUALIZADO") — é uma ficha **CUMULATIVA**, um único documento
+ * Template inspirado num formulário SGI de referência (FO-008-00) — é uma
+ * ficha **CUMULATIVA**, um único documento
  * por colaborador contendo TODAS as entregas ao longo do tempo, com colunas
  * de data, quantidade, descrição, CA, assinatura do recebimento, data e
  * assinatura de devolução, e responsável.

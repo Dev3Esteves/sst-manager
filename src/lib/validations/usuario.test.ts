@@ -92,7 +92,7 @@ describe("gerarSenhaForte", () => {
 
 describe("criarUsuarioSchema", () => {
   const validPayload = {
-    email: "teste@sistenge.com",
+    email: "teste@exemplo.com.br",
     senha: "SenhaForte123!",
     perfil_id: "00000000-0000-4000-8000-000000000001",
     empresa_id: "00000000-0000-4000-8000-000000000002",

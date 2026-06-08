@@ -1,6 +1,6 @@
 /**
  * GET /api/integr/v1/psicossocial/campanhas/[id]/relatorio
- * Relatório psicossocial (PDF) para o Sistenge People — versão Bearer.
+ * Relatório psicossocial (PDF) para o People (RH) — versão Bearer.
  *
  * Mesma geração de PDF da rota de sessão (`/api/psicossocial/[id]/relatorio`),
  * mas autenticada por API key (verificarApiKeyPeople) e lendo via service role.

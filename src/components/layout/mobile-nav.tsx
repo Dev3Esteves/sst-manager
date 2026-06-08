@@ -8,7 +8,8 @@ import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { Menu, X } from "lucide-react"
 import { NAV_SECTIONS } from "./nav-config"
-import { SistengeLogo } from "@/components/sistenge-logo"
+import { BrandLogo } from "@/components/brand-logo"
+import { brand } from "@/config/brand"
 
 const sections = NAV_SECTIONS
 
@@ -30,10 +31,12 @@ export function MobileNav() {
           <Drawer.Description className="sr-only">Navegação principal do sistema</Drawer.Description>
           <div className="flex h-16 items-center justify-between border-b px-4">
             <div className="flex items-center gap-2">
-              <SistengeLogo variant="icon" height={32} />
+              <BrandLogo variant="icon" height={32} />
               <div>
-                <div className="text-sm font-semibold leading-tight">SST Manager</div>
-                <div className="text-xs text-muted-foreground leading-tight">SISTENGE</div>
+                <div className="text-sm font-semibold leading-tight">{brand.appName}</div>
+                {brand.companyName ? (
+                  <div className="text-xs text-muted-foreground leading-tight">{brand.companyName}</div>
+                ) : null}
               </div>
             </div>
             <Button variant="ghost" size="icon" onClick={() => setOpen(false)} aria-label="Fechar menu">

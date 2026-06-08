@@ -22,8 +22,8 @@ export const QUIZZES: Record<string, QuizPergunta[]> = {
       correta: 1,
     },
     {
-      pergunta: "Quem cuida da Segurança e Saúde no Trabalho no ecossistema Sistenge?",
-      opcoes: ["O Sistenge People", "O SST Manager", "Nenhum dos dois"],
+      pergunta: "Quem cuida da Segurança e Saúde no Trabalho neste ecossistema?",
+      opcoes: ["O People (RH)", "O SST Manager", "Nenhum dos dois"],
       correta: 1,
     },
   ],
@@ -234,7 +234,7 @@ export const QUIZZES: Record<string, QuizPergunta[]> = {
   ],
   "people-visao-geral": [
     {
-      pergunta: "O que é tratado no Sistenge People?",
+      pergunta: "O que é tratado no People (RH)?",
       opcoes: [
         "RH: colaboradores, cargos, centros de responsabilidade e documentos de pessoal.",
         "Apenas inspeções de segurança.",

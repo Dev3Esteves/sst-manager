@@ -1,7 +1,7 @@
 # Referências para o SST Manager
 
 > Documento canônico de referências regulatórias, normativas e arquiteturais para
-> construir e evoluir o SST Manager (SISTENGE — engenharia / data centers).
+> construir e evoluir o SST Manager (a empresa — engenharia / data centers).
 > Cada item traz fonte com URL, ano de vigência e ligação a uma feature do software.
 >
 > **Data desta síntese:** 2026-05-10
@@ -63,9 +63,9 @@
 - **Catálogo no app:** [`/referencias/nrs`](../src/app/(app)/referencias/nrs/page.tsx) (38 NRs, 36 vigentes, 2 revogadas — NR-02 e NR-27)
 - **Dados estruturados:** [`data/nr-catalog.json`](../data/nr-catalog.json) (numero, titulo, status, ementa, fonte_url, pdf_url)
 
-### NRs prioritárias para SISTENGE (engenharia / construção / data center)
+### NRs prioritárias para a empresa (engenharia / construção / data center)
 
-| NR | Tema | Por que importa pra SISTENGE |
+| NR | Tema | Por que importa pra empresa |
 |----|------|------------------------------|
 | **NR-01** | Disposições Gerais + GRO/PGR | Documento mestre — todas as obras precisam de PGR |
 | **NR-04** | SESMT | Dimensionamento por CNAE × empregados |
@@ -73,7 +73,7 @@
 | **NR-06** | EPI | Ficha de EPI, treinamento, controle de CA |
 | **NR-07** | PCMSO | Programa + ASOs por colaborador |
 | **NR-09** | Agentes físicos, químicos, biológicos | Avaliação ambiental — base do S-2240 |
-| **NR-10** | Eletricidade | Núcleo das obras SISTENGE — SEP + curso 40h+40h |
+| **NR-10** | Eletricidade | Núcleo das obras da empresa — SEP + curso 40h+40h |
 | **NR-11** | Transporte/movimentação | Içamento em obra |
 | **NR-12** | Máquinas | Maquinário de obra; gestão de salvaguardas |
 | **NR-15** | Insalubridade | Caracterização ambiental, adicional |
@@ -229,7 +229,7 @@ Referências:
 | **DART** Days Away, Restricted or Transferred | `(DART_cases × 200.000) / HHT` |
 | **Severity Rate** | `(dias_perdidos × 200.000) / HHT` |
 
-> Útil quando SISTENGE atende cliente data center multinacional que compara contra padrões OSHA.
+> Útil quando a empresa atende cliente data center multinacional que compara contra padrões OSHA.
 
 ### Leading — proativos
 - % DDS realizados / planejados
@@ -248,7 +248,7 @@ Referências:
 ### Custo
 - **CA** = custos diretos (INSS, salários afastamento, atendimento) + custos indiretos (Heinrich propõe 4× diretos)
 - **Benchmark setorial:** AEAT — https://www.gov.br/previdencia/pt-br/assuntos/previdencia-social/saude-e-seguranca-do-trabalhador (atual: AEAT 2022/2023, edição 2024 a verificar)
-  - SISTENGE provavelmente CNAE 41/42/43 (construção) e 43.21-5 (instalações elétricas) — historicamente top-5 em frequência
+  - a empresa provavelmente CNAE 41/42/43 (construção) e 43.21-5 (instalações elétricas) — historicamente top-5 em frequência
 
 ---
 
@@ -296,7 +296,7 @@ Referências:
 | **NR-12** | Operadores/mantenedores de máquinas | varia | — | Catálogo |
 | **NR-18** | Integração (admissão em obra civil) | 6h mín. | — | Catálogo |
 | **NR-20** | Classes I a IV (básico/intermediário/avançado/específico) | 4-32h | 1-3 anos | Catálogo |
-| **NR-22** | Mineração (não SISTENGE) | — | — | — |
+| **NR-22** | Mineração (não a empresa) | — | — | — |
 | **NR-33** | Trabalhador autorizado / Supervisor de entrada | 16h / 40h | Anual | Catálogo |
 | **NR-34** | Construção naval | — | — | — |
 | **NR-35** | Trabalho em Altura | 8h | 2 anos | Catálogo |
@@ -523,7 +523,7 @@ Priorização **P0** (regulatório bloqueante) → **P3** (melhoria contínua).
 
 # Parte III — Roadmap priorizado
 
-Ordenação **R×E** (ROI × Esforço) para o contexto SISTENGE.
+Ordenação **R×E** (ROI × Esforço) para o contexto a empresa.
 
 ## Sprint pack A — Fundamentos (P0 imediato)
 1. **PGR** estruturado (módulo + Inventário + Plano de Ação 5W2H)
@@ -611,6 +611,6 @@ Ordenação **R×E** (ROI × Esforço) para o contexto SISTENGE.
 
 ---
 
-> **Próxima ação sugerida:** validar o roadmap (Parte III) com o time SISTENGE e escolher
+> **Próxima ação sugerida:** validar o roadmap (Parte III) com o time do projeto e escolher
 > 2-3 itens do Sprint pack A para entrar nas próximas fases. O P0 PGR + HHT real são os
 > que mais destravam outros (PGR habilita S-2240; HHT corrige TF/TG e todos os relatórios).

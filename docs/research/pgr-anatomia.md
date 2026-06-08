@@ -1,11 +1,11 @@
-# PGR SISTENGE — Anatomia para Schema de Banco e Gerador de PDF
+# PGR de referÃªncia — Anatomia para Schema de Banco e Gerador de PDF
 
 > Pesquisa derivada de três documentos-fonte:
 > 1. `PGR_GAROA.txt` — PGR completo da obra **ADA Infrastructure Operations Brasil Ltda — Google** (cliente Garoa), extraído de `.docx` (limpo, 4356 linhas).
 > 2. `PGR_DANTE.txt` — extraído de `.doc` Word 97-2003 via olefile. **Conteúdo binário irrecuperável** (mojibake `ꗬÁЖደ¿ကࠀ⥉橢橢Жর	誌櫲誌櫲...`). Grep não encontrou nenhuma palavra-chave em português. Marcado como `(não recuperável do .doc — consultar versão Word original)`.
-> 3. `PGR_SISTENGE_MATRIZ.txt` — extraído de `.doc` (template/matriz da SISTENGE). **Também irrecuperável** (mesmo padrão de mojibake UTF-8 sobre bytes binários do `.doc`). Grep não encontrou nenhuma palavra-chave em português. Marcado como `(não recuperável do .doc — consultar versão Word original)`.
+> 3. `PGR_EXEMPLO_MATRIZ.txt` — extraído de `.doc` (template/matriz da empresa). **Também irrecuperável** (mesmo padrão de mojibake UTF-8 sobre bytes binários do `.doc`). Grep não encontrou nenhuma palavra-chave em português. Marcado como `(não recuperável do .doc — consultar versão Word original)`.
 >
-> **Conclusão prática:** toda a anatomia abaixo foi extraída exclusivamente do PGR_GAROA. Considera-se que ele representa a aplicação do template MATRIZ a um caso real, então o template é inferível a partir dele. Recomendação ao engenheiro: para validar campos extras / variações de seções, converter `PGR_SISTENGE_MATRIZ.doc` para `.docx` no Word antes de re-extrair.
+> **Conclusão prática:** toda a anatomia abaixo foi extraída exclusivamente do PGR_GAROA. Considera-se que ele representa a aplicação do template MATRIZ a um caso real, então o template é inferível a partir dele. Recomendação ao engenheiro: para validar campos extras / variações de seções, converter `PGR_EXEMPLO_MATRIZ.doc` para `.docx` no Word antes de re-extrair.
 
 ---
 
@@ -21,7 +21,7 @@ PROGRAMA DE GERENCIAMENTO DE RISCOS PROGRAMA DE RISCO OCUPACIONAL
 ADA INFRASTRUCTURE OPERATIONS BRASIL LTDA
 ```
 
-Observação: o título engloba **PGR (NR-01)** e **GRO (Gerenciamento de Riscos Ocupacionais — NR-09 antiga PPRA)** no mesmo documento. SISTENGE trata como produto único.
+Observação: o título engloba **PGR (NR-01)** e **GRO (Gerenciamento de Riscos Ocupacionais — NR-09 antiga PPRA)** no mesmo documento. a empresa trata como produto único.
 
 **Campos da capa (inferidos):**
 - Tipo de documento: "PGR/GRO"
@@ -47,21 +47,21 @@ Tabela com colunas (verbatim das linhas 7-16):
 ### 1.3 Vigência
 
 ```
-EMPRESA: SISTENGE CONSTRUÇÕES E COMÉRCIO LTDA
+EMPRESA: EMPRESA EXEMPLO LTDA
 Data da Emissão (Elaboração): 25/03/2026
 Data da Revisão (Vencimento): 22/03/2027
 ```
 
 **Periodicidade típica:** ~12 meses (25/03/2026 → 22/03/2027). Confirma a exigência da NR-01 de revisão anual.
 
-### 1.4 Caracterização da Empresa (Contratada — SISTENGE)
+### 1.4 Caracterização da Empresa (Contratada — a empresa)
 
 Campos exatos (linhas 81-95):
 
 | Campo | Valor verbatim |
 |-------|----------------|
-| Razão Social | `SISTENGE CONSTRUÇÕES E COMÉRCIO LTDA` |
-| CNPJ | `49.329.618/0001-99` |
+| Razão Social | `EMPRESA EXEMPLO LTDA` |
+| CNPJ | `00.000.000/0001-00` |
 | CNAE | `41.20-4` |
 | Grau de Risco | `03` |
 | Atividade | `Construção de Edifícios` |
@@ -116,7 +116,7 @@ Coordenador de Obras
 CREA: 5063036176
 ```
 
-Duas assinaturas: (1) o elaborador SST/SESMT, (2) o coordenador da obra. **Note:** o campo é "CREA" mesmo para "Supervisor de Segurança do Trabalho" — provavelmente é um registro CREA com modalidade Segurança, ou TMSE. SISTENGE não usa registro MTE explícito.
+Duas assinaturas: (1) o elaborador SST/SESMT, (2) o coordenador da obra. **Note:** o campo é "CREA" mesmo para "Supervisor de Segurança do Trabalho" — provavelmente é um registro CREA com modalidade Segurança, ou TMSE. a empresa não usa registro MTE explícito.
 
 ### 1.7 Sumário típico (linhas 121-169)
 
@@ -139,7 +139,7 @@ Duas assinaturas: (1) o elaborador SST/SESMT, (2) o coordenador da obra. **Note:
 16 -  ANEXO VIII - AVALIAÇÃO E GERENCIAMENTO DE RISCOS (AGR)
 ```
 
-⚠ **Inconsistência verbatim:** o item 15 está rotulado como "ANEXO VIII" no sumário, mas internamente (linha 3448) aparece como `ANEXO VII`. O item 16 está como `ANEXO VIII` em ambos. O cabeçalho do conteúdo do anexo IV diz "Resultados das Avaliações Quantitativas" mas o sumário lista esse como ANEXO V. **A numeração de anexos do template SISTENGE é incoerente entre sumário e cabeçalhos internos.** No schema, recomenda-se usar id sequencial interno e armazenar o "rótulo" como string editável.
+⚠ **Inconsistência verbatim:** o item 15 está rotulado como "ANEXO VIII" no sumário, mas internamente (linha 3448) aparece como `ANEXO VII`. O item 16 está como `ANEXO VIII` em ambos. O cabeçalho do conteúdo do anexo IV diz "Resultados das Avaliações Quantitativas" mas o sumário lista esse como ANEXO V. **A numeração de anexos do template a empresa é incoerente entre sumário e cabeçalhos internos.** No schema, recomenda-se usar id sequencial interno e armazenar o "rótulo" como string editável.
 
 ---
 
@@ -242,7 +242,7 @@ risco_inventario.tipo_exposicao   ENUM ('Eventual','Moderado','Habitual')
 risco_inventario.categoria_risco  ENUM ('Muito Baixo','Baixo','Médio','Alto','Muito Alto')
 ```
 
-Conforme texto da seção 4 (linhas 706-780), as categorias usadas pela SISTENGE são: **Muito Baixo, Baixo, Médio, Alto, Muito Alto**. Critério de monitoramento:
+Conforme texto da seção 4 (linhas 706-780), as categorias usadas pelo cliente são: **Muito Baixo, Baixo, Médio, Alto, Muito Alto**. Critério de monitoramento:
 - "Médio": revisão a cada 3 anos
 - "Alto" e "Muito Alto": revisão a cada 5 anos
 - "Muito Baixo" e "Baixo": monitoramento facultativo, baseado em julgamento profissional
@@ -281,7 +281,7 @@ Conforme texto da seção 4 (linhas 706-780), as categorias usadas pela SISTENGE
 
 ⚠ **Observações sobre dados:**
 - Repete-se em quase todos os GHEs uma observação no rodapé da tabela: `Obs* Os riscos Físico / Químico / Biológicos / Acidentes / Ergonômicos - Deverão acompanhar a diretriz do cliente conforme suas revisões.`
-- O **código eSocial** é repetido para muitos riscos diferentes (ex: 05.01.001 cobre queda, calor, postura, animais peçonhentos, eletricidade, espaço confinado…). Isso **não corresponde** ao uso real da Tabela 24 do eSocial — sugere que SISTENGE usa códigos genéricos como placeholders. Ver Section 5.
+- O **código eSocial** é repetido para muitos riscos diferentes (ex: 05.01.001 cobre queda, calor, postura, animais peçonhentos, eletricidade, espaço confinado…). Isso **não corresponde** ao uso real da Tabela 24 do eSocial — sugere que a empresa usa códigos genéricos como placeholders. Ver Section 5.
 - A coluna "Categoria" às vezes recebe valor "Eventual" por erro de extração/preenchimento (ex.: GHE 02 — POEIRA MINERAL aparece com tipo "Eventual" e categoria "Eventual"). No banco, validar enum estrito.
 
 ---
@@ -310,7 +310,7 @@ Formato verbatim (linhas 1018-1023 e 1402-1426):
 | — | STATUS DA AÇÃO? (CONCLUÍDA / EM ANDAMENTO / PENDENTE) |
 | — | OBSERVAÇÕES |
 
-**Note:** falta a coluna **QUANTO?** (custo) — o 5W2H clássico tem 7 perguntas, SISTENGE usa só 6 + status + obs. Não há gestão de custo no PGR.
+**Note:** falta a coluna **QUANTO?** (custo) — o 5W2H clássico tem 7 perguntas, a empresa usa só 6 + status + obs. Não há gestão de custo no PGR.
 
 ### 3.3 Schema sugerido
 
@@ -320,8 +320,8 @@ acao_plano (
   pgr_id FK,
   numero_item INT,        -- "1", "2", ..., "17"
   o_que TEXT,             -- ação
-  quem VARCHAR,           -- "SMS", "TODOS", "SMS/SISTENGE"
-  onde VARCHAR,           -- "MATRIZ", "Obra GAROA (Google)", "Nas Gerências Sistenge"
+  quem VARCHAR,           -- "SMS", "TODOS", "SMS/EMPRESA"
+  onde VARCHAR,           -- "MATRIZ", "Obra GAROA (Google)", "Nas Gerências a empresa"
   quando VARCHAR,         -- "03/2026", "PERIODICO", "PERMANENTE", "NA ADMISSÃO E MANUTENÇÃO NO DDS"
   por_que TEXT,
   como TEXT,
@@ -337,7 +337,7 @@ acao_plano (
 Quase tudo é "SMS" (Serviço de Meio Ambiente e Segurança — equivalente ao SESMT). Casos:
 - `SMS` — 14 itens
 - `TODOS` — 2 itens (controle de validade CA, arquivo de ficha EPI)
-- `SMS/SISTENGE` — 1 item (auditoria)
+- `SMS/EMPRESA` — 1 item (auditoria)
 
 Não há atribuição nominal a uma pessoa específica nos itens. A única pessoa nomeada aparece na seção de assinaturas (Fernanda Cavalcante / Adriano Soares Ferreira).
 
@@ -361,7 +361,7 @@ Não há atribuição nominal a uma pessoa específica nos itens. A única pesso
 
 ---
 
-## Section 4 — Riscos típicos detectados nas obras SISTENGE
+## Section 4 — Riscos típicos detectados nas obras da empresa
 
 Lista completa de riscos identificados no inventário do PGR_GAROA, agrupados por categoria de origem (categorização inferida — o doc não rotula explicitamente). Fonte para **TODOS** os riscos abaixo: `PGR_GAROA.txt` (PGR_DANTE e PGR_MATRIZ não recuperáveis).
 
@@ -391,7 +391,7 @@ Lista completa de riscos identificados no inventário do PGR_GAROA, agrupados po
 | SECREÇÕES | 05.01.001 | Limpeza |
 | (Implícito: pneumonia, hepatite, infecções, gripes, fungos) | — | Mencionado em "Possíveis Danos à Saúde" das linhas de UMIDADE e SECREÇÕES |
 
-⚠ Inventário pobre em agentes biológicos — provavelmente porque obra civil tem baixa exposição. SISTENGE basicamente só lista "secreções" e "umidade" como agente bio.
+⚠ Inventário pobre em agentes biológicos — provavelmente porque obra civil tem baixa exposição. a empresa basicamente só lista "secreções" e "umidade" como agente bio.
 
 ### 4.4 Riscos Ergonômicos
 
@@ -710,13 +710,13 @@ Treinamentos citados em diversos pontos do corpo:
 - **Treinamento introdutório** (linha 804)
 - **Treinamentos específicos** (linha 806)
 
-⚠ **CH e periodicidade não estão no documento.** Para o schema, sugerir tabela `treinamento(nome, nr_referencia, ch_horas, periodicidade)` populada por uma base mestre (catálogo) independente do PGR — o PGR só aponta para os treinamentos exigidos. Periodicidades canônicas para SISTENGE devem ser definidas pelo SESMT (ex: NR-35 = 8h inicial + 8h bienal; NR-10 = 40h inicial + 40h bienal SEP; NR-33 = 16h trabalhador autorizado + 8h reciclagem anual; NR-18 integração = 6h).
+⚠ **CH e periodicidade não estão no documento.** Para o schema, sugerir tabela `treinamento(nome, nr_referencia, ch_horas, periodicidade)` populada por uma base mestre (catálogo) independente do PGR — o PGR só aponta para os treinamentos exigidos. Periodicidades canônicas para a empresa devem ser definidas pelo SESMT (ex: NR-35 = 8h inicial + 8h bienal; NR-10 = 40h inicial + 40h bienal SEP; NR-33 = 16h trabalhador autorizado + 8h reciclagem anual; NR-18 integração = 6h).
 
 ---
 
 ## Section 9 — Anexos típicos
 
-A estrutura usada por SISTENGE (com numeração interna inconsistente — ver Section 1.7):
+A estrutura usada por a empresa (com numeração interna inconsistente — ver Section 1.7):
 
 | Nº (sumário) | Nº (cabeçalho interno) | Título | Conteúdo |
 |---|---|---|---|
@@ -758,12 +758,12 @@ E permitir reordenação / renomeação (já que o template real é inconsistent
 - Sub-itens com numeração arábica decimal: `1.1`, `1.2`, `1.3`...
 - Anexos: numeração romana maiúscula (`ANEXO I`, `ANEXO II`...) — mas com inconsistências.
 - Listas em bullet usam ▪ ou similar no Word original (no extract aparece como linhas indentadas com espaços).
-- Fonte presumida: Arial ou Calibri (típico SISTENGE) — não inferível do txt.
+- Fonte presumida: Arial ou Calibri (típico a empresa) — não inferível do txt.
 
 ### 10.2 Layout de tabelas
 - Tabelas convertidas pelo docx2txt aparecem como blocos verticais — uma célula por linha, com indentação grande. Isso indica que no Word original são **tabelas reais** com colunas, não texto formatado.
 - Cabeçalhos de tabela repetem-se a cada quebra de página.
-- Há rodapé recorrente `PGR - Programa de Gerenciamento de Riscos` e referência ao formulário `SGI\Formulários\FO-121-00 PGR.doc` (linhas 3999-4000). **`FO-121-00` é o código do formulário SISTENGE para PGR** — útil para nomear o template no sistema.
+- Há rodapé recorrente `PGR - Programa de Gerenciamento de Riscos` e referência ao formulário `SGI\Formulários\FO-121-00 PGR.doc` (linhas 3999-4000). **`FO-121-00` é o código do formulário a empresa para PGR** — útil para nomear o template no sistema.
 - Paginação encontrada: o doc tem 57 páginas no `.docx` original (linha 3997: `57`).
 
 ### 10.3 Repetições e duplicações
@@ -779,7 +779,7 @@ E permitir reordenação / renomeação (já que o template real é inconsistent
 5. **Numeração de páginas** no rodapé + título do PGR + código do formulário interno (`FO-121-00`).
 6. **Rodapé recorrente** com referência ao SGI (Sistema de Gestão Integrada): `SGI\Formulários\FO-121-00 PGR.doc`.
 7. **Suporte a observação por anexo** (ex: "Obs* Os riscos Físico / Químico... — Deverão acompanhar a diretriz do cliente conforme suas revisões.").
-8. **Comparativo cliente vs obra**: o documento separa "Caracterização da Empresa" (SISTENGE — a contratada) de "Local de Atividade" (o cliente — onde a obra acontece). O schema precisa modelar essa relação:
+8. **Comparativo cliente vs obra**: o documento separa "Caracterização da Empresa" (a empresa — a contratada) de "Local de Atividade" (o cliente — onde a obra acontece). O schema precisa modelar essa relação:
 
 ```
 empresa_contratada (id, razao_social, cnpj, cnae, grau_risco, endereco, ...)
@@ -800,10 +800,10 @@ Estas tabelas técnicas são **idênticas no template** — não mudam por obra.
 
 1. **Modelar PGR como documento versionado** (`pgr_revisao` separada) — alterações disparam nova revisão, não overwrite.
 2. **GHE é a entidade central** — quase tudo (inventário, EPIs, ações, treinamentos) gira em torno do GHE.
-3. **Códigos eSocial** precisam validação por catálogo oficial; o template SISTENGE atual usa códigos inconsistentes.
+3. **Códigos eSocial** precisam validação por catálogo oficial; o template a empresa atual usa códigos inconsistentes.
 4. **Cargos**: criar catálogo de cargos com vínculo N:M para GHE — o mesmo cargo pode estar em vários GHEs entre obras.
 5. **Status com enums fixos** — o doc original usa strings livres com typos.
-6. **Geração de PDF**: priorizar fidelidade ao formulário `FO-121-00` (SGI SISTENGE) — incluir assinaturas, rodapé padrão, numeração de páginas.
+6. **Geração de PDF**: priorizar fidelidade ao formulário `FO-121-00` (SGI a empresa) — incluir assinaturas, rodapé padrão, numeração de páginas.
 7. **Anexos como módulos plugáveis** — cada tipo (cronograma, inventário, EPI matrix, AGR, análise global) é um renderizador diferente.
 8. **Tabelas de referência seed**: NR catálogo, eSocial Tabela 24, limites NR-15/ACGIH, metodologias NIOSH/NHO, CA de EPIs.
 9. **PCMSO, APR, PT, PAE** — são documentos separados mas integrados ao PGR (mencionados em "Disposições Finais"). Considerar futuros módulos.

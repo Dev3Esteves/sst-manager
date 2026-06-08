@@ -1,5 +1,5 @@
 /**
- * Webhook receiver do Sistenge People.
+ * Webhook receiver do People (RH).
  *
  * Autenticação: HMAC-SHA256 do corpo bruto no header `x-people-signature`,
  * validado contra PEOPLE_WEBHOOK_SECRET. Idempotência: cada `event_id` é

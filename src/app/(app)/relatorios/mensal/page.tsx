@@ -13,6 +13,7 @@ import {
   Users, HeartPulse, GraduationCap, ClipboardCheck, FileText, MessageSquare,
 } from "lucide-react"
 import { PrintButton } from "./print-button"
+import { brand } from "@/config/brand"
 import { SubmitOnChangeSelect } from "@/components/ui/submit-on-change-select"
 
 export default async function RelatorioMensalPage({
@@ -174,7 +175,7 @@ export default async function RelatorioMensalPage({
       {/* Header impressão: só aparece no print */}
       <div className="hidden print:flex print:items-center print:justify-between print:border-b print:pb-4 print:mb-4">
         <div>
-          <div className="font-bold text-lg">{empresaPropria?.razao_social ?? "SISTENGE"}</div>
+          <div className="font-bold text-lg">{empresaPropria?.razao_social ?? (brand.companyName || brand.appName)}</div>
           <div className="text-xs text-muted-foreground">
             {empresaPropria?.cnpj ? `CNPJ ${empresaPropria.cnpj}` : ""}
           </div>
@@ -399,7 +400,7 @@ export default async function RelatorioMensalPage({
       </div>
 
       <footer className="hidden print:block print:mt-8 print:pt-3 print:border-t text-xs text-muted-foreground text-center">
-        Documento gerado automaticamente pelo Sistema de Gestão de SST — {empresaPropria?.razao_social ?? "SISTENGE"}
+        Documento gerado automaticamente pelo Sistema de Gestão de SST — {empresaPropria?.razao_social ?? (brand.companyName || brand.appName)}
       </footer>
     </div>
   )

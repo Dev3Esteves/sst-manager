@@ -7,6 +7,8 @@
  * vencer. Não exige tabela de estado "já notifiquei".
  */
 
+import { brand } from "@/config/brand"
+
 export type VencimentoRow = {
   categoria: string
   item: string
@@ -99,6 +101,6 @@ export function montarEmailHtml(
       <tbody>${linhas}</tbody>
     </table>
     ${link}
-    <p style="margin-top:24px;font-size:12px;color:#9ca3af">E-mail automático do SST Manager — SISTENGE. Não responda.</p>
+    <p style="margin-top:24px;font-size:12px;color:#9ca3af">E-mail automático do ${brand.appName}${brand.companyName ? ` — ${brand.companyName}` : ""}. Não responda.</p>
   </div>`
 }

@@ -1,7 +1,7 @@
 import { timingSafeEqual } from "node:crypto"
 
 /**
- * Autenticação das APIs de LEITURA consumidas pelo Sistenge People.
+ * Autenticação das APIs de LEITURA consumidas pelo People (RH).
  * O People envia a chave em `Authorization: Bearer <key>` ou `x-api-key`,
  * validada contra PEOPLE_API_KEY (comparação em tempo constante).
  */

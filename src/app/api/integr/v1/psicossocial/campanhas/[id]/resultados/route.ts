@@ -1,6 +1,6 @@
 /**
  * GET /api/integr/v1/psicossocial/campanhas/[id]/resultados
- * Resultados AGREGADOS por GHE × dimensão para o Sistenge People.
+ * Resultados AGREGADOS por GHE × dimensão para o People (RH).
  *
  * ⚠️ Anonimato: expõe apenas o agregado (score/classificação por GHE). NUNCA
  * respostas individuais (psi_resposta é deny-all e não é lida aqui).

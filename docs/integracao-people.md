@@ -1,6 +1,6 @@
-# Integração com o Sistenge People
+# Integração com o People (RH)
 
-Contrato de integração entre o **Sistenge People** (fonte da verdade de cargos,
+Contrato de integração entre o **People (RH)** (fonte da verdade de cargos,
 colaboradores e exames) e o **sst-manager**.
 
 > Status: **infraestrutura pronta, inativa até configurar os segredos**. Os

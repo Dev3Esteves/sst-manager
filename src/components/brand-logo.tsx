@@ -1,18 +1,21 @@
 import Image from "next/image"
 import { cn } from "@/lib/utils"
+import { brand } from "@/config/brand"
 
 /**
- * Logo oficial da SISTENGE. Duas variantes:
+ * Logo do produto (white-label). Duas variantes:
  *  - `full` (padrão): logotipo horizontal completo com texto
- *  - `icon`: só o ícone "S" estilizado (para favicon, sidebar compacta, etc.)
+ *  - `icon`: só o ícone (para favicon, sidebar compacta, etc.)
  *
- * Troca automática por tema via Tailwind `dark:` — renderiza as duas
- * variantes (clara/escura) e usa `hidden dark:block` / `dark:hidden` para
- * alternar sem flash na hidratação (evita delay do JS).
+ * As fontes vêm de `@/config/brand` (env `NEXT_PUBLIC_BRAND_LOGO_*`), então
+ * trocar a marca é trocar os arquivos em `/public/logos/` ou apontar o env —
+ * sem mexer aqui.
  *
- * Imagens são SVG servidas direto do `/public/logos/*.svg`.
+ * Troca automática por tema via Tailwind `dark:` — renderiza as duas variantes
+ * (clara/escura) e usa `hidden dark:block` / `dark:hidden` para alternar sem
+ * flash na hidratação (evita delay do JS).
  */
-export function SistengeLogo({
+export function BrandLogo({
   variant = "full",
   className,
   priority = false,
@@ -23,16 +26,16 @@ export function SistengeLogo({
   className?: string
   /** Passa `priority` pro Next/Image quando o logo é acima da dobra (login, cabeçalho) */
   priority?: boolean
-  /** Altura em px. Width é calculada preservando o aspect ratio oficial. */
+  /** Altura em px. Width é calculada preservando o aspect ratio. */
   height?: number
 }) {
-  const aspect = variant === "full" ? 1920 / 392.19 : 1
+  const aspect = variant === "full" ? brand.logo.fullAspect : 1
   const width = Math.round(height * aspect)
-  const alt = "SISTENGE"
+  const alt = brand.companyName || brand.appName
 
   // Tema claro (fundo claro) → logo escuro/colorido; tema escuro → logo claro/branco.
-  const srcLight = variant === "full" ? "/logos/sistenge-claro.svg" : "/logos/sistenge-icone-principal.svg"
-  const srcDark = variant === "full" ? "/logos/sistenge-escuro.svg" : "/logos/sistenge-icone-branco.svg"
+  const srcLight = variant === "full" ? brand.logo.fullLight : brand.logo.iconLight
+  const srcDark = variant === "full" ? brand.logo.fullDark : brand.logo.iconDark
 
   return (
     <span className={cn("inline-block leading-none", className)}>

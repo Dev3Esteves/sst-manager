@@ -4,16 +4,21 @@
  * já foram aplicadas e só queremos rodar a nova.
  *
  * Uso:
- *   SB_TOKEN=sbp_xxx PROJECT_REF=bxqoppzupqewdwvudcfg node scripts/apply-0009.mjs
+ *   SB_TOKEN=sbp_xxx PROJECT_REF=seu-project-ref node scripts/apply-0009.mjs
  *
- * PROJECT_REF default: bxqoppzupqewdwvudcfg (SISTENGE).
+ * PROJECT_REF: ref do seu projeto Supabase (obrigatório).
  */
 import { readFileSync } from "node:fs"
 import { join, dirname } from "node:path"
 import { fileURLToPath } from "node:url"
 
 const SB_TOKEN = process.env.SB_TOKEN
-const PROJECT_REF = process.env.PROJECT_REF || "bxqoppzupqewdwvudcfg"
+const PROJECT_REF = process.env.PROJECT_REF
+
+if (!PROJECT_REF) {
+  console.error("PROJECT_REF não definido. Exporte o ref do seu projeto Supabase.")
+  process.exit(1)
+}
 
 if (!SB_TOKEN) {
   console.error("SB_TOKEN não definido. Exporte seu Personal Access Token do Supabase Dashboard.")

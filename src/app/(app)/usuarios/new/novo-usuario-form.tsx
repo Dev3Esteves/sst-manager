@@ -12,6 +12,7 @@ import { toast } from "sonner"
 import { Loader2, ArrowLeft, Sparkles, Copy, CheckCircle2, Eye, EyeOff } from "lucide-react"
 import { criarUsuario } from "../actions"
 import { gerarSenhaForte } from "@/lib/validations/usuario"
+import { brand } from "@/config/brand"
 
 type Perfil = { id: string; nome: string; descricao: string | null }
 type Empresa = { id: string; razao_social: string }
@@ -166,7 +167,7 @@ export function NovoUsuarioForm({
             <Input
               id="email" type="email" value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="colaborador@sistenge.com"
+              placeholder={`colaborador@${brand.emailDomain}`}
             />
           </div>
           <div className="space-y-2 md:col-span-2">

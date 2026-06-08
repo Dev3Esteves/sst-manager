@@ -152,7 +152,7 @@ export const manuaisCadastros: Manual[] = [
         ] },
       ] },
       { titulo: "Atenção (integração futura)", blocos: [
-        { tipo: "atencao", texto: "Em breve, cargos, colaboradores e exames passarão a ser sincronizados a partir do Sistenge People (fonte da verdade). Quando isso entrar, esses cadastros ficarão somente-leitura aqui." },
+        { tipo: "atencao", texto: "Em breve, cargos, colaboradores e exames passarão a ser sincronizados a partir do People (RH) (fonte da verdade). Quando isso entrar, esses cadastros ficarão somente-leitura aqui." },
       ] },
     ],
   },

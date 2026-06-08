@@ -10,7 +10,7 @@ import { renderFichaEpiPdf, type FichaEpiData } from "./ficha-epi"
  */
 describe("renderFichaEpiPdf", () => {
   const dadosMinimos: FichaEpiData = {
-    empresa_razao_social: "SISTENGE Engenharia Ltda",
+    empresa_razao_social: "Empresa Demo Ltda",
     empresa_cnpj: "45.543.915/0001-81",
     empresa_logo_url: null,
     colaborador_nome: "Alex Vidal Felipe",

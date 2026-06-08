@@ -21,7 +21,7 @@ describe("empresaSchema", () => {
 
   it("aceita empresa dona do sistema", () => {
     const parsed = empresaSchema.safeParse({
-      razao_social: "SISTENGE Engenharia Ltda",
+      razao_social: "Empresa Demo Ltda",
       cnpj: CNPJ_VALIDO,
       tipo: "propria",
       dona_sistema: true,

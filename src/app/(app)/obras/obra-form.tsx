@@ -121,7 +121,7 @@ export function ObraForm({
             <Label htmlFor="nome">Nome da obra *</Label>
             <Input
               id="nome" name="nome" defaultValue={obra?.nome}
-              placeholder="DANTE / RACIONAL" required
+              placeholder="OBRA EXEMPLO" required
             />
             {errors.nome && <p className="text-xs text-destructive">{errors.nome[0]}</p>}
           </div>

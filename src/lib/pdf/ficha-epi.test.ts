@@ -18,7 +18,7 @@ describe("renderFichaEpiPdf", () => {
     colaborador_matricula: "EMP-001",
     cargo_titulo: "Encarregado de Obras Técnico",
     data_admissao: "2022-03-15",
-    obra_nome: "DANTE / RACIONAL",
+    obra_nome: "OBRA EXEMPLO",
     entregas: [],
     emitido_em: "2026-04-18T10:00:00Z",
   }

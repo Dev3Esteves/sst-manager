@@ -81,7 +81,7 @@ describe("GET /api/colaboradores/[id]/ficha-epi/pdf", () => {
       data_admissao: "2022-03-15",
       empresa: { razao_social: "Empresa Demo", cnpj: "00.000.000/0001-00", logo_url: null },
       cargo: { titulo: "Encarregado" },
-      obra: { nome: "DANTE / RACIONAL" },
+      obra: { nome: "OBRA EXEMPLO" },
     }
     dbState.entregas = [
       {

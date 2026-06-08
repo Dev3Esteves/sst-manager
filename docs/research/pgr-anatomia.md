@@ -1,11 +1,11 @@
 # PGR de referÃªncia — Anatomia para Schema de Banco e Gerador de PDF
 
 > Pesquisa derivada de três documentos-fonte:
-> 1. `PGR_GAROA.txt` — PGR completo da obra **ADA Infrastructure Operations Brasil Ltda — Google** (cliente Garoa), extraído de `.docx` (limpo, 4356 linhas).
-> 2. `PGR_DANTE.txt` — extraído de `.doc` Word 97-2003 via olefile. **Conteúdo binário irrecuperável** (mojibake `ꗬÁЖደ¿ကࠀ⥉橢橢Жর	誌櫲誌櫲...`). Grep não encontrou nenhuma palavra-chave em português. Marcado como `(não recuperável do .doc — consultar versão Word original)`.
+> 1. `PGR_EXEMPLO.txt` — PGR completo da obra **Cliente Exemplo — Cliente** (cliente Exemplo), extraído de `.docx` (limpo, 4356 linhas).
+> 2. `PGR_EXEMPLO_2.txt` — extraído de `.doc` Word 97-2003 via olefile. **Conteúdo binário irrecuperável** (mojibake `ꗬÁЖደ¿ကࠀ⥉橢橢Жর	誌櫲誌櫲...`). Grep não encontrou nenhuma palavra-chave em português. Marcado como `(não recuperável do .doc — consultar versão Word original)`.
 > 3. `PGR_EXEMPLO_MATRIZ.txt` — extraído de `.doc` (template/matriz da empresa). **Também irrecuperável** (mesmo padrão de mojibake UTF-8 sobre bytes binários do `.doc`). Grep não encontrou nenhuma palavra-chave em português. Marcado como `(não recuperável do .doc — consultar versão Word original)`.
 >
-> **Conclusão prática:** toda a anatomia abaixo foi extraída exclusivamente do PGR_GAROA. Considera-se que ele representa a aplicação do template MATRIZ a um caso real, então o template é inferível a partir dele. Recomendação ao engenheiro: para validar campos extras / variações de seções, converter `PGR_EXEMPLO_MATRIZ.doc` para `.docx` no Word antes de re-extrair.
+> **Conclusão prática:** toda a anatomia abaixo foi extraída exclusivamente do PGR_EXEMPLO. Considera-se que ele representa a aplicação do template MATRIZ a um caso real, então o template é inferível a partir dele. Recomendação ao engenheiro: para validar campos extras / variações de seções, converter `PGR_EXEMPLO_MATRIZ.doc` para `.docx` no Word antes de re-extrair.
 
 ---
 
@@ -18,7 +18,7 @@ Não há "capa" gráfica separada do conteúdo no extract (a capa do `.docx` ori
 ```
 PGR/GRO
 PROGRAMA DE GERENCIAMENTO DE RISCOS PROGRAMA DE RISCO OCUPACIONAL
-ADA INFRASTRUCTURE OPERATIONS BRASIL LTDA
+Cliente Exemplo
 ```
 
 Observação: o título engloba **PGR (NR-01)** e **GRO (Gerenciamento de Riscos Ocupacionais — NR-09 antiga PPRA)** no mesmo documento. a empresa trata como produto único.
@@ -26,7 +26,7 @@ Observação: o título engloba **PGR (NR-01)** e **GRO (Gerenciamento de Riscos
 **Campos da capa (inferidos):**
 - Tipo de documento: "PGR/GRO"
 - Subtítulo: "PROGRAMA DE GERENCIAMENTO DE RISCOS / PROGRAMA DE RISCO OCUPACIONAL"
-- Cliente / razão social do tomador: `ADA INFRASTRUCTURE OPERATIONS BRASIL LTDA`
+- Cliente / razão social do tomador: `Cliente Exemplo`
 - Logo: não recuperado do txt (existe no .docx)
 
 ### 1.2 Controle de Revisões
@@ -76,7 +76,7 @@ Campos exatos (linhas 81-95):
 ### 1.5 Local de Atividade (Obra)
 
 ```
-OBRA: ADA INFRASTRUCTURE OPERATIONS BRASIL LTDA - GOOGLE
+OBRA: CLIENTE EXEMPLO
 Endereço: Rodovia Edgar Maximo Zamboto (Estrada do Campo Limpo)
 Bairro: Glebas
 Município: Franco da Rocha
@@ -230,7 +230,7 @@ risco_inventario (
 
 ### 2.4 Matriz probabilidade × severidade
 
-**Não há matriz numérica X×Y explícita** no PGR_GAROA. A classificação final é qualitativa, com dois eixos cruzados:
+**Não há matriz numérica X×Y explícita** no PGR_EXEMPLO. A classificação final é qualitativa, com dois eixos cruzados:
 
 - **Tipo de Exposição:** `Eventual` ou `Moderado` (não vi "Habitual" mas o template pode ter)
 - **Categoria de Risco (final):** `Baixo`, `Médio`, `Alto`
@@ -247,7 +247,7 @@ Conforme texto da seção 4 (linhas 706-780), as categorias usadas pelo cliente 
 - "Alto" e "Muito Alto": revisão a cada 5 anos
 - "Muito Baixo" e "Baixo": monitoramento facultativo, baseado em julgamento profissional
 
-### 2.5 GHEs reais da obra GAROA (7 GHEs)
+### 2.5 GHEs reais da obra Exemplo (7 GHEs)
 
 | Código | Função/Posição                  | Área                                      | Local              |
 |--------|---------------------------------|-------------------------------------------|--------------------|
@@ -259,7 +259,7 @@ Conforme texto da seção 4 (linhas 706-780), as categorias usadas pelo cliente 
 | GHE 06 | Operacional - Mecânica          | OPERACIONAL MECANICA                      | Campo              |
 | GHE 07 | Operacional - Civil             | OPERACIONAL CIVIL                         | Campo              |
 
-### 2.6 Exemplos REAIS de inventário (verbatim do PGR_GAROA)
+### 2.6 Exemplos REAIS de inventário (verbatim do PGR_EXEMPLO)
 
 | GHE | Função | Agente Ambiental | Cód. eSocial | Fontes Geradoras | Trajetória | Via Ingresso | Possíveis Danos | Tipo Exposição | Categoria |
 |---|---|---|---|---|---|---|---|---|---|
@@ -321,7 +321,7 @@ acao_plano (
   numero_item INT,        -- "1", "2", ..., "17"
   o_que TEXT,             -- ação
   quem VARCHAR,           -- "SMS", "TODOS", "SMS/EMPRESA"
-  onde VARCHAR,           -- "MATRIZ", "Obra GAROA (Google)", "Nas Gerências a empresa"
+  onde VARCHAR,           -- "MATRIZ", "Obra Exemplo", "Nas Gerências a empresa"
   quando VARCHAR,         -- "03/2026", "PERIODICO", "PERMANENTE", "NA ADMISSÃO E MANUTENÇÃO NO DDS"
   por_que TEXT,
   como TEXT,
@@ -363,7 +363,7 @@ Não há atribuição nominal a uma pessoa específica nos itens. A única pesso
 
 ## Section 4 — Riscos típicos detectados nas obras da empresa
 
-Lista completa de riscos identificados no inventário do PGR_GAROA, agrupados por categoria de origem (categorização inferida — o doc não rotula explicitamente). Fonte para **TODOS** os riscos abaixo: `PGR_GAROA.txt` (PGR_DANTE e PGR_MATRIZ não recuperáveis).
+Lista completa de riscos identificados no inventário do PGR_EXEMPLO, agrupados por categoria de origem (categorização inferida — o doc não rotula explicitamente). Fonte para **TODOS** os riscos abaixo: `PGR_EXEMPLO.txt` (PGR_EXEMPLO_2 e PGR_MATRIZ não recuperáveis).
 
 ### 4.1 Riscos Físicos
 
@@ -442,7 +442,7 @@ Lista completa de riscos identificados no inventário do PGR_GAROA, agrupados po
 
 ## Section 5 — Agentes nocivos eSocial (Tabela 24)
 
-**Aviso crítico:** os códigos eSocial usados no PGR_GAROA **não estão corretos** segundo a Tabela 24 oficial. O documento usa apenas 4 códigos como placeholders:
+**Aviso crítico:** os códigos eSocial usados no PGR_EXEMPLO **não estão corretos** segundo a Tabela 24 oficial. O documento usa apenas 4 códigos como placeholders:
 
 | Código no doc | Quantas vezes aparece | Códigos eSocial oficiais correspondentes |
 |---|---|---|
@@ -605,7 +605,7 @@ Exemplos REAIS (linhas 3410-3431):
 | Ruído | Individual | Uso de EPI | Uso de protetor auricular tipo plug | Quando ultrapassar 80db | Quando necessário | Eventual |
 | Poeira Total | Individual | Uso de EPI | Uso de mascara PFF2 | Analisar necessidade de acordo com a atividade | Quando necessário | Eventual |
 
-⚠ O Anexo VI no PGR_GAROA está **quase vazio** — apenas 2 linhas preenchidas. Provavelmente um cliente real preenche mais. Observação no doc: "Os riscos inseridos tratam-se da mobilização de obra."
+⚠ O Anexo VI no PGR_EXEMPLO está **quase vazio** — apenas 2 linhas preenchidas. Provavelmente um cliente real preenche mais. Observação no doc: "Os riscos inseridos tratam-se da mobilização de obra."
 
 ### 7.3 Schema sugerido
 
@@ -694,7 +694,7 @@ epi_funcionario_ficha (    -- já mencionada no cronograma item 13
 
 ## Section 8 — Treinamentos exigidos
 
-O PGR_GAROA **não tem seção dedicada a treinamentos com CH e periodicidade**. As NRs aplicáveis são listadas no objetivo (linha 232):
+O PGR_EXEMPLO **não tem seção dedicada a treinamentos com CH e periodicidade**. As NRs aplicáveis são listadas no objetivo (linha 232):
 
 ```
 NR 01, NR 04, NR 05, NR 06, NR-07, NR 09, NR-10, NR 11, NR 12, NR 15, NR 16,
@@ -724,10 +724,10 @@ A estrutura usada por a empresa (com numeração interna inconsistente — ver S
 | Anexo II | II | APR + Caracterização dos GHE | Mapeamento de GHEs, funções, cargos, locais |
 | Anexo III | III | Inventário de Riscos | Lista de pares GHE × risco com classificação |
 | Anexo IV | IV | Ações Preventivas COVID-19 | Protocolos (legado pandemia) |
-| Anexo V | IV (sic) | Resultados Avaliações Quantitativas | Vazio no GAROA — planejado para 11/2026 |
+| Anexo V | IV (sic) | Resultados Avaliações Quantitativas | Vazio no EXEMPLO — planejado para 11/2026 |
 | Anexo VI | V (sic) | Medidas Existentes e Recomendadas | Tabela agente × tipo medida × ação |
 | Anexo VII (sumário diz VIII) | VII | Lista de EPI por GHE/Função | Matriz EPI × GHE |
-| Anexo VIII | VIII | Avaliação e Gerenciamento de Riscos (AGR) | Vazio no GAROA — preenchimento periódico |
+| Anexo VIII | VIII | Avaliação e Gerenciamento de Riscos (AGR) | Vazio no EXEMPLO — preenchimento periódico |
 | (não no sumário) | IX | Relatório de Análise Global | Anexado anualmente após revisão (item 11 cronograma) |
 
 **Recomendação para o schema:** modelar anexos como **lista ordenada de tipos** com renderização polimórfica:
@@ -807,4 +807,4 @@ Estas tabelas técnicas são **idênticas no template** — não mudam por obra.
 7. **Anexos como módulos plugáveis** — cada tipo (cronograma, inventário, EPI matrix, AGR, análise global) é um renderizador diferente.
 8. **Tabelas de referência seed**: NR catálogo, eSocial Tabela 24, limites NR-15/ACGIH, metodologias NIOSH/NHO, CA de EPIs.
 9. **PCMSO, APR, PT, PAE** — são documentos separados mas integrados ao PGR (mencionados em "Disposições Finais"). Considerar futuros módulos.
-10. **Para validar variações de template:** converter manualmente os `.doc` antigos (DANTE e MATRIZ) para `.docx` antes de re-extrair — o conteúdo está perdido na extração atual via olefile.
+10. **Para validar variações de template:** converter manualmente os `.doc` antigos (EXEMPLO_2 e MATRIZ) para `.docx` antes de re-extrair — o conteúdo está perdido na extração atual via olefile.

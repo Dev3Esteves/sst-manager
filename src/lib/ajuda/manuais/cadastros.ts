@@ -84,7 +84,7 @@ export const manuaisCadastros: Manual[] = [
       ] },
       { titulo: "Campos", blocos: [
         { tipo: "campos", itens: [
-          { campo: "Nome", descricao: "Identificação da obra (ex.: DANTE / RACIONAL).", obrigatorio: true },
+          { campo: "Nome", descricao: "Identificação da obra (ex.: OBRA EXEMPLO).", obrigatorio: true },
           { campo: "Contratante", descricao: "Empresa cliente onde a obra acontece." },
           { campo: "CNO", descricao: "Cadastro Nacional de Obras (Receita Federal), formato XX.XXX.XXXXX/XX — usado no eSocial e no PGR." },
           { campo: "Nº de empregados (máx.)", descricao: "Pico de trabalhadores alocados; aparece no cabeçalho do PGR." },

@@ -15,7 +15,7 @@ describe("renderOsNr01Pdf", () => {
     numero_os: "OS-2026-0001",
     data_emissao: "2026-04-18",
     revisao: "00",
-    obra_nome: "DANTE / RACIONAL",
+    obra_nome: "OBRA EXEMPLO",
     cargo_titulo: "Encarregado de Obras Técnico",
     descricao_atividades: "Supervisão de equipes em obras elétricas de média e alta tensão.",
     riscos: [

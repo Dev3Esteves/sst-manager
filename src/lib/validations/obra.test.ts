@@ -7,7 +7,7 @@ describe("obraSchema", () => {
   it("aceita uma obra mínima válida (só nome + empresa)", () => {
     const parsed = obraSchema.safeParse({
       empresa_id: UUID,
-      nome: "DANTE / RACIONAL",
+      nome: "OBRA EXEMPLO",
     })
     expect(parsed.success).toBe(true)
     if (parsed.success) {

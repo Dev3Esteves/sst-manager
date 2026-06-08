@@ -44,7 +44,7 @@ const pick = (arr) => arr[rnd(arr.length)]
 // OBRAS DEMO (nomes fictícios para demonstração)
 // ============================================================================
 const OBRAS_DEMO = [
-  { nome: "DANTE / RACIONAL", cidade: "Campinas", uf: "SP", codigo: "OBR-001" },
+  { nome: "OBRA EXEMPLO", cidade: "Campinas", uf: "SP", codigo: "OBR-001" },
   { nome: "OBRA ELEA — Subestação Norte", cidade: "Hortolândia", uf: "SP", codigo: "OBR-002" },
   { nome: "Ampliação DC Tamboré", cidade: "Barueri", uf: "SP", codigo: "OBR-003" },
   { nome: "Retrofit SE Mogi", cidade: "Mogi das Cruzes", uf: "SP", codigo: "OBR-004" },

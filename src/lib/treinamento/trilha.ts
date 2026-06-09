@@ -2,7 +2,7 @@
  * Trilha de treinamento do sistema (in-app, desbloqueio sequencial).
  * Cada módulo só abre após a conclusão do anterior (progresso por usuário em
  * `treinamento_sistema_progresso`). Cobre o ecossistema (multiempresa +
- * integração), o SST (Segurança) e uma visão do Sistenge People (RH).
+ * integração), o SST (Segurança) e uma visão do People (RH).
  */
 
 export type SecaoTrilha = "Ecossistema" | "SST — Segurança" | "People — RH"
@@ -27,9 +27,9 @@ export const TRILHA: ModuloTrilha[] = [
   {
     slug: "boas-vindas", ordem: 1, secao: "Ecossistema",
     titulo: "Boas-vindas e visão geral",
-    objetivo: "Entender o que é o ecossistema Sistenge (People + SST) e como esta trilha funciona.",
+    objetivo: "Entender o que é o ecossistema integrado (People + SST) e como esta trilha funciona.",
     topicos: [
-      "O SST Manager cuida da Segurança e Saúde no Trabalho; o Sistenge People cuida do RH.",
+      "O SST Manager cuida da Segurança e Saúde no Trabalho; o People (RH) cuida do RH.",
       "Os dois sistemas conversam: o People envia colaboradores/cargos e consome ASO/EPI/Psicossocial do SST.",
       "Esta trilha é sequencial: cada módulo abre após você concluir o anterior.",
       "Ao final de cada módulo, clique em 'Marcar como concluído' para liberar o próximo.",
@@ -201,7 +201,7 @@ export const TRILHA: ModuloTrilha[] = [
   // ───────────────────────── People — RH ─────────────────────────
   {
     slug: "people-visao-geral", ordem: 15, secao: "People — RH", externo: true,
-    titulo: "Sistenge People (RH) — visão geral",
+    titulo: "People (RH) — visão geral",
     objetivo: "Saber o que é tratado no People e como ele se conecta ao SST.",
     topicos: [
       "O People é o sistema de RH: colaboradores, cargos, centros de responsabilidade e documentos de pessoal.",

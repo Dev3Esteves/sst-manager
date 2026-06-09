@@ -1,7 +1,7 @@
 import { z } from "zod"
 
 /**
- * Contrato de integração com o Sistenge People (anti-corruption layer).
+ * Contrato de integração com o People (RH) (anti-corruption layer).
  *
  * Estes schemas definem o formato ESPERADO dos eventos do People. Quando o
  * People for vinculado e seu contrato real for conhecido, ajuste aqui (e só

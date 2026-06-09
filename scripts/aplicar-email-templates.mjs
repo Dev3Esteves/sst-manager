@@ -47,7 +47,7 @@ if (!REF) {
 
 // Mapeia cada template para os campos da Management API + assunto (igual ao config.toml).
 const TEMPLATES = [
-  { arquivo: "invite.html",       subjectField: "mailer_subjects_invite",       contentField: "mailer_templates_invite_content",       subject: "Você foi convidado para o SST Manager (SISTENGE)" },
+  { arquivo: "invite.html",       subjectField: "mailer_subjects_invite",       contentField: "mailer_templates_invite_content",       subject: "Você foi convidado para o SST Manager" },
   { arquivo: "confirmation.html", subjectField: "mailer_subjects_confirmation", contentField: "mailer_templates_confirmation_content", subject: "Confirme seu e-mail — SST Manager" },
   { arquivo: "recovery.html",     subjectField: "mailer_subjects_recovery",     contentField: "mailer_templates_recovery_content",     subject: "Redefinição de senha — SST Manager" },
   { arquivo: "email_change.html", subjectField: "mailer_subjects_email_change", contentField: "mailer_templates_email_change_content", subject: "Confirme a alteração de e-mail — SST Manager" },

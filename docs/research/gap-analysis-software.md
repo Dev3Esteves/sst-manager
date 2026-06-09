@@ -136,7 +136,7 @@
 
 ## 3. Prioridades sugeridas (próximas fases pós-Fase 4)
 
-Em ordem de **ROI × esforço** para o contexto da SISTENGE:
+Em ordem de **ROI × esforço** para o contexto da empresa:
 
 1. **PGR completo** (NR-1 + Portaria 1.378/23) — alta exigência fiscal, baixo esforço (reuso de cargos.riscos_associados)
 2. **CIPA + Lei 14.457** — alta exigência legal recente, sem cobertura

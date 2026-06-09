@@ -39,7 +39,7 @@ export async function updateSession(request: NextRequest) {
   const isCronRoute = pathname.startsWith('/api/cron')
   // Coleta anônima do questionário psicossocial (link/QR público, sem sessão).
   const isColetaPsi = pathname.startsWith('/q/')
-  // Integração com o Sistenge People — autentica por HMAC (webhook) ou API key
+  // Integração com o People (RH) — autentica por HMAC (webhook) ou API key
   // (leitura) no próprio handler; não passa pela sessão de usuário.
   const isIntegrRoute = pathname.startsWith('/api/integr')
   const isPublicRoute = isAuthRoute || isCronRoute || isColetaPsi || isIntegrRoute || pathname === '/'

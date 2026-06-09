@@ -1,4 +1,4 @@
-# SST Manager — SISTENGE
+# SST Manager — a empresa
 
 [![CI](https://github.com/EvandroEstevesFerreira/sst-manager/actions/workflows/ci.yml/badge.svg)](https://github.com/EvandroEstevesFerreira/sst-manager/actions/workflows/ci.yml)
 

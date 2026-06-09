@@ -228,7 +228,7 @@ function previewTexto(template: string): string {
     entidade: "Centro de Treinamento ABC",
     entidade_trecho: ", ministrado por Centro de Treinamento ABC",
     instrutor: "Maria Oliveira",
-    empresa: "SISTENGE Engenharia",
+    empresa: "Empresa Demo",
     validade_trecho: " O certificado é válido até 15/04/2028.",
   }
   return template.replace(/\{\{(\w+)\}\}/g, (match, key) => exemplo[key] ?? match)

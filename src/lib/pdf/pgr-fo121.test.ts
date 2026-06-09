@@ -4,7 +4,7 @@ import { renderPgrFo121Pdf } from "./pgr-fo121"
 import type { PgrFo121Data } from "./pgr-fo121-builder"
 
 /**
- * Smoke tests do gerador PDF FO-121-00 (PGR/GRO SISTENGE).
+ * Smoke tests do gerador PDF FO-121-00 (PGR/GRO).
  * Verificamos que: (i) o renderer não quebra em entradas vazias, mínimas e
  * completas; (ii) o output é um PDF válido (`%PDF-` magic header).
  */
@@ -18,7 +18,7 @@ const dataMinima: PgrFo121Data = {
   status: "rascunho",
   empresa_logo_url: null,
 
-  contratada_razao_social: "SISTENGE Construções e Comércio Ltda",
+  contratada_razao_social: "Empresa Demo Construções Ltda",
   contratada_cnpj: "49.329.618/0001-99",
   contratada_endereco: "Rua Ouvidor Peleja, 111, São Paulo, SP",
   contratada_telefone: "(11) 3556-8700",

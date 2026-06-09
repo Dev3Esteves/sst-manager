@@ -26,7 +26,7 @@ export type PgrFo121Data = {
   status: PgrStatus
   empresa_logo_url: string | null
 
-  // Empresa contratada (executora — SISTENGE)
+  // Empresa contratada (executora)
   contratada_razao_social: string
   contratada_cnpj: string
   contratada_endereco: string | null

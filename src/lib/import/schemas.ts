@@ -21,8 +21,8 @@ export const empresaImport: ImportSchema<typeof empresaImportZod> = {
   schema: empresaImportZod,
   templateFilename: "template_empresas.csv",
   colunas: [
-    { key: "razao_social", label: "Razão Social", aliases: ["razao", "razaosocial"], exemplo: "SISTENGE Engenharia Ltda", obrigatorio: true },
-    { key: "nome_fantasia", label: "Nome Fantasia", aliases: ["fantasia"], exemplo: "SISTENGE" },
+    { key: "razao_social", label: "Razão Social", aliases: ["razao", "razaosocial"], exemplo: "Empresa Demo Ltda", obrigatorio: true },
+    { key: "nome_fantasia", label: "Nome Fantasia", aliases: ["fantasia"], exemplo: "Empresa Demo" },
     { key: "cnpj", label: "CNPJ", exemplo: "11.222.333/0001-81", obrigatorio: true },
     {
       key: "tipo", label: "Tipo",
@@ -77,7 +77,7 @@ export const colaboradorImport: ImportSchema<typeof colaboradorImportZod> = {
     { key: "data_nascimento", label: "Data de Nascimento", aliases: ["nascimento", "dt_nascimento"], exemplo: "1985-03-15", parse: parseData },
     { key: "sexo", label: "Sexo (M/F/O)", exemplo: "M", parse: (v) => v?.toUpperCase()?.trim() || undefined },
     { key: "telefone", label: "Telefone", aliases: ["fone", "celular"], exemplo: "(11) 98765-4321" },
-    { key: "email", label: "E-mail", aliases: ["e_mail"], exemplo: "joao@sistenge.com" },
+    { key: "email", label: "E-mail", aliases: ["e_mail"], exemplo: "joao@exemplo.com.br" },
     { key: "matricula", label: "Matrícula", exemplo: "00123" },
     { key: "data_admissao", label: "Data de Admissão", aliases: ["admissao", "dt_admissao"], exemplo: "2023-01-10", obrigatorio: true, parse: parseData },
     {

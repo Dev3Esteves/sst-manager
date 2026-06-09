@@ -38,7 +38,7 @@ export default async function TreinamentoPage() {
           <GraduationCap className="h-7 w-7" /> Treinamento do sistema
         </h1>
         <p className="text-muted-foreground">
-          Trilha guiada do ecossistema Sistenge. Cada módulo abre após a conclusão do anterior.
+          Trilha guiada do ecossistema integrado. Cada módulo abre após a conclusão do anterior.
         </p>
       </div>
 

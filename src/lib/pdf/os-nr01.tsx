@@ -5,7 +5,7 @@ import { fetchLogoAsDataUri } from "./fetch-logo"
 /**
  * Ordem de Serviço NR-01 — por função.
  *
- * Template espelhado do PDF "NR-01 ALEX" da SISTENGE: 9 seções numeradas com
+ * Template espelhado do PDF "NR-01 ALEX" de referência: 9 seções numeradas com
  * cabeçalho contendo logo + número da OS + data + revisão + **Obra**. A OS é
  * emitida por função (cargo), mas assinada por cada colaborador daquela
  * função alocado na obra.

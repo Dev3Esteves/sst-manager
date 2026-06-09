@@ -4,7 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { NAV_SECTIONS } from "./nav-config"
-import { SistengeLogo } from "@/components/sistenge-logo"
+import { BrandLogo } from "@/components/brand-logo"
 import { APP_VERSION } from "@/lib/version"
 
 const sections = NAV_SECTIONS
@@ -30,11 +30,11 @@ export function Sidebar({
       "
     >
       <div className="flex h-16 items-center border-b overflow-hidden">
-        {/* Recolhida: ícone oficial SISTENGE centralizado (theme-aware) no trilho de 72px */}
+        {/* Recolhida: ícone neutro do produto no trilho de 72px */}
         <div className="flex w-[72px] shrink-0 items-center justify-center group-hover/sidebar:hidden 2xl:hidden">
-          <SistengeLogo variant="icon" height={34} />
+          <BrandLogo variant="icon" height={34} />
         </div>
-        {/* Expandida: logo da empresa ativa (igual People); fallback SISTENGE */}
+        {/* Expandida: logo da empresa ativa; fallback ícone + nome */}
         <div className="hidden min-w-0 items-center px-[22px] group-hover/sidebar:flex 2xl:flex">
           {empresaLogoUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -44,7 +44,7 @@ export function Sidebar({
               className="h-9 w-auto max-w-[200px] object-contain"
             />
           ) : (
-            <SistengeLogo variant="full" height={26} />
+            <BrandLogo nome={empresaNome ?? undefined} variant="full" height={26} />
           )}
         </div>
       </div>

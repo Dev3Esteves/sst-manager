@@ -1,7 +1,7 @@
 /**
  * GET /api/integr/v1/saude/aso?cpf=...
  * Status do ASO (exame médico) mais recente de um colaborador, para o
- * Sistenge People consultar (SST é a fonte de ASO/saúde ocupacional).
+ * People (RH) consultar (SST é a fonte de ASO/saúde ocupacional).
  * Auth por API key (PEOPLE_API_KEY).
  */
 import { NextResponse } from "next/server"

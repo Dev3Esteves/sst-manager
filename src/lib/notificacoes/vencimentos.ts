@@ -99,6 +99,6 @@ export function montarEmailHtml(
       <tbody>${linhas}</tbody>
     </table>
     ${link}
-    <p style="margin-top:24px;font-size:12px;color:#9ca3af">E-mail automático do SST Manager — SISTENGE. Não responda.</p>
+    <p style="margin-top:24px;font-size:12px;color:#9ca3af">E-mail automático do SST Manager. Não responda.</p>
   </div>`
 }

@@ -62,7 +62,7 @@ de referências regulatórias.
 
 #### Sprint A.1 — Módulo PGR (NR-1)
 - **Migration `0012_pgr_module.sql`** — 7 tabelas alinhadas ao formulário FO-121-00
-  da SISTENGE: `pgr`, `pgr_ghe`, `pgr_ghe_cargo`, `pgr_risco`, `pgr_acao`,
+  da empresa: `pgr`, `pgr_ghe`, `pgr_ghe_cargo`, `pgr_risco`, `pgr_acao`,
   `pgr_medida_controle`, `pgr_epi_ghe`. Também adiciona `cno` e `num_empregados_max`
   em `obras`. RLS padrão do projeto + índices por empresa/status.
 - **UI completa** — lista (`/pgr`), criar (`/pgr/new`), detalhe com KPIs e
@@ -94,7 +94,7 @@ de referências regulatórias.
   nocivos para o evento S-2240. RLS read-only para authenticated; escrita só
   via service_role.
 - **Seed oficial com 94 agentes** — extraído do CSV oficial fornecido pela
-  SISTENGE (`TABELA22_v4_Conteudo.csv`, leiaute S-1.3). 65 químicos, 18 físicos,
+  a empresa (`TABELA22_v4_Conteudo.csv`, leiaute S-1.3). 65 químicos, 18 físicos,
   7 biológicos, 2 associações, 1 outros, 1 ausência. 2 inativos preservados
   com `ativo=false` para histórico.
 - **Combobox no editor de risco** — busca por código/descrição, agrupado por
@@ -115,7 +115,7 @@ de referências regulatórias.
 #### Outros
 - **Indicadores TF/TG dinâmicos** — fórmulas NBR 14280 com base 10⁶ HHT
   documentadas; remove constante hardcoded `HHT_MENSAL_ESTIMADO`.
-- **Anatomia PGR SISTENGE** documentada em `docs/research/pgr-sistenge-anatomia.md`
+- **Anatomia PGR de referência** documentada em `docs/research/pgr-anatomia.md`
   (810 linhas).
 - **Pacote de referências regulatórias** em `docs/referencias-software.md`
   e gap analysis em `docs/research/gap-analysis-software.md`.
@@ -284,9 +284,9 @@ de referências regulatórias.
 ## [0.2.0] — 2026-04-19
 
 ### Adicionado
-- **Logos oficiais SISTENGE** (7 variantes SVG em `public/logos/`)
+- **Logos oficiais a empresa** (7 variantes SVG em `public/logos/`)
   - Horizontal claro/escuro, monocromático preto/branco, ícone principal e monocromáticos
-  - Componente `<SistengeLogo>` com troca automática por tema (dark/light) via Tailwind — sem flash na hidratação
+  - Componente `<a empresaLogo>` com troca automática por tema (dark/light) via Tailwind — sem flash na hidratação
   - Aplicado em: tela de login (horizontal), sidebar (ícone), mobile nav drawer (ícone)
 
 ### Mudado
@@ -310,7 +310,7 @@ de referências regulatórias.
 - Cadastros: empresas, obras, cargos, colaboradores, EPIs, treinamentos
 - Operação: exames médicos (PCMSO), DDS, ocorrências, inspeções
 - Documentos SST: APR, PT, Autorizações NR-10/33/35, Ordem de Serviço NR-01 por função
-- **Ficha de EPI cumulativa** (histórico vivo por colaborador, inspirada no SGI/FO-008-00 SISTENGE)
+- **Ficha de EPI cumulativa** (histórico vivo por colaborador, inspirada no SGI/FO-008-00 a empresa)
 - Import CSV para 6 entidades
 
 **UI/UX:**

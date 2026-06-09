@@ -56,7 +56,7 @@
 
 - **Fonte:** https://www.iso.org/standard/60857.html
 - **Revisão:** 2015 (próxima revisão ISO 14001:2026 em consulta pública).
-- **Overlap com SST relevante para SISTENGE (construção + data centers):**
+- **Overlap com SST relevante para a empresa (construção + data centers):**
   - **Aspectos ambientais ≈ perigos SST** em obras (poeira, ruído, vibração, resíduos).
   - **Requisitos legais e outros requisitos** (cláusula 6.1.3) — pode compartilhar matriz com 45001.
   - **Preparação e resposta a emergências** (8.2) — derramamento químico afeta meio ambiente E trabalhadores.
@@ -64,7 +64,7 @@
 
 ### 1.5 NBRs brasileiras — construção & data centers
 
-| Norma | Título | Revisão | Aplicação SISTENGE |
+| Norma | Título | Revisão | Aplicação a empresa |
 |---|---|---|---|
 | **NBR 14276** | Brigada de incêndio — Requisitos e procedimentos | 2020 | Plano de emergência em obras e data centers; treinamentos e dimensionamento de brigada. |
 | **NBR 9050** | Acessibilidade a edificações, mobiliário, espaços e equipamentos urbanos | 2020 (Emenda 1) | Projeto de obras; também acessibilidade nos próprios canteiros (banheiros, escritórios). |

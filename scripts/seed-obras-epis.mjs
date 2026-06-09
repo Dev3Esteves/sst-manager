@@ -41,7 +41,7 @@ const rnd = (n) => Math.floor(Math.random() * n)
 const pick = (arr) => arr[rnd(arr.length)]
 
 // ============================================================================
-// OBRAS DEMO (nomes inspirados nos PDFs reais da SISTENGE)
+// OBRAS DEMO (nomes inspirados nos PDFs reais da Empresa Demo)
 // ============================================================================
 const OBRAS_DEMO = [
   { nome: "DANTE / RACIONAL", cidade: "Campinas", uf: "SP", codigo: "OBR-001" },

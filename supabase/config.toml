@@ -243,11 +243,11 @@ otp_expiry = 3600
 # admin_email = "admin@email.com"
 # sender_name = "Admin"
 
-# Templates de e-mail de autenticação com a identidade SISTENGE / SST Manager.
+# Templates de e-mail de autenticação com a identidade do SST Manager.
 # (No Supabase hospedado/produção, replique o conteúdo destes arquivos em
 #  Authentication → Email Templates do Dashboard — config.toml vale p/ local.)
 [auth.email.template.invite]
-subject = "Você foi convidado para o SST Manager (SISTENGE)"
+subject = "Você foi convidado para o SST Manager"
 content_path = "./supabase/templates/invite.html"
 
 [auth.email.template.confirmation]

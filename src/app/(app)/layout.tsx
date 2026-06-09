@@ -5,7 +5,7 @@ import { Toaster } from "sonner"
 import { createClient } from "@/lib/supabase/server"
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
-  // Logo da empresa ativa para o topo da sidebar (fallback: ícone SISTENGE).
+  // Logo da empresa ativa para o topo da sidebar (fallback: ícone neutro do produto).
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   let empresaLogoUrl: string | null = null

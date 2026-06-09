@@ -64,7 +64,7 @@ export function RecuperarSenhaForm() {
             <Input
               id="email"
               type="email"
-              placeholder="voce@sistenge.com"
+              placeholder="voce@exemplo.com.br"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required

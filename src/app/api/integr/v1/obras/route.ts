@@ -1,6 +1,6 @@
 /**
  * GET /api/integr/v1/obras[?codigo=...&ativa=true]
- * Lista de obras (SST é a fonte de verdade) para o Sistenge People reconciliar
+ * Lista de obras (SST é a fonte de verdade) para o People (RH) reconciliar
  * seus `centros_responsabilidade` (tipo='obra') pelo CÓDIGO da obra.
  * Auth por API key (PEOPLE_API_KEY). Retorna também os locais de cada obra.
  */

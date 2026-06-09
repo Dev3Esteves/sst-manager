@@ -17,8 +17,8 @@ const env = Object.fromEntries(
     })
 )
 
-const EMAIL = process.argv[2] || 'admin@sistenge.com'
-const SENHA = process.argv[3] || 'Sistenge@2026'
+const EMAIL = process.argv[2] || 'admin@exemplo.com.br'
+const SENHA = process.argv[3] || 'Admin@2026'
 
 const admin = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {
   auth: { autoRefreshToken: false, persistSession: false },

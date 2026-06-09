@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Cria empresa SISTENGE + usuário admin + vínculo na tabela usuarios.
+// Cria empresa Empresa Demo + usuário admin + vínculo na tabela usuarios.
 // Roda uma vez. Idempotente: se já existir, não duplica.
 
 import { createClient } from '@supabase/supabase-js'
@@ -23,7 +23,7 @@ const env = Object.fromEntries(
 const SUPABASE_URL = env.NEXT_PUBLIC_SUPABASE_URL
 const SERVICE_KEY = env.SUPABASE_SERVICE_ROLE_KEY
 
-const ADMIN_EMAIL = process.argv[2] || 'admin@sistenge.com'
+const ADMIN_EMAIL = process.argv[2] || 'admin@exemplo.com.br'
 const ADMIN_PASSWORD = process.argv[3] || randomBytes(12).toString('base64url')
 
 const supabase = createClient(SUPABASE_URL, SERVICE_KEY, {
@@ -32,7 +32,7 @@ const supabase = createClient(SUPABASE_URL, SERVICE_KEY, {
 
 console.log(`→ Usando email: ${ADMIN_EMAIL}`)
 
-// 1. Empresa SISTENGE (upsert por CNPJ)
+// 1. Empresa Empresa Demo (upsert por CNPJ)
 const { data: empresaExist } = await supabase
   .from('empresas')
   .select('id')
@@ -42,13 +42,13 @@ const { data: empresaExist } = await supabase
 let empresaId
 if (empresaExist) {
   empresaId = empresaExist.id
-  console.log(`✓ Empresa SISTENGE já existe (${empresaId})`)
+  console.log(`✓ Empresa Empresa Demo já existe (${empresaId})`)
 } else {
   const { data, error } = await supabase
     .from('empresas')
     .insert({
-      razao_social: 'SISTENGE Engenharia',
-      nome_fantasia: 'SISTENGE',
+      razao_social: 'Empresa Demo',
+      nome_fantasia: 'Empresa Demo',
       cnpj: '00.000.000/0001-00',
       tipo: 'propria',
       ativo: true,
@@ -57,7 +57,7 @@ if (empresaExist) {
     .single()
   if (error) { console.error('Erro empresa:', error); process.exit(1) }
   empresaId = data.id
-  console.log(`✓ Empresa SISTENGE criada (${empresaId})`)
+  console.log(`✓ Empresa Empresa Demo criada (${empresaId})`)
   console.log(`  ⚠ CNPJ placeholder — atualize no app depois`)
 }
 
@@ -110,7 +110,7 @@ if (linkExist) {
     ativo: true,
   })
   if (error) { console.error('Erro usuarios:', error); process.exit(1) }
-  console.log(`✓ Vínculo criado em usuarios (admin → SISTENGE)`)
+  console.log(`✓ Vínculo criado em usuarios (admin → Empresa Demo)`)
 }
 
 console.log('\n✓ Bootstrap completo. Use o login em http://localhost:3000/login')

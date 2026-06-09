@@ -143,7 +143,7 @@
 ### AEAT — Anuário Estatístico de Acidentes do Trabalho
 - **Fonte oficial:** https://www.gov.br/previdencia/pt-br/assuntos/previdencia-social/saude-e-seguranca-do-trabalhador (a hub page; a edição vigente é o **AEAT 2022/2023**, publicado em 2024 — verificar nova edição 2024 no link "Acidentes do Trabalho e Benefícios por Incapacidade").
 - **Metodologia:** consolida dados de CATs registradas no INSS por CNAE 2.0; cruza com benefícios B91/B92/B93/B94 (auxílio-doença acidentário, aposentadoria por invalidez acidentária, pensão por morte acidentária, auxílio-acidente).
-- **Para empresas tipo SISTENGE (CNAE 41/42/43 — construção):**
+- **Para empresas tipo construção (CNAE 41/42/43 — construção):**
   - Construção (CNAE 41-43) historicamente está entre **TOP 5 setores em frequência e gravidade**. Quedas de altura e soterramento dominam óbitos.
   - Setor de data centers normalmente cai em CNAE 43.21-5 (instalações elétricas) — segundo o AEAT, alta incidência de acidentes elétricos e choques.
 - **Mapeamento → SST Manager:**

@@ -90,7 +90,7 @@ export const manuaisMelhorias2026: Manual[] = [
     categoria: "Cadastros",
     rota: "/obras",
     perfis: ["Administrador", "Técnico de Segurança", "Engenheiro de Segurança"],
-    resumo: "A obra é a fonte de verdade do grupo: CNPJ, endereço, empreitada e os locais (áreas) usados em inspeções, ocorrências e documentos. O Sistenge People consome essas obras.",
+    resumo: "A obra é a fonte de verdade do grupo: CNPJ, endereço, empreitada e os locais (áreas) usados em inspeções, ocorrências e documentos. O People (RH) consome essas obras.",
     secoes: [
       { titulo: "Cadastro da obra", blocos: [
         { tipo: "campos", itens: [
@@ -104,7 +104,7 @@ export const manuaisMelhorias2026: Manual[] = [
         { tipo: "dica", texto: "Os locais ficam disponíveis para vincular em inspeções, ocorrências e documentos de campo." },
       ] },
       { titulo: "Integração com o People", blocos: [
-        { tipo: "paragrafo", texto: "O SST expõe as obras por API. O Sistenge People concilia seus centros de responsabilidade (tipo obra) pelo código da obra — mantenha o campo 'código interno' preenchido e único." },
+        { tipo: "paragrafo", texto: "O SST expõe as obras por API. O People (RH) concilia seus centros de responsabilidade (tipo obra) pelo código da obra — mantenha o campo 'código interno' preenchido e único." },
       ] },
     ],
   },

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Corrige e-mails do domínio antigo @sistenge.com.br para @sistenge.com.
+// Corrige e-mails do domínio antigo @antigo.com.br para @exemplo.com.br.
 // Atualiza tanto o login (Supabase Auth) quanto a coluna colaboradores.email.
 //
 // Dry-run por padrão (apenas lista). Passe --apply para efetivar.
@@ -37,8 +37,8 @@ const supabase = createClient(SUPABASE_URL, SERVICE_KEY, {
 })
 
 const APPLY = process.argv.includes('--apply')
-const OLD = '@sistenge.com.br'
-const NEW = '@sistenge.com'
+const OLD = '@antigo.com.br'
+const NEW = '@exemplo.com.br'
 const fix = (email) => email.slice(0, email.length - OLD.length) + NEW
 
 console.log(APPLY ? '== MODO APLICAR ==' : '== DRY-RUN (use --apply para efetivar) ==')

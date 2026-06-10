@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { classificarVencimento, urgenciaBadgeVariant, urgenciaLabel, formatDate } from "@/lib/utils/vencimento"
 import { ExportCsvButton } from "@/components/shared/export-csv-button"
 import { ListFilters } from "@/components/shared/list-filters"
-import { Plus, ScanLine, FileSpreadsheet } from "lucide-react"
+import { Plus, ScanLine, FileSpreadsheet, Pencil } from "lucide-react"
 
 const TIPO_LABEL: Record<string, string> = {
   admissional: "Admissional",
@@ -117,6 +117,7 @@ export default async function ExamesPage({
                 <TableHead>Vencimento</TableHead>
                 <TableHead>Resultado</TableHead>
                 <TableHead>Status</TableHead>
+                <TableHead className="w-20"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -145,12 +146,17 @@ export default async function ExamesPage({
                     <TableCell>
                       <Badge variant={urgenciaBadgeVariant(urgencia)}>{urgenciaLabel(urgencia)}</Badge>
                     </TableCell>
+                    <TableCell>
+                      <Button variant="ghost" size="icon" asChild>
+                        <Link href={`/exames/${e.id}`}><Pencil className="h-4 w-4" /></Link>
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 )
               })}
               {(!exames || exames.length === 0) && (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
+                  <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
                     Nenhum exame registrado.
                   </TableCell>
                 </TableRow>

@@ -139,11 +139,13 @@ export const TRILHA: ModuloTrilha[] = [
   {
     slug: "psicossocial-sst", ordem: 10, secao: "SST — Segurança",
     titulo: "Riscos psicossociais (NR-01)",
-    objetivo: "Aplicar e ler campanhas psicossociais integradas ao PGR.",
+    objetivo: "Aplicar e ler campanhas psicossociais integradas ao PGR, escolhendo o instrumento certo e avaliando a severidade.",
     topicos: [
       "As campanhas avaliam dimensões psicossociais por GHE.",
+      "Você escolhe o instrumento: exposição (COPSOQ, HSE-IT, PROART) alimenta o PGR; desfecho (CBI, DASS-21) é só monitoramento.",
+      "Para os fatores de exposição, o risco final vem da matriz NR-1 (probabilidade do questionário × severidade avaliada pelo técnico).",
       "Os resultados respeitam o anonimato (supressão quando há poucos respondentes).",
-      "O resultado alimenta o inventário de riscos psicossociais do PGR.",
+      "Só dimensões de exposição, após a avaliação de severidade, alimentam o inventário de riscos psicossociais do PGR.",
     ],
     rotas: [{ label: "Psicossocial", href: "/psicossocial" }],
   },

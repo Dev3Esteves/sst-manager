@@ -164,11 +164,22 @@ export const manuaisOperacao: Manual[] = [
     categoria: "Operação",
     rota: "/psicossocial",
     perfis: ["Administrador", "Técnico de Segurança", "RH"],
-    resumo: "Avaliação dos Fatores de Risco Psicossociais (FRPRT) exigida pela NR-01, por questionário anônimo (COPSOQ II-Br), com resultado por GHE integrado ao Inventário do PGR e relatório PDF.",
+    resumo: "Avaliação dos Fatores de Risco Psicossociais (FRPRT) exigida pela NR-01, por questionário anônimo, com 5 instrumentos validados (COPSOQ II-Br, HSE-IT, PROART, CBI e DASS-21), classificação pela matriz de risco NR-1 (probabilidade × severidade), resultado por GHE integrado ao Inventário do PGR e relatório PDF.",
     secoes: [
       { titulo: "Para que serve e base legal", blocos: [
-        { tipo: "paragrafo", texto: "Desde 26/05/2026, a NR-01 (Portaria MTE 1.419/2024) obriga identificar, avaliar e tratar os riscos psicossociais no GRO/PGR. O módulo aplica um questionário validado, calcula o risco por GHE e gera evidência defensável." },
+        { tipo: "paragrafo", texto: "Desde 26/05/2026, a NR-01 (Portaria MTE 1.419/2024) obriga identificar, avaliar e tratar os riscos psicossociais no GRO/PGR. O módulo aplica um instrumento validado, calcula o risco por GHE e — para os fatores de risco — classifica pela matriz NR-1 (probabilidade × severidade), gerando evidência defensável." },
         { tipo: "atencao", texto: "A avaliação mede CONDIÇÕES de trabalho (estressores), não sintomas individuais. As respostas são anônimas e os resultados só aparecem agregados por GHE (mínimo de respondentes), conforme a LGPD." },
+      ] },
+      { titulo: "Instrumentos disponíveis", blocos: [
+        { tipo: "paragrafo", texto: "Ao criar a campanha você escolhe o instrumento. Há duas naturezas: EXPOSIÇÃO (mede fatores de risco — alimenta o Inventário do PGR) e DESFECHO (mede consequências como burnout e sofrimento — serve só para monitoramento, não vai ao PGR)." },
+        { tipo: "campos", itens: [
+          { campo: "COPSOQ II-Br (exposição)", descricao: "Copenhagen Psychosocial Questionnaire — 8 dimensões / 34 itens. Fatores psicossociais que vão ao Inventário do PGR." },
+          { campo: "HSE-IT (exposição)", descricao: "HSE Management Standards — 7 dimensões / 35 itens. Fatores organizacionais que vão ao PGR." },
+          { campo: "PROART (misto)", descricao: "Protocolo de Avaliação dos Riscos Psicossociais no Trabalho — 4 escalas / 10 fatores. Organização e estilos de gestão = exposição (vão ao PGR); Sofrimento e Danos = desfecho (só monitoramento)." },
+          { campo: "CBI (desfecho)", descricao: "Copenhagen Burnout Inventory — burnout pessoal/trabalho/cliente. Monitoramento; não vai ao PGR." },
+          { campo: "DASS-21 (desfecho)", descricao: "Depressão, Ansiedade e Estresse (21 itens). Classificação nativa em 5 níveis por subescala. Monitoramento; não vai ao PGR." },
+        ] },
+        { tipo: "atencao", texto: "Só dimensões de EXPOSIÇÃO entram no Inventário do PGR. Instrumentos de DESFECHO (CBI, DASS-21) e as escalas de Sofrimento/Danos do PROART aparecem como monitoramento e NÃO são lançados no PGR." },
       ] },
       { titulo: "Pré-requisito: GHEs no PGR", blocos: [
         { tipo: "paragrafo", texto: "A campanha avalia os GHEs de um PGR. Cadastre os GHEs no módulo PGR antes de criar a campanha (cada GHE com código, descrição e nº de expostos)." },
@@ -177,21 +188,30 @@ export const manuaisOperacao: Manual[] = [
       { titulo: "Passo a passo completo", blocos: [
         { tipo: "passos", itens: [
           "Em Psicossocial (NR-01) → 'Nova campanha'.",
-          "Escolha o PGR (obra), título, versão (curta para frentes de obra) e data de início.",
+          "Escolha o INSTRUMENTO conforme o objetivo: exposição (COPSOQ, HSE-IT, PROART) para alimentar o PGR, ou desfecho (CBI, DASS-21) para monitoramento.",
+          "Escolha o PGR (obra), título e data de início.",
           "Na campanha, clique em 'Gerar/atualizar links por GHE' (um link/QR anônimo por GHE).",
           "Clique em 'Abrir para respostas' (Rascunho → Aberta).",
           "Distribua o link/QR de cada GHE (cartaz, QR no canteiro, WhatsApp, tablet).",
           "Acompanhe a adesão (respostas por GHE) sem identificar quem respondeu.",
           "'Encerrar' e 'Calcular resultados' → veja o mapa de calor (GHE × dimensão).",
-          "'Lançar no Inventário do PGR' (riscos médio/alto) e baixe o 'Relatório PDF'.",
+          "Para campanhas de exposição: faça a 'Avaliação de severidade' (matriz NR-1) de cada dimensão de risco — passo obrigatório antes de lançar.",
+          "'Lançar no Inventário do PGR' (apenas dimensões de exposição avaliadas) e baixe o 'Relatório PDF'.",
         ] },
+      ] },
+      { titulo: "Avaliação de severidade (matriz NR-1)", blocos: [
+        { tipo: "paragrafo", texto: "O questionário fornece a PROBABILIDADE (frequência/intensidade da exposição, a partir do escore). A NR-01 exige cruzar com a SEVERIDADE (gravidade do dano potencial), avaliada pelo técnico. O sistema multiplica probabilidade × severidade e classifica o nível de risco NR-1, que define a categoria lançada no PGR." },
+        { tipo: "atencao", texto: "Sem a avaliação de severidade, a dimensão não pode ser lançada no Inventário do PGR — o questionário isolado não basta (Guia do MTE)." },
       ] },
       { titulo: "Interpretação", blocos: [
         { tipo: "campos", itens: [
-          { campo: "Verde (0–33)", descricao: "Risco baixo — condição favorável." },
-          { campo: "Amarelo (34–66)", descricao: "Risco médio — requer atenção." },
-          { campo: "Vermelho (67–100)", descricao: "Risco alto — prioridade de ação." },
+          { campo: "Verde (0–33)", descricao: "Exposição baixa — condição favorável." },
+          { campo: "Amarelo (34–66)", descricao: "Exposição média — requer atenção." },
+          { campo: "Vermelho (67–100)", descricao: "Exposição alta — prioridade de ação." },
+          { campo: "Nível NR-1 (P × S)", descricao: "Para exposição: resultado da matriz probabilidade × severidade. É o que vira a categoria do risco no Inventário do PGR." },
+          { campo: "Desfecho (CBI, DASS-21, Sofrimento/Danos do PROART)", descricao: "Nível de severidade próprio do instrumento (ex.: DASS-21: normal → extremamente severo). Monitoramento da saúde do grupo; não entra no PGR." },
         ] },
+        { tipo: "dica", texto: "A cor (verde/amarelo/vermelho) reflete o escore do questionário; o nível NR-1 reflete o risco final após a severidade técnica. Um pode ser amarelo e o outro alto, dependendo da gravidade atribuída." },
       ] },
       { titulo: "Cenários e cuidados", blocos: [
         { tipo: "cenario", situacao: "um GHE tem menos de 5 respostas", orientacao: "o resultado é suprimido (anonimato). Reforce a comunicação para aumentar a adesão antes de calcular." },

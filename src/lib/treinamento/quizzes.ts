@@ -162,6 +162,24 @@ export const QUIZZES: Record<string, QuizPergunta[]> = {
       opcoes: ["O inventário de riscos psicossociais do PGR", "A folha de ponto", "O contracheque"],
       correta: 0,
     },
+    {
+      pergunta: "Qual tipo de instrumento NÃO é lançado no Inventário do PGR?",
+      opcoes: [
+        "Os de exposição (COPSOQ, HSE-IT)",
+        "Os de desfecho (CBI, DASS-21) — são só monitoramento",
+        "Nenhum: todos vão ao PGR",
+      ],
+      correta: 1,
+    },
+    {
+      pergunta: "Como se chega ao nível de risco NR-1 de um fator de exposição?",
+      opcoes: [
+        "Só pelo escore do questionário",
+        "Probabilidade (do questionário) × severidade (avaliada pelo técnico)",
+        "Pelo número de respondentes",
+      ],
+      correta: 1,
+    },
   ],
   "ocorrencias-nc": [
     {

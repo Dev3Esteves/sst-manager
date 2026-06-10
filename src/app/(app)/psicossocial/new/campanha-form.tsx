@@ -9,16 +9,25 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Loader2 } from "lucide-react"
 import { criarCampanha } from "../actions"
+import { INSTRUMENTOS, getInstrumento, INSTRUMENTO_PADRAO } from "@/lib/psicossocial/instrumentos"
 
 export function CampanhaForm({ pgrs }: { pgrs: { id: string; label: string }[] }) {
   const [pgrId, setPgrId] = useState(pgrs[0]?.id ?? "")
-  const [versao, setVersao] = useState<"curto" | "medio">("curto")
+  const [instrumentoKey, setInstrumentoKey] = useState(INSTRUMENTO_PADRAO)
+  const versoesDisponiveis = getInstrumento(instrumentoKey)?.versoes ?? []
+  const [versao, setVersao] = useState<string>(versoesDisponiveis[0]?.value ?? "curto")
   const [erro, setErro] = useState<string | null>(null)
   const [pending, startTransition] = useTransition()
+
+  function trocarInstrumento(key: string) {
+    setInstrumentoKey(key)
+    setVersao(getInstrumento(key)?.versoes[0]?.value ?? "")
+  }
 
   function handle(formData: FormData) {
     setErro(null)
     formData.set("pgr_id", pgrId)
+    formData.set("instrumento_key", instrumentoKey)
     formData.set("versao_aplicada", versao)
     startTransition(async () => {
       const r = await criarCampanha(formData)
@@ -48,12 +57,20 @@ export function CampanhaForm({ pgrs }: { pgrs: { id: string; label: string }[] }
             <Input id="titulo" name="titulo" placeholder="Ex.: Avaliação psicossocial 2026 — Obra X" required />
           </div>
           <div className="space-y-2">
-            <Label>Versão do questionário *</Label>
-            <Select value={versao} onValueChange={(v) => setVersao(v as "curto" | "medio")}>
+            <Label>Instrumento *</Label>
+            <Select value={instrumentoKey} onValueChange={trocarInstrumento}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="curto">Curta (frentes de obra)</SelectItem>
-                <SelectItem value="medio">Média (padrão)</SelectItem>
+                {INSTRUMENTOS.map((i) => <SelectItem key={i.key} value={i.key}>{i.nome}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label>Versão do questionário *</Label>
+            <Select value={versao} onValueChange={setVersao}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                {versoesDisponiveis.map((v) => <SelectItem key={v.value} value={v.value}>{v.label}</SelectItem>)}
               </SelectContent>
             </Select>
           </div>

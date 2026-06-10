@@ -24,6 +24,7 @@ export type RelatorioPsiData = {
   obraNome: string
   pgrRevisao: number | null
   campanhaTitulo: string
+  instrumentoNome: string
   versao: string
   dataInicio: string
   dataFim: string | null
@@ -90,7 +91,7 @@ export async function renderPsicossocialRelatorioPdf(
       <View style={pdfStyles.section}>
         <Text style={pdfStyles.sectionTitle}>1. Identificação da avaliação</Text>
         <Text style={s.p}>
-          Campanha: {data.campanhaTitulo} · Instrumento: COPSOQ II-Br (versão {data.versao}) ·
+          Campanha: {data.campanhaTitulo} · Instrumento: {data.instrumentoNome} (versão {data.versao}) ·
           Período: {fmt(data.dataInicio)} a {fmt(data.dataFim)} · Situação: {data.status}.
         </Text>
         <Text style={s.note}>
@@ -196,8 +197,8 @@ export async function renderPsicossocialRelatorioPdf(
       <View style={pdfStyles.section}>
         <Text style={pdfStyles.sectionTitle}>6. Nota metodológica e conformidade</Text>
         <Text style={s.note}>
-          Instrumento COPSOQ II-Br (Copenhagen Psychosocial Questionnaire, versão brasileira validada),
-          escala Likert convertida para 0–100, com aplicação da direção de risco por dimensão. A avaliação
+          Instrumento {data.instrumentoNome}, escala Likert convertida para 0–100, com aplicação da
+          direção de risco por dimensão. A avaliação
           mede condições de trabalho (estressores), não sintomas individuais. Os desfechos (estresse,
           burnout, saúde) são monitorados à parte e não compõem o inventário. Coleta anônima, sem vínculo
           com a identidade do trabalhador, e resultados apresentados apenas de forma agregada por GHE

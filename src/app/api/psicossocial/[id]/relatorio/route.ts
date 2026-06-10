@@ -18,13 +18,15 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
   // Campanha (RLS garante que é da empresa do usuário)
   const { data: campanha } = await supabase
     .from("psi_campanha")
-    .select("titulo, versao_aplicada, data_inicio, data_fim, status, min_respondentes, empresa_id, pgr(numero_revisao, obras(nome))")
+    .select("titulo, versao_aplicada, data_inicio, data_fim, status, min_respondentes, empresa_id, pgr(numero_revisao, obras(nome)), psi_instrumento(nome)")
     .eq("id", id)
     .maybeSingle()
   if (!campanha) return NextResponse.json({ error: "Campanha não encontrada" }, { status: 404 })
 
   const pgr = Array.isArray(campanha.pgr) ? campanha.pgr[0] : campanha.pgr
   const obra = pgr ? (Array.isArray(pgr.obras) ? pgr.obras[0] : pgr.obras) : null
+  const instr = Array.isArray(campanha.psi_instrumento) ? campanha.psi_instrumento[0] : campanha.psi_instrumento
+  const instrumentoNome = instr?.nome ?? "Instrumento psicossocial"
 
   const { data: empresa } = await supabase
     .from("empresas")
@@ -79,6 +81,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
       obraNome: obra?.nome ?? "—",
       pgrRevisao: pgr?.numero_revisao ?? null,
       campanhaTitulo: campanha.titulo,
+      instrumentoNome,
       versao: campanha.versao_aplicada,
       dataInicio: campanha.data_inicio,
       dataFim: campanha.data_fim,

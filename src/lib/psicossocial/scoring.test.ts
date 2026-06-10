@@ -5,7 +5,12 @@ import {
   agregarDimensaoGHE,
   processarGHE,
   classificacaoParaCategoriaRiscoPGR,
+  probabilidadeDoScore,
+  nivelRiscoNR1,
+  nivelNR1ParaCategoriaRiscoPGR,
+  FAIXAS_TERCIS,
   type ItemDef,
+  type FaixaDef,
   type Respondente,
 } from "./scoring"
 import { COPSOQ_BR, itensDaVersao } from "./copsoq"
@@ -27,6 +32,36 @@ describe("classificar (tercis)", () => {
   it("50 -> amarelo", () => expect(classificar(50)).toBe("amarelo"))
   it("80 -> vermelho", () => expect(classificar(80)).toBe("vermelho"))
   it("null -> null", () => expect(classificar(null)).toBeNull())
+  it("usa tercis por padrão", () => expect(FAIXAS_TERCIS).toEqual({ verdeMax: 33.3, amareloMax: 66.6 }))
+})
+
+describe("classificar com faixas dirigidas pelo instrumento", () => {
+  // Faixas próprias (ex.: instrumento mais sensível): verde só até 20, vermelho a partir de 50.
+  const faixas: FaixaDef = { verdeMax: 20, amareloMax: 50 }
+  it("30 é amarelo com faixas próprias (seria verde no tercil)", () => {
+    expect(classificar(30)).toBe("verde")
+    expect(classificar(30, faixas)).toBe("amarelo")
+  })
+  it("60 é vermelho com faixas próprias (seria amarelo no tercil)", () => {
+    expect(classificar(60)).toBe("amarelo")
+    expect(classificar(60, faixas)).toBe("vermelho")
+  })
+  it("processarGHE respeita instrumento.faixas", () => {
+    // Instrumento com 1 dimensão direta e faixas sensíveis; resposta uniforme 30.
+    const inst = {
+      faixas,
+      dominios: [
+        {
+          id: "d", nome: "D",
+          dimensoes: [{ id: "x", nome: "X", risco_direcao: "direto" as const, itens: [{ id: "I1", reverso: false }] }],
+        },
+      ],
+    }
+    const resp = Array.from({ length: 5 }, () => ({ I1: 30 }))
+    const [r] = processarGHE(inst, resp, "curto", 5)
+    expect(r.score).toBe(30)
+    expect(r.classificacao).toBe("amarelo") // verdeMax=20 → 30 cai no amarelo
+  })
 })
 
 describe("agregarDimensaoGHE", () => {
@@ -94,6 +129,53 @@ describe("classificacaoParaCategoriaRiscoPGR", () => {
     expect(classificacaoParaCategoriaRiscoPGR("vermelho")).toBe("alto")
     expect(classificacaoParaCategoriaRiscoPGR("amarelo")).toBe("medio")
     expect(classificacaoParaCategoriaRiscoPGR("verde")).toBe("baixo")
+  })
+})
+
+describe("NR-1: probabilidadeDoScore (score 0-100 -> 1-5)", () => {
+  it("mapeia faixas de score para probabilidade", () => {
+    expect(probabilidadeDoScore(0)).toBe(1)
+    expect(probabilidadeDoScore(20)).toBe(1)
+    expect(probabilidadeDoScore(40)).toBe(2)
+    expect(probabilidadeDoScore(60)).toBe(3)
+    expect(probabilidadeDoScore(80)).toBe(4)
+    expect(probabilidadeDoScore(100)).toBe(5)
+  })
+  it("null/NaN -> probabilidade mínima (1)", () => {
+    expect(probabilidadeDoScore(null)).toBe(1)
+  })
+})
+
+describe("NR-1: nivelRiscoNR1", () => {
+  it("matriz P×S (1-25) classifica em 4 níveis", () => {
+    expect(nivelRiscoNR1(1, 1).nivel).toBe("baixo") // 1
+    expect(nivelRiscoNR1(2, 3).nivel).toBe("medio") // 6
+    expect(nivelRiscoNR1(3, 4).nivel).toBe("alto") // 12
+    expect(nivelRiscoNR1(5, 5).nivel).toBe("critico") // 25
+    expect(nivelRiscoNR1(2, 3).produto).toBe(6)
+    expect(nivelRiscoNR1(2, 3).exposicao).toBeNull()
+  })
+  it("matriz P×S×E (1-125) usa bandas do Guia MTE", () => {
+    expect(nivelRiscoNR1(1, 2, 3).nivel).toBe("baixo") // 6
+    expect(nivelRiscoNR1(2, 3, 4).nivel).toBe("medio") // 24
+    expect(nivelRiscoNR1(3, 4, 5).nivel).toBe("alto") // 60
+    expect(nivelRiscoNR1(5, 5, 5).nivel).toBe("critico") // 125
+    expect(nivelRiscoNR1(5, 5, 5).produto).toBe(125)
+  })
+  it("limita (clamp) entradas fora de 1-5", () => {
+    const r = nivelRiscoNR1(9, 0, 7)
+    expect(r.probabilidade).toBe(5)
+    expect(r.severidade).toBe(1)
+    expect(r.exposicao).toBe(5)
+  })
+})
+
+describe("NR-1: nivelNR1ParaCategoriaRiscoPGR", () => {
+  it("mapeia 4 níveis NR-1 para a categoria_risco do PGR (5 níveis)", () => {
+    expect(nivelNR1ParaCategoriaRiscoPGR("baixo")).toBe("baixo")
+    expect(nivelNR1ParaCategoriaRiscoPGR("medio")).toBe("medio")
+    expect(nivelNR1ParaCategoriaRiscoPGR("alto")).toBe("alto")
+    expect(nivelNR1ParaCategoriaRiscoPGR("critico")).toBe("muito_alto")
   })
 })
 

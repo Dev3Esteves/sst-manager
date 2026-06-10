@@ -3,11 +3,12 @@ import { renderToBuffer } from "@react-pdf/renderer"
 import { renderPsicossocialRelatorioPdf, type RelatorioPsiData } from "./psicossocial-relatorio"
 
 const base: RelatorioPsiData = {
-  empresaRazaoSocial: "Empresa Demo",
+  empresaRazaoSocial: "SISTENGE Engenharia",
   empresaCnpj: "00.000.000/0001-00",
   obraNome: "Obra Teste",
   pgrRevisao: 0,
   campanhaTitulo: "Avaliação Psicossocial 2026",
+  instrumentoNome: "COPSOQ II-Br (curta)",
   versao: "curto",
   dataInicio: "2026-06-01",
   dataFim: "2026-06-15",

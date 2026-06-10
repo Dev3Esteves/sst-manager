@@ -2,20 +2,24 @@
 
 import { useState, useTransition } from "react"
 import { Loader2, CheckCircle2, ShieldCheck } from "lucide-react"
-import { ESCALA_LIKERT } from "@/lib/psicossocial/copsoq"
 import { FAIXAS_ETARIAS, SEXOS } from "@/lib/validations/psicossocial"
 import { submeterResposta } from "./actions"
 
 type Item = { id: string; dominio: string; dimensao: string; texto: string; reverso: boolean }
+type Escala = { rotulos: string[]; valores: number[] }
 
 export function QuestionarioForm({
   token,
   titulo,
   itens,
+  escala,
+  instrucao,
 }: {
   token: string
   titulo: string
   itens: Item[]
+  escala: Escala
+  instrucao: string
 }) {
   const [respostas, setRespostas] = useState<Record<string, number>>({})
   const [faixaEtaria, setFaixaEtaria] = useState<string>("")
@@ -70,9 +74,7 @@ export function QuestionarioForm({
 
       <div className="rounded-lg border bg-background p-4">
         <h1 className="font-semibold">{titulo}</h1>
-        <p className="text-sm text-muted-foreground">
-          Pense nas suas condições de trabalho nas últimas semanas e marque a frequência.
-        </p>
+        <p className="text-sm text-muted-foreground">{instrucao}</p>
         <div className="mt-3 grid grid-cols-2 gap-3">
           <label className="text-sm">
             Faixa etária (opcional)
@@ -108,8 +110,8 @@ export function QuestionarioForm({
           <div className="text-[11px] uppercase tracking-wider text-primary font-semibold">{it.dominio}</div>
           <p className="mt-1 text-sm font-medium">{idx + 1}. {it.texto}</p>
           <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-5">
-            {ESCALA_LIKERT.rotulos.map((rot, i) => {
-              const valor = ESCALA_LIKERT.valores[i]
+            {escala.rotulos.map((rot, i) => {
+              const valor = escala.valores[i]
               const ativo = respostas[it.id] === valor
               return (
                 <button

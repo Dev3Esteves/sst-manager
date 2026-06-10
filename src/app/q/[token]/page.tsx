@@ -1,6 +1,7 @@
 import { unstable_noStore as noStore } from "next/cache"
 import { createAdminClient } from "@/lib/supabase/admin"
-import { itensDaVersao } from "@/lib/psicossocial/copsoq"
+import { flattenItens, type InstrumentoDef } from "@/lib/psicossocial/scoring"
+import { ESCALA_PADRAO, type DefinicaoArmazenada } from "@/lib/psicossocial/instrumentos"
 import { logger } from "@/lib/logger"
 import { QuestionarioForm } from "./questionario-form"
 import { BrandLogo } from "@/components/brand-logo"
@@ -17,7 +18,7 @@ export default async function ColetaPage({ params }: { params: Promise<{ token: 
 
   const { data: convite, error } = await admin
     .from("psi_convite")
-    .select("token, psi_campanha(titulo, versao_aplicada, status)")
+    .select("token, psi_campanha(titulo, versao_aplicada, status, psi_instrumento(definicao))")
     .eq("token", token)
     .maybeSingle()
 
@@ -36,8 +37,18 @@ export default async function ColetaPage({ params }: { params: Promise<{ token: 
       status: campanha?.status ?? null,
     })
   }
-  const versao = (campanha?.versao_aplicada as "curto" | "medio") ?? "curto"
-  const itens = valido ? itensDaVersao(versao) : []
+
+  // Definição do instrumento da campanha (data-driven): itens, escala e instrução.
+  const instr = campanha
+    ? Array.isArray(campanha.psi_instrumento)
+      ? campanha.psi_instrumento[0]
+      : campanha.psi_instrumento
+    : null
+  const definicao = (instr?.definicao ?? null) as DefinicaoArmazenada | null
+  const versao = (campanha?.versao_aplicada as string) ?? "curto"
+  const itens = valido && definicao ? flattenItens(definicao as InstrumentoDef, versao) : []
+  const escala = definicao?.escala ?? ESCALA_PADRAO
+  const instrucao = definicao?.instrucao ?? "Pense nas suas condições de trabalho e marque a frequência."
   const marca = await getMarca()
 
   return (
@@ -52,7 +63,7 @@ export default async function ColetaPage({ params }: { params: Promise<{ token: 
 
       <main className="mx-auto max-w-2xl p-4">
         {valido ? (
-          <QuestionarioForm token={token} titulo={campanha?.titulo ?? "Pesquisa"} itens={itens} />
+          <QuestionarioForm token={token} titulo={campanha?.titulo ?? "Pesquisa"} itens={itens} escala={escala} instrucao={instrucao} />
         ) : (
           <div className="mt-10 rounded-lg border bg-background p-6 text-center">
             <h1 className="text-lg font-semibold">Pesquisa indisponível</h1>

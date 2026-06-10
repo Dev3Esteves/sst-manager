@@ -1,11 +1,20 @@
 /**
  * Instrumento COPSOQ II-Br — versão CURTA (estrutura oficial validada).
  *
- * Estrutura conforme a validação brasileira da versão curta do COPSOQ II:
+ * Instrumento-fonte: validação brasileira da versão curta do COPSOQ II —
  *   Gonçalves JS, Moriguchi CS, Chaves TC, Sato TO. "Cross-cultural adaptation
  *   and psychometric properties of the short version of COPSOQ II-Brazil."
- *   Rev Saude Publica. 2021;55:69 — 7 domínios, 11 dimensões, 40 questões,
- *   Likert 5 pontos, classificação favorável/atenção/desfavorável.
+ *   Rev Saude Publica. 2021;55:69. O instrumento completo tem 7 domínios, 11
+ *   dimensões e 40 questões (Likert 5 pontos, classificação favorável/atenção/
+ *   desfavorável), INCLUINDO os domínios de desfecho.
+ *
+ * Escopo IMPLEMENTADO aqui (apenas EXPOSIÇÃO / fatores de risco):
+ *   6 domínios, 8 dimensões, 34 itens. Os DESFECHOS da versão curta —
+ *   satisfação (Q13), saúde geral (Q17) e burnout/estresse (Q18-Q19) — são
+ *   consequência, não fator de risco; ficam fora do Inventário do PGR e serão
+ *   tratados como instrumentos de monitoramento à parte (ver roadmap F4).
+ *   Itens reversos (recursos: influência, apoio, reconhecimento) são marcados
+ *   com reverso=true; ver convenção em scoring.ts.
  *
  * ⚠️ TEXTO ADAPTADO (oficial=false): os enunciados abaixo foram traduzidos da
  * Tabela 2 do artigo (publicada em inglês) para o português. NÃO são o texto
@@ -13,14 +22,8 @@
  * material suplementar. Pela licença COPSOQ (CC BY-NC-ND), só pode ser
  * distribuído como "COPSOQ II-Br" usando o texto validado sem modificação;
  * substituir pelos enunciados verbatim antes do uso em produção.
- *
- * Escopo de RISCO: incluímos apenas as dimensões de EXPOSIÇÃO (fatores de
- * risco). Os DESFECHOS da versão curta — satisfação (Q13), saúde geral (Q17)
- * e burnout/estresse (Q18-Q19) — são consequência, não fator de risco, e são
- * monitorados à parte (não entram no Inventário do PGR). Item Q1B é o único
- * com pontuação invertida na versão curta.
  */
-import type { InstrumentoDef } from "./scoring"
+import { flattenItens, type InstrumentoDef } from "./scoring"
 
 export const ESCALA_LIKERT = {
   rotulos: ["Nunca/quase nunca", "Raramente", "Às vezes", "Frequentemente", "Sempre"],
@@ -48,6 +51,8 @@ export const COPSOQ_META = {
 const V = ["curto", "medio"]
 
 export const COPSOQ_BR: InstrumentoDef = {
+  // Classificação por tercis (padrão COPSOQ). Explícito para o motor multi-instrumento.
+  faixas: { verdeMax: CLASSIFICACAO_TERCIS.faixas.verde.max, amareloMax: CLASSIFICACAO_TERCIS.faixas.amarelo.max },
   dominios: [
     {
       id: "exigencias",
@@ -186,25 +191,7 @@ export const COPSOQ_BR: InstrumentoDef = {
   ],
 }
 
-/** Achata o instrumento numa lista de itens para uma versão (para render do form). */
-export function itensDaVersao(
-  versao: "curto" | "medio",
-): { id: string; dominio: string; dimensao: string; texto: string; reverso: boolean }[] {
-  const out: { id: string; dominio: string; dimensao: string; texto: string; reverso: boolean }[] = []
-  for (const dom of COPSOQ_BR.dominios) {
-    for (const dim of dom.dimensoes) {
-      if (dim.versoes && !dim.versoes.includes(versao)) continue
-      for (const it of dim.itens) {
-        if (it.versoes && !it.versoes.includes(versao)) continue
-        out.push({
-          id: it.id,
-          dominio: dom.nome,
-          dimensao: dim.nome,
-          texto: it.texto ?? it.id,
-          reverso: !!it.reverso,
-        })
-      }
-    }
-  }
-  return out
+/** Achata o COPSOQ numa lista de itens para uma versão (para render do form). */
+export function itensDaVersao(versao: "curto" | "medio") {
+  return flattenItens(COPSOQ_BR, versao)
 }

@@ -3,9 +3,12 @@ import { z } from "zod"
 /** Criação/edição de campanha psicossocial (autenticado, admin/tec_seguranca). */
 export const campanhaPsiSchema = z.object({
   pgr_id: z.string().uuid("PGR obrigatório"),
-  instrumento_id: z.string().uuid("Instrumento obrigatório"),
+  // Chave do instrumento no registro (copsoq, hse, ...). O instrumento_id real
+  // é resolvido/garantido no servidor a partir desta chave.
+  instrumento_key: z.string().min(1).default("copsoq"),
   titulo: z.string().min(3, "Mínimo 3 caracteres"),
-  versao_aplicada: z.enum(["curto", "medio"]).default("curto"),
+  // Versão é específica do instrumento (ex.: COPSOQ curto/medio; HSE única).
+  versao_aplicada: z.string().min(1).default("curto"),
   data_inicio: z.string().min(1, "Data de início obrigatória"),
   data_fim: z.string().optional().nullable(),
   min_respondentes: z.coerce.number().int().min(3).max(50).default(5),

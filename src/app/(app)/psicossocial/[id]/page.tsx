@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { ArrowLeft, FileDown } from "lucide-react"
 import { AcoesCampanha, CopiarLink } from "./acoes"
+import { AvaliacaoSeveridade, type ItemSeveridade } from "./avaliacao-severidade"
 
 export const dynamic = "force-dynamic"
 
@@ -54,7 +55,7 @@ export default async function CampanhaDetalhePage({ params }: { params: Promise<
 
   const { data: resultados } = await supabase
     .from("psi_resultado_dimensao")
-    .select("pgr_ghe_id, dimensao_nome, score_risco, classificacao, suprimido, n_respondentes")
+    .select("pgr_ghe_id, dimensao_id, dimensao_nome, score_risco, classificacao, suprimido, n_respondentes, probabilidade, severidade, exposicao, nivel_risco_nr1, tipo, nivel_desfecho")
     .eq("campanha_id", id)
 
   // Monta heatmap: GHEs (linhas) × dimensões (colunas)
@@ -76,6 +77,23 @@ export default async function CampanhaDetalhePage({ params }: { params: Promise<
     })
   }
   const temResultados = (resultados ?? []).some((r) => !r.suprimido)
+
+  // Itens para a avaliação técnica de severidade (NR-1): dimensões não suprimidas.
+  const itensSeveridade: ItemSeveridade[] = (resultados ?? [])
+    .filter((r) => !r.suprimido)
+    .map((r) => ({
+      pgr_ghe_id: r.pgr_ghe_id,
+      gheCodigo: gheCodigoPorId.get(r.pgr_ghe_id) ?? "GHE",
+      dimensao_id: r.dimensao_id,
+      dimensao_nome: r.dimensao_nome,
+      score: r.score_risco as number | null,
+      probabilidade: r.probabilidade as number | null,
+      severidade: r.severidade as number | null,
+      exposicao: r.exposicao as number | null,
+      nivel_risco_nr1: r.nivel_risco_nr1 as string | null,
+      tipo: (r.tipo as "exposicao" | "desfecho" | null) ?? "exposicao",
+      nivel_desfecho: r.nivel_desfecho as string | null,
+    }))
 
   return (
     <div className="container py-8 max-w-5xl space-y-6">
@@ -172,6 +190,27 @@ export default async function CampanhaDetalhePage({ params }: { params: Promise<
           </CardContent>
         </Card>
       )}
+
+      {itensSeveridade.length > 0 && (() => {
+        const soDesfecho = itensSeveridade.every((i) => i.tipo === "desfecho")
+        return (
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">
+                {soDesfecho ? "Indicadores de desfecho (monitoramento)" : "Avaliação técnica do nível de risco (NR-1)"}
+              </CardTitle>
+              <CardDescription>
+                {soDesfecho
+                  ? "Este instrumento mede desfechos (consequências). Os resultados servem ao monitoramento e não são lançados no Inventário do PGR."
+                  : "Determine o nível pela matriz Probabilidade × Severidade (× Exposição). Obrigatório antes de lançar no PGR."}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <AvaliacaoSeveridade id={id} itens={itensSeveridade} />
+            </CardContent>
+          </Card>
+        )
+      })()}
     </div>
   )
 }

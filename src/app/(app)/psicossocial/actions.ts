@@ -5,14 +5,19 @@ import { redirect } from "next/navigation"
 import { requireRole, AuthError } from "@/lib/auth/guards"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { campanhaPsiSchema } from "@/lib/validations/psicossocial"
+import { CLASSIFICACAO_TERCIS } from "@/lib/psicossocial/copsoq"
 import {
-  COPSOQ_BR,
-  COPSOQ_META,
-  CLASSIFICACAO_TERCIS,
-} from "@/lib/psicossocial/copsoq"
+  getInstrumento,
+  definicaoArmazenada,
+  INSTRUMENTO_PADRAO,
+} from "@/lib/psicossocial/instrumentos"
 import {
-  processarGHE,
-  classificacaoParaCategoriaRiscoPGR,
+  processarInstrumento,
+  probabilidadeDoScore,
+  nivelRiscoNR1,
+  nivelNR1ParaCategoriaRiscoPGR,
+  type InstrumentoDef,
+  type NivelNR1,
   type Respondente,
 } from "@/lib/psicossocial/scoring"
 
@@ -24,22 +29,37 @@ function novoToken(): string {
   return (crypto.randomUUID() + crypto.randomUUID()).replace(/-/g, "")
 }
 
-/** Garante (upsert) o instrumento COPSOQ padrão no catálogo. Via service role. */
-async function garantirInstrumentoId(): Promise<string> {
+/**
+ * Garante (upsert) um instrumento do registro no catálogo, gravando a definição
+ * completa (domínios + faixas + escala + key) usada pelo formulário e cálculo.
+ * Via service role. Retorna o id do psi_instrumento.
+ */
+async function garantirInstrumento(key: string): Promise<string> {
+  const reg = getInstrumento(key)
+  if (!reg) throw new Error(`Instrumento desconhecido: ${key}`)
   const admin = createAdminClient()
-  const nome = COPSOQ_META.instrumento
-  const versao = COPSOQ_META.versao_schema
   const { data: existente } = await admin
     .from("psi_instrumento")
     .select("id")
-    .eq("nome", nome)
-    .eq("versao", versao)
+    .eq("nome", reg.nome)
+    .eq("versao", reg.versao_schema)
     .maybeSingle()
-  if (existente) return existente.id as string
 
+  const payload = {
+    nome: reg.nome,
+    versao: reg.versao_schema,
+    definicao: definicaoArmazenada(reg),
+    oficial: reg.oficial,
+    ativo: true,
+  }
+  if (existente) {
+    // Mantém a definição atualizada (faixas/escala/key) ao reusar.
+    await admin.from("psi_instrumento").update({ definicao: payload.definicao }).eq("id", existente.id)
+    return existente.id as string
+  }
   const { data, error } = await admin
     .from("psi_instrumento")
-    .insert({ nome, versao, definicao: COPSOQ_BR, oficial: COPSOQ_META.oficial, ativo: true })
+    .insert(payload)
     .select("id")
     .single()
   if (error || !data) throw new Error(error?.message ?? "Falha ao registrar instrumento")
@@ -56,7 +76,7 @@ export async function criarCampanha(formData: FormData): Promise<ActionResult> {
 
   const parsed = campanhaPsiSchema.safeParse({
     pgr_id: formData.get("pgr_id"),
-    instrumento_id: "00000000-0000-4000-8000-000000000000", // placeholder; resolvido abaixo
+    instrumento_key: formData.get("instrumento_key") || INSTRUMENTO_PADRAO,
     titulo: formData.get("titulo"),
     versao_aplicada: formData.get("versao_aplicada") || "curto",
     data_inicio: formData.get("data_inicio"),
@@ -64,6 +84,13 @@ export async function criarCampanha(formData: FormData): Promise<ActionResult> {
     min_respondentes: formData.get("min_respondentes") || 5,
   })
   if (!parsed.success) return { error: parsed.error.errors[0]?.message ?? "Dados inválidos" }
+
+  // Resolve e valida o instrumento + a versão escolhida.
+  const reg = getInstrumento(parsed.data.instrumento_key)
+  if (!reg) return { error: "Instrumento inválido." }
+  if (!reg.versoes.some((v) => v.value === parsed.data.versao_aplicada)) {
+    return { error: "Versão inválida para o instrumento escolhido." }
+  }
 
   // empresa_id derivado do PGR (RLS garante que é da empresa do usuário)
   const { data: pgr } = await supabase
@@ -73,7 +100,7 @@ export async function criarCampanha(formData: FormData): Promise<ActionResult> {
     .maybeSingle()
   if (!pgr) return { error: "PGR não encontrado ou sem acesso." }
 
-  const instrumentoId = await garantirInstrumentoId()
+  const instrumentoId = await garantirInstrumento(reg.key)
 
   const { data: campanha, error } = await supabase
     .from("psi_campanha")
@@ -189,10 +216,17 @@ export async function calcularResultados(id: string): Promise<ActionResult> {
 
   const { data: campanha } = await admin
     .from("psi_campanha")
-    .select("id, empresa_id, versao_aplicada, min_respondentes")
+    .select("id, empresa_id, versao_aplicada, min_respondentes, psi_instrumento(definicao)")
     .eq("id", id)
     .maybeSingle()
   if (!campanha) return { error: "Campanha não encontrada." }
+
+  // Definição do instrumento desta campanha (data-driven). Fallback defensivo
+  // ao COPSOQ do registro caso o JSONB esteja ausente.
+  const instr = Array.isArray(campanha.psi_instrumento)
+    ? campanha.psi_instrumento[0]
+    : campanha.psi_instrumento
+  const definicao = (instr?.definicao ?? getInstrumento(INSTRUMENTO_PADRAO)?.def) as InstrumentoDef
 
   const { data: respostas } = await admin
     .from("psi_resposta")
@@ -224,10 +258,10 @@ export async function calcularResultados(id: string): Promise<ActionResult> {
 
   const linhas: Record<string, unknown>[] = []
   for (const [gheId, respondentes] of Array.from(porGhe.entries())) {
-    const resultados = processarGHE(
-      COPSOQ_BR,
+    const resultados = processarInstrumento(
+      definicao,
       respondentes,
-      campanha.versao_aplicada as "curto" | "medio",
+      campanha.versao_aplicada as string,
       campanha.min_respondentes ?? CLASSIFICACAO_TERCIS.min_respondentes_ghe,
     )
     for (const res of resultados) {
@@ -242,6 +276,11 @@ export async function calcularResultados(id: string): Promise<ActionResult> {
         classificacao: res.classificacao,
         n_respondentes: res.n,
         suprimido: res.suprimido,
+        tipo: res.tipo,
+        nivel_desfecho: res.nivel_desfecho ?? null,
+        // Probabilidade NR-1 só para fatores de exposição (desfecho não vai ao PGR).
+        probabilidade:
+          res.suprimido || res.tipo === "desfecho" ? null : probabilidadeDoScore(res.score),
       })
     }
   }
@@ -255,9 +294,70 @@ export async function calcularResultados(id: string): Promise<ActionResult> {
   return { ok: true }
 }
 
+/** Uma avaliação técnica de severidade/exposição para um resultado (GHE × dimensão). */
+export type AvaliacaoSeveridadeInput = {
+  pgr_ghe_id: string
+  dimensao_id: string
+  severidade: number // 1-5
+  exposicao?: number | null // 1-5 ou null (matriz P×S)
+}
+
 /**
- * Lança as dimensões em risco médio/alto no Inventário de Riscos do PGR
- * (pgr_risco categoria='psicossocial'). Evita duplicar (mesmo GHE+agente).
+ * Registra a avaliação técnica (Severidade × Exposição) sobre a Probabilidade
+ * já calculada do questionário e grava o nível de risco NR-1 por dimensão.
+ * A NR-1 exige essa etapa: o questionário sozinho não determina o nível.
+ */
+export async function avaliarSeveridade(
+  id: string,
+  avaliacoes: AvaliacaoSeveridadeInput[],
+): Promise<ActionResult> {
+  try {
+    await requireRole(ROLES)
+  } catch (e) {
+    return { error: e instanceof AuthError ? e.message : "Não autorizado" }
+  }
+  if (!avaliacoes || avaliacoes.length === 0) return { error: "Nada para avaliar." }
+  const admin = createAdminClient()
+
+  // Lê os resultados (com a probabilidade derivada do score) desta campanha.
+  const { data: resultados } = await admin
+    .from("psi_resultado_dimensao")
+    .select("id, pgr_ghe_id, dimensao_id, probabilidade, suprimido")
+    .eq("campanha_id", id)
+  if (!resultados || resultados.length === 0) {
+    return { error: "Calcule os resultados antes de avaliar a severidade." }
+  }
+  const porChave = new Map(resultados.map((r) => [`${r.pgr_ghe_id}::${r.dimensao_id}`, r]))
+
+  let atualizados = 0
+  for (const av of avaliacoes) {
+    const alvo = porChave.get(`${av.pgr_ghe_id}::${av.dimensao_id}`)
+    if (!alvo || alvo.suprimido || alvo.probabilidade == null) continue
+    const nr1 = nivelRiscoNR1(alvo.probabilidade as number, av.severidade, av.exposicao ?? null)
+    const { error } = await admin
+      .from("psi_resultado_dimensao")
+      .update({
+        severidade: nr1.severidade,
+        exposicao: nr1.exposicao,
+        produto_nr1: nr1.produto,
+        nivel_risco_nr1: nr1.nivel,
+        severidade_em: new Date().toISOString(),
+      })
+      .eq("id", alvo.id)
+    if (error) return { error: error.message }
+    atualizados++
+  }
+  if (atualizados === 0) return { error: "Nenhuma dimensão elegível foi avaliada (verifique supressão/cálculo)." }
+
+  revalidatePath(`/psicossocial/${id}`)
+  return { ok: true, id: `${atualizados}` }
+}
+
+/**
+ * Lança no Inventário de Riscos do PGR (pgr_risco categoria='psicossocial') as
+ * dimensões cujo NÍVEL DE RISCO NR-1 (avaliação técnica P×S×E) seja médio, alto
+ * ou crítico. Exige a etapa de severidade — o score do questionário sozinho não
+ * basta (NR-1). Evita duplicar (mesmo GHE+agente).
  */
 export async function lancarNoInventarioPgr(id: string): Promise<ActionResult> {
   let supabase
@@ -276,12 +376,20 @@ export async function lancarNoInventarioPgr(id: string): Promise<ActionResult> {
 
   const { data: resultados } = await supabase
     .from("psi_resultado_dimensao")
-    .select("pgr_ghe_id, dimensao_nome, score_risco, classificacao, suprimido")
+    .select("pgr_ghe_id, dimensao_nome, score_risco, nivel_risco_nr1, suprimido, tipo")
     .eq("campanha_id", id)
-  const alvo = (resultados ?? []).filter(
-    (r) => !r.suprimido && (r.classificacao === "amarelo" || r.classificacao === "vermelho"),
+
+  // Desfechos (sofrimento/danos) não vão ao PGR — apenas fatores de exposição.
+  const elegiveis = (resultados ?? []).filter((r) => !r.suprimido && r.tipo !== "desfecho")
+  const semAvaliacao = elegiveis.filter((r) => r.nivel_risco_nr1 == null)
+  if (elegiveis.length > 0 && semAvaliacao.length === elegiveis.length) {
+    return { error: "Avalie a severidade técnica (P×S×E) antes de lançar no PGR. O questionário sozinho não determina o nível (NR-1)." }
+  }
+
+  const alvo = elegiveis.filter(
+    (r) => r.nivel_risco_nr1 === "medio" || r.nivel_risco_nr1 === "alto" || r.nivel_risco_nr1 === "critico",
   )
-  if (alvo.length === 0) return { error: "Nenhum risco médio/alto para lançar (ou ainda não calculado)." }
+  if (alvo.length === 0) return { error: "Nenhum risco médio/alto/crítico (NR-1) para lançar." }
 
   // Riscos psicossociais já lançados (evita duplicar)
   const { data: existentes } = await supabase
@@ -299,12 +407,10 @@ export async function lancarNoInventarioPgr(id: string): Promise<ActionResult> {
       pgr_ghe_id: r.pgr_ghe_id,
       categoria: "psicossocial",
       agente_ambiental: r.dimensao_nome,
-      fontes_geradoras: "Organização do trabalho (avaliação COPSOQ)",
+      fontes_geradoras: "Organização do trabalho (avaliação psicossocial)",
       possiveis_danos: "Estresse ocupacional, transtornos mentais relacionados ao trabalho",
-      categoria_risco: classificacaoParaCategoriaRiscoPGR(
-        r.classificacao as "amarelo" | "vermelho",
-      ),
-      observacoes: `Origem: avaliação psicossocial (COPSOQ). Score de risco ${r.score_risco}.`,
+      categoria_risco: nivelNR1ParaCategoriaRiscoPGR(r.nivel_risco_nr1 as NivelNR1),
+      observacoes: `Origem: avaliação psicossocial. Score ${r.score_risco}; nível NR-1: ${r.nivel_risco_nr1}.`,
     }))
 
   if (novos.length === 0) return { error: "Todos os riscos desta campanha já constam no inventário." }

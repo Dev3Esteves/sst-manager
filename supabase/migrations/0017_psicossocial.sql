@@ -7,9 +7,10 @@
 -- 26/05/2026. O psicossocial entra como fator ergonômico (NR-01 + NR-17) e
 -- alimenta o Inventário de Riscos do PGR (pgr_risco categoria='psicossocial').
 --
--- Metodologia: questionário tipo COPSOQ III → score 0-100 por dimensão →
--- classificação por tercis (verde/amarelo/vermelho) → agregação por GHE
--- (reusa pgr_ghe) com mínimo de respondentes (anonimato/LGPD).
+-- Metodologia: questionário psicossocial (ex.: COPSOQ II-Br) → score 0-100 por
+-- dimensão → classificação por tercis (verde/amarelo/vermelho) → agregação por
+-- GHE (reusa pgr_ghe) com mínimo de respondentes (anonimato/LGPD). O catálogo
+-- psi_instrumento é multi-instrumento (COPSOQ, HSE-IT, PROART, desfechos).
 --
 -- Princípios:
 --   - Reusa empresas / obras / pgr / pgr_ghe — NÃO recria estrutura org.
@@ -19,11 +20,11 @@
 -- ============================================================================
 
 -- ----------------------------------------------------------------------------
--- 1. Instrumento (catálogo global, versionado) — ex.: COPSOQ III-Br médio/curto
+-- 1. Instrumento (catálogo global, versionado) — ex.: COPSOQ II-Br médio/curto
 -- ----------------------------------------------------------------------------
 CREATE TABLE psi_instrumento (
   id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  nome        TEXT NOT NULL,                 -- "COPSOQ III-Br"
+  nome        TEXT NOT NULL,                 -- "COPSOQ II-Br (curta)"
   versao      TEXT NOT NULL,                 -- "medio" | "curto"
   definicao   JSONB NOT NULL,                -- domínios/dimensões/itens/escala/classificação
   oficial     BOOLEAN NOT NULL DEFAULT false,-- false = texto rascunho (não-licenciado)
@@ -34,7 +35,7 @@ CREATE TABLE psi_instrumento (
 
 COMMENT ON TABLE psi_instrumento IS
   'Instrumento psicossocial versionado (catálogo). `oficial=false` indica texto '
-  'representativo/rascunho — substituir pelo texto licenciado (COPSOQ III-Br) '
+  'representativo/rascunho — substituir pelo texto licenciado (COPSOQ II-Br) '
   'antes do uso em produção.';
 
 -- ----------------------------------------------------------------------------
@@ -112,7 +113,7 @@ CREATE INDEX idx_psi_resposta_campanha_ghe ON psi_resposta(campanha_id, pgr_ghe_
 CREATE TABLE psi_resposta_item (
   id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   resposta_id  UUID NOT NULL REFERENCES psi_resposta(id) ON DELETE CASCADE,
-  item_id      TEXT NOT NULL,                -- ex.: "DQ1"
+  item_id      TEXT NOT NULL,                -- ex.: "Q1A" (COPSOQ) / "D1" (HSE)
   valor        SMALLINT NOT NULL CHECK (valor BETWEEN 0 AND 100)
 );
 

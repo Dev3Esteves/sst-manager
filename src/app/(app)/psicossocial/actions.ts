@@ -11,7 +11,9 @@ import {
   definicaoArmazenada,
   INSTRUMENTO_PADRAO,
 } from "@/lib/psicossocial/instrumentos"
-import { PERGUNTAS_QUALITATIVAS_PADRAO } from "@/lib/psicossocial/qualitativo"
+import { PERGUNTAS_QUALITATIVAS_PADRAO, perguntasDaCampanha } from "@/lib/psicossocial/qualitativo"
+import { sintetizarQualitativo, type RespostaAberta } from "@/lib/ia/sintese-qualitativa"
+import { IAServiceUnavailable } from "@/lib/ia/classificar-risco"
 import {
   processarInstrumento,
   probabilidadeDoScore,
@@ -425,4 +427,106 @@ export async function lancarNoInventarioPgr(id: string): Promise<ActionResult> {
 
   revalidatePath(`/psicossocial/${id}`)
   return { ok: true, id: `${novos.length}` }
+}
+
+/**
+ * Gera (via IA) a síntese temática das respostas ABERTAS por GHE. Lê as respostas
+ * anônimas via service role, agrupa por GHE, SUPRIME GHE com menos respondentes
+ * (lotes distintos) que o mínimo (k-anonimato), chama o Claude e faz upsert em
+ * psi_sintese_qualitativa (revisado=false — exige revisão p/ liberar verbatim).
+ */
+export async function gerarSinteseQualitativa(id: string): Promise<ActionResult> {
+  try {
+    await requireRole(ROLES)
+  } catch (e) {
+    return { error: e instanceof AuthError ? e.message : "Não autorizado" }
+  }
+  const admin = createAdminClient()
+
+  const { data: campanha } = await admin
+    .from("psi_campanha")
+    .select("id, empresa_id, min_respondentes, perguntas_qualitativas")
+    .eq("id", id)
+    .maybeSingle()
+  if (!campanha) return { error: "Campanha não encontrada." }
+
+  const perguntas = perguntasDaCampanha(campanha.perguntas_qualitativas)
+  const { data: respostas } = await admin
+    .from("psi_resposta_qualitativa")
+    .select("pgr_ghe_id, lote_id, pergunta_texto, resposta_texto")
+    .eq("campanha_id", id)
+  if (!respostas || respostas.length === 0) {
+    return { error: "Ainda não há respostas abertas para sintetizar." }
+  }
+
+  const porGhe = new Map<string, { respostas: RespostaAberta[]; lotes: Set<string> }>()
+  for (const r of respostas) {
+    const g = porGhe.get(r.pgr_ghe_id) ?? { respostas: [], lotes: new Set<string>() }
+    g.respostas.push({ pergunta: r.pergunta_texto, texto: r.resposta_texto })
+    g.lotes.add(r.lote_id)
+    porGhe.set(r.pgr_ghe_id, g)
+  }
+
+  const min = campanha.min_respondentes ?? 5
+  let geradas = 0
+  try {
+    for (const [gheId, g] of Array.from(porGhe.entries())) {
+      if (g.lotes.size < min) {
+        // Abaixo do mínimo: suprime (remove síntese anterior, se houver).
+        await admin.from("psi_sintese_qualitativa").delete().eq("campanha_id", id).eq("pgr_ghe_id", gheId)
+        continue
+      }
+      const sintese = await sintetizarQualitativo({ perguntas, respostas: g.respostas })
+      const { error } = await admin.from("psi_sintese_qualitativa").upsert(
+        {
+          empresa_id: campanha.empresa_id,
+          campanha_id: id,
+          pgr_ghe_id: gheId,
+          temas: sintese.temas,
+          alertas: sintese.alertas_identificacao,
+          sugestoes: sintese.sugestoes_acao,
+          verbatim_aprovado: [],
+          revisado: false,
+          atualizado_em: new Date().toISOString(),
+        },
+        { onConflict: "campanha_id,pgr_ghe_id" },
+      )
+      if (error) return { error: error.message }
+      geradas++
+    }
+  } catch (e) {
+    if (e instanceof IAServiceUnavailable) return { error: "IA indisponível (ANTHROPIC_API_KEY não configurada)." }
+    return { error: e instanceof Error ? e.message : "Falha na síntese por IA." }
+  }
+
+  if (geradas === 0) {
+    return { error: `Nenhum GHE atingiu o mínimo de ${min} respondentes (anonimato preservado).` }
+  }
+  revalidatePath(`/psicossocial/${id}`)
+  return { ok: true, id: `${geradas}` }
+}
+
+/** Marca a síntese de um GHE como revisada e fixa os trechos verbatim aprovados. */
+export async function revisarSinteseQualitativa(
+  sinteseId: string,
+  campanhaId: string,
+  verbatimAprovado: string[],
+): Promise<ActionResult> {
+  try {
+    await requireRole(ROLES)
+  } catch (e) {
+    return { error: e instanceof AuthError ? e.message : "Não autorizado" }
+  }
+  const admin = createAdminClient()
+  const { error } = await admin
+    .from("psi_sintese_qualitativa")
+    .update({
+      verbatim_aprovado: verbatimAprovado,
+      revisado: true,
+      atualizado_em: new Date().toISOString(),
+    })
+    .eq("id", sinteseId)
+  if (error) return { error: error.message }
+  revalidatePath(`/psicossocial/${campanhaId}`)
+  return { ok: true }
 }

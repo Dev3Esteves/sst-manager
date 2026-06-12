@@ -89,10 +89,12 @@ export async function submeterRespostaQualitativa(
     return { ok: false, error: "Esta pesquisa não está aberta para respostas no momento." }
   }
 
+  const lote = crypto.randomUUID() // agrupa esta submissão (anônimo) p/ contar respondentes
   const linhas = parsed.data.respostas.map((r) => ({
     empresa_id: convite.empresa_id,
     campanha_id: convite.campanha_id,
     pgr_ghe_id: convite.pgr_ghe_id,
+    lote_id: lote,
     pergunta_idx: r.pergunta_idx,
     pergunta_texto: r.pergunta_texto,
     resposta_texto: r.resposta_texto,

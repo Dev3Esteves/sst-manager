@@ -29,6 +29,9 @@ CREATE TABLE IF NOT EXISTS psi_resposta_qualitativa (
   empresa_id     UUID NOT NULL REFERENCES empresas(id) ON DELETE RESTRICT,
   campanha_id    UUID NOT NULL REFERENCES psi_campanha(id) ON DELETE CASCADE,
   pgr_ghe_id     UUID NOT NULL REFERENCES pgr_ghe(id) ON DELETE CASCADE,
+  -- Agrupa as respostas de UMA submissão (anônima) — permite contar respondentes
+  -- distintos por GHE para o k-anonimato, sem identificar a pessoa.
+  lote_id        UUID NOT NULL,
   pergunta_idx   SMALLINT NOT NULL,
   pergunta_texto TEXT NOT NULL,
   resposta_texto TEXT NOT NULL,

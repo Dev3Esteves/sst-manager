@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { ArrowLeft, FileDown } from "lucide-react"
 import { AcoesCampanha, CopiarLink } from "./acoes"
 import { AvaliacaoSeveridade, type ItemSeveridade } from "./avaliacao-severidade"
+import { AnaliseQualitativa, type GheQualitativo, type TemaQualitativo } from "./analise-qualitativa"
 
 export const dynamic = "force-dynamic"
 
@@ -24,7 +25,7 @@ export default async function CampanhaDetalhePage({ params }: { params: Promise<
 
   const { data: campanha } = await supabase
     .from("psi_campanha")
-    .select("id, titulo, status, versao_aplicada, data_inicio, data_fim, min_respondentes, pgr(numero_revisao, obras(nome))")
+    .select("id, titulo, status, versao_aplicada, data_inicio, data_fim, min_respondentes, modo_qualitativo, pgr(numero_revisao, obras(nome))")
     .eq("id", id)
     .maybeSingle()
   if (!campanha) notFound()
@@ -57,6 +58,27 @@ export default async function CampanhaDetalhePage({ params }: { params: Promise<
     .from("psi_resultado_dimensao")
     .select("pgr_ghe_id, dimensao_id, dimensao_nome, score_risco, classificacao, suprimido, n_respondentes, probabilidade, severidade, exposicao, nivel_risco_nr1, tipo, nivel_desfecho")
     .eq("campanha_id", id)
+
+  // Pesquisa qualitativa: respondentes (lotes distintos) por GHE + sínteses salvas.
+  const modoQualitativo = (campanha as { modo_qualitativo?: string }).modo_qualitativo ?? "nenhum"
+  const respQualPorGhe = new Map<string, Set<string>>()
+  if (modoQualitativo !== "nenhum") {
+    const { data: respQual } = await admin
+      .from("psi_resposta_qualitativa")
+      .select("pgr_ghe_id, lote_id")
+      .eq("campanha_id", id)
+    for (const r of respQual ?? []) {
+      const s = respQualPorGhe.get(r.pgr_ghe_id) ?? new Set<string>()
+      s.add(r.lote_id)
+      respQualPorGhe.set(r.pgr_ghe_id, s)
+    }
+  }
+  const { data: sinteses } = modoQualitativo !== "nenhum"
+    ? await supabase
+        .from("psi_sintese_qualitativa")
+        .select("id, pgr_ghe_id, temas, alertas, sugestoes, verbatim_aprovado, revisado, atualizado_em")
+        .eq("campanha_id", id)
+    : { data: [] }
 
   // Monta heatmap: GHEs (linhas) × dimensões (colunas)
   const gheNome = new Map<string, string>()
@@ -94,6 +116,29 @@ export default async function CampanhaDetalhePage({ params }: { params: Promise<
       tipo: (r.tipo as "exposicao" | "desfecho" | null) ?? "exposicao",
       nivel_desfecho: r.nivel_desfecho as string | null,
     }))
+
+  const qualGhes: GheQualitativo[] = modoQualitativo !== "nenhum"
+    ? Array.from(respQualPorGhe.entries()).map(([gid, lotes]) => {
+        const codigo = gheCodigoPorId.get(gid) ?? "GHE"
+        const s = (sinteses ?? []).find((x) => x.pgr_ghe_id === gid) ?? null
+        return {
+          pgr_ghe_id: gid,
+          codigo,
+          descricao: gheNome.get(codigo) ?? "",
+          respondentes: lotes.size,
+          sintese: s
+            ? {
+                id: s.id as string,
+                temas: (s.temas ?? []) as TemaQualitativo[],
+                alertas: (s.alertas ?? []) as string[],
+                sugestoes: (s.sugestoes ?? []) as string[],
+                verbatim_aprovado: (s.verbatim_aprovado ?? []) as string[],
+                revisado: !!s.revisado,
+              }
+            : null,
+        }
+      })
+    : []
 
   return (
     <div className="container py-8 max-w-5xl space-y-6">
@@ -211,6 +256,26 @@ export default async function CampanhaDetalhePage({ params }: { params: Promise<
           </Card>
         )
       })()}
+
+      {modoQualitativo !== "nenhum" && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Análise qualitativa (perguntas abertas)</CardTitle>
+            <CardDescription>
+              Síntese temática por IA das respostas abertas, por GHE. De-identificada e suprimida
+              quando há menos de {campanha.min_respondentes} respondentes. Trechos literais só entram
+              no relatório após sua revisão.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <AnaliseQualitativa
+              campanhaId={id}
+              minRespondentes={campanha.min_respondentes}
+              ghes={qualGhes}
+            />
+          </CardContent>
+        </Card>
+      )}
     </div>
   )
 }

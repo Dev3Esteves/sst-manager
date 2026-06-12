@@ -84,6 +84,21 @@ const styles = StyleSheet.create({
   versoItemCol: { width: "50%", fontSize: 10, marginBottom: 2, paddingRight: 10, lineHeight: 1.25 },
   versoParagrafo: { fontSize: 10, marginBottom: 6, lineHeight: 1.3 },
   versoFooter: { fontSize: 8, color: "#64748b", textAlign: "center", marginTop: "auto" },
+
+  // ---- Modelo RETRATO (vertical, 1 página) ----
+  vHead: { flexDirection: "row", alignItems: "center", width: "100%", marginBottom: 4 },
+  vLogo: { width: 110, height: 48, objectFit: "contain" },
+  vTitulo: { fontSize: 26, fontWeight: "bold", letterSpacing: 2, color: "#1e293b", textAlign: "center" },
+  vBadge: {
+    fontSize: 10, fontWeight: "bold", color: "#b45309",
+    border: "1.5 solid #f59e0b", borderRadius: 4, padding: "3 6",
+  },
+  vEmpresa: { fontSize: 11, fontWeight: "bold", color: "#1e293b", textAlign: "center", marginTop: 2 },
+  vCertificaQue: { fontSize: 11, color: "#475569", textAlign: "center", marginBottom: 6 },
+  vCorpo: { fontSize: 11, lineHeight: 1.5, textAlign: "center", marginHorizontal: 8, marginTop: 8, marginBottom: 12 },
+  vSecTitulo: { fontSize: 11, fontWeight: "bold", color: "#1e293b", textDecoration: "underline", marginBottom: 6 },
+  vItem: { fontSize: 9.5, marginBottom: 2, paddingLeft: 8, lineHeight: 1.3 },
+  vDataLocal: { fontSize: 10, textAlign: "center", marginTop: 6, marginBottom: 14 },
 })
 
 export type CertificadoData = {
@@ -147,7 +162,9 @@ async function fetchLogoAsDataUri(url: string): Promise<string | null> {
   }
 }
 
-export async function renderCertificadoPdf(d: CertificadoData) {
+export type OrientacaoCertificado = "retrato" | "paisagem"
+
+export async function renderCertificadoPdf(d: CertificadoData, orientacao: OrientacaoCertificado = "paisagem") {
   const qr = d.validacao_url ? await QRCode.toDataURL(d.validacao_url, { margin: 1, width: 140 }) : undefined
   const logo = d.empresa_logo_url ? await fetchLogoAsDataUri(d.empresa_logo_url) : null
 
@@ -170,6 +187,69 @@ export async function renderCertificadoPdf(d: CertificadoData) {
     : TEXTO_CERTIFICADO_PADRAO
 
   const textoCorpo = interpolarTextoCertificado(template, vars)
+
+  const itens = (d.conteudo_programatico ?? []).map(limparItemConteudo).filter(Boolean)
+
+  // ---- RETRATO: certificado em página única (modelo vertical) ----
+  if (orientacao === "retrato") {
+    return (
+      <Document title={`Certificado — ${d.curso_titulo}`}>
+        <Page size="A4" style={styles.page}>
+          <View style={styles.borderOuter}>
+            <View style={{ ...styles.borderInner, alignItems: "stretch", paddingTop: 20 }}>
+              <View style={styles.vHead}>
+                <View style={{ width: 120 }}>{logo && <Image src={logo} style={styles.vLogo} />}</View>
+                <View style={{ flex: 1, alignItems: "center" }}>
+                  <Text style={styles.vTitulo}>CERTIFICADO</Text>
+                </View>
+                <View style={{ width: 120, alignItems: "flex-end" }}>
+                  {d.nr_referencia ? <Text style={styles.vBadge}>{d.nr_referencia}</Text> : null}
+                </View>
+              </View>
+
+              <Text style={styles.vEmpresa}>A {d.empresa_razao_social}</Text>
+              <Text style={styles.vCertificaQue}>Certifica que</Text>
+
+              <View style={styles.nomeBloco}>
+                <Text style={styles.nomeAluno}>{d.aluno_nome}</Text>
+              </View>
+              <Text style={styles.cpfAluno}>CPF {d.aluno_cpf}</Text>
+
+              <Text style={styles.vCorpo}>{textoCorpo}</Text>
+
+              <Text style={styles.vSecTitulo}>CONTEÚDO PROGRAMÁTICO:</Text>
+              {itens.length > 0 ? (
+                itens.map((item, i) => <Text key={i} style={styles.vItem}>✓  {item}</Text>)
+              ) : (
+                <Text style={styles.vItem}>✓  Conforme ementa da NR aplicável e requisitos do empregador.</Text>
+              )}
+
+              <Text style={styles.vDataLocal}>{vars.cidade}, {formatPtBr(d.data_realizacao)}</Text>
+
+              <View style={styles.footer}>
+                <View style={styles.assinaturaBloco}>
+                  <View style={styles.assinaturaLinha} />
+                  <Text style={styles.assinaturaNome}>{d.instrutor_nome ?? "Instrutor"}</Text>
+                  <Text style={styles.assinaturaCargo}>{d.instrutor_cargo ?? "Instrutor responsável"}</Text>
+                </View>
+                {qr && (
+                  <View style={{ alignItems: "center" }}>
+                    <Image src={qr} style={styles.qrBox} />
+                    <Text style={styles.numeroCertif}>Cert. Nº {d.numero}</Text>
+                  </View>
+                )}
+                <View style={styles.assinaturaBloco}>
+                  <View style={styles.assinaturaLinha} />
+                  <Text style={styles.assinaturaNome}>Coordenação</Text>
+                  <Text style={styles.assinaturaCargo}>SST — {d.empresa_razao_social}</Text>
+                </View>
+              </View>
+            </View>
+          </View>
+        </Page>
+      </Document>
+    )
+  }
 
   return (
     <Document title={`Certificado — ${d.curso_titulo}`}>

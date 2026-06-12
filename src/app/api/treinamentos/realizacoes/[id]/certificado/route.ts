@@ -1,11 +1,13 @@
 import { NextResponse } from "next/server"
 import { renderToBuffer } from "@react-pdf/renderer"
 import { createClient } from "@/lib/supabase/server"
-import { renderCertificadoPdf } from "@/lib/pdf/certificado"
+import { renderCertificadoPdf, type OrientacaoCertificado } from "@/lib/pdf/certificado"
 import { formatCNPJ, formatCPF } from "@/lib/validations/shared"
 
-export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
+  const orientacao: OrientacaoCertificado =
+    new URL(req.url).searchParams.get("orientacao") === "retrato" ? "retrato" : "paisagem"
   const supabase = await createClient()
   const { data, error } = await supabase
     .from("treinamentos_realizados")
@@ -46,7 +48,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
     // empresa (config) > padrão hardcoded (aplicado dentro do renderer).
     texto_certificado_template: trn?.texto_certificado || empresa?.template_certificado || null,
     validacao_url: `${process.env.NEXT_PUBLIC_APP_URL ?? ""}/treinamentos/realizacoes/${id}`,
-  })
+  }, orientacao)
 
   const buffer = await renderToBuffer(pdf)
   return new NextResponse(new Uint8Array(buffer), {

@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { classificarVencimento, urgenciaBadgeVariant, urgenciaLabel, formatDate } from "@/lib/utils/vencimento"
-import { Plus, Award, Users, FileArchive } from "lucide-react"
+import { Plus, Users, FileArchive, RectangleHorizontal, RectangleVertical } from "lucide-react"
 
 export default async function RealizacoesPage() {
   const supabase = await createClient()
@@ -49,7 +49,7 @@ export default async function RealizacoesPage() {
                 <TableHead>Entidade</TableHead>
                 <TableHead>Nota</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead className="w-16"></TableHead>
+                <TableHead className="w-24 text-center">Certificado</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -72,11 +72,18 @@ export default async function RealizacoesPage() {
                       {urgencia ? <Badge variant={urgenciaBadgeVariant(urgencia)}>{urgenciaLabel(urgencia)}</Badge> : <Badge variant="secondary">Sem vencimento</Badge>}
                     </TableCell>
                     <TableCell>
-                      <Button variant="ghost" size="icon" asChild title="Baixar certificado (frente/verso)">
-                        <Link href={`/api/treinamentos/realizacoes/${r.id}/certificado`} target="_blank">
-                          <Award className="h-4 w-4" />
-                        </Link>
-                      </Button>
+                      <div className="flex items-center justify-center gap-1">
+                        <Button variant="ghost" size="icon" asChild title="Certificado horizontal (paisagem)">
+                          <Link href={`/api/treinamentos/realizacoes/${r.id}/certificado?orientacao=paisagem`} target="_blank">
+                            <RectangleHorizontal className="h-4 w-4" />
+                          </Link>
+                        </Button>
+                        <Button variant="ghost" size="icon" asChild title="Certificado vertical (retrato)">
+                          <Link href={`/api/treinamentos/realizacoes/${r.id}/certificado?orientacao=retrato`} target="_blank">
+                            <RectangleVertical className="h-4 w-4" />
+                          </Link>
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 )

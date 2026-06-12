@@ -56,4 +56,10 @@ describe("certificado — sanitização e contagem de páginas", () => {
     const buf = await renderToBuffer(el)
     expect(contarPaginas(buf)).toBe(2)
   })
+
+  it("orientação retrato gera 1 única página", async () => {
+    const el = await renderCertificadoPdf(data, "retrato")
+    const buf = await renderToBuffer(el)
+    expect(contarPaginas(buf)).toBe(1)
+  })
 })

@@ -249,7 +249,7 @@ export function QuestionarioForm({
         <div key={it.id} className="rounded-lg border bg-background p-4">
           <div className="text-[11px] uppercase tracking-wider text-primary font-semibold">{it.dominio}</div>
           <p className="mt-1 text-sm font-medium">{idx + 1}. {it.texto}</p>
-          <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-5">
+          <div className="mt-3 flex flex-wrap gap-2">
             {escala.rotulos.map((rot, i) => {
               const valor = escala.valores[i]
               const ativo = respostas[it.id] === valor
@@ -258,7 +258,7 @@ export function QuestionarioForm({
                   key={i}
                   type="button"
                   onClick={() => setRespostas((p) => ({ ...p, [it.id]: valor }))}
-                  className={`rounded-md border px-2 py-2 text-xs transition-colors ${
+                  className={`flex flex-1 basis-[120px] items-center justify-center rounded-md border px-2 py-2 text-center text-xs leading-tight transition-colors ${
                     ativo ? "bg-primary text-primary-foreground border-primary" : "hover:border-primary"
                   }`}
                 >

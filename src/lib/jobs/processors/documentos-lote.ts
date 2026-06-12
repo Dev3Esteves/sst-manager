@@ -451,7 +451,7 @@ function buildRelatorio(resultados: LoteResultItem[], input: DocumentosLoteInput
   return `RELATÓRIO DE GERAÇÃO EM LOTE
 ============================================================
 Tipo:     ${tipoLabel}
-Data:     ${new Date().toLocaleString("pt-BR")}
+Data:     ${new Date().toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })}
 Total:    ${resultados.length}
 Gerados:  ${gerados.length}
 Pulados:  ${pulados.length}

@@ -1,5 +1,6 @@
 import { Text, View, StyleSheet } from "@react-pdf/renderer"
 import { BasePdfDocument, pdfStyles, buildQrDataUrl, type DocumentoMeta } from "./base"
+import { agoraBrasiliaData } from "@/lib/utils/data-brasilia"
 
 export type RelatorioGhe = {
   codigo: string
@@ -83,7 +84,7 @@ export async function renderPsicossocialRelatorioPdf(
     empresaRazaoSocial: data.empresaRazaoSocial,
     empresaCnpj: data.empresaCnpj,
     localTrabalho: `${data.obraNome}${data.pgrRevisao != null ? ` · PGR rev ${data.pgrRevisao}` : ""}`,
-    dataEmissao: new Date().toLocaleDateString("pt-BR"),
+    dataEmissao: agoraBrasiliaData(),
   }
   const qr = appUrl ? await buildQrDataUrl(`${appUrl}/psicossocial/${campanhaId}`) : undefined
 

@@ -19,6 +19,16 @@ export function hojeBrasilia(): string {
   return new Intl.DateTimeFormat("en-CA", { timeZone: TZ }).format(new Date())
 }
 
+/** Data+hora "agora" em Brasília p/ EXIBIÇÃO (ex.: "11/06/2026, 21:57:31"). */
+export function agoraBrasiliaDataHora(): string {
+  return new Date().toLocaleString("pt-BR", { timeZone: TZ })
+}
+
+/** Data "agora" em Brasília p/ EXIBIÇÃO (ex.: "11/06/2026"). */
+export function agoraBrasiliaData(): string {
+  return new Date().toLocaleDateString("pt-BR", { timeZone: TZ })
+}
+
 /** Agora em Brasília no formato YYYY-MM-DDTHH:mm (para inputs `type="datetime-local"`). */
 export function agoraBrasiliaInput(): string {
   const partes = new Intl.DateTimeFormat("en-CA", {

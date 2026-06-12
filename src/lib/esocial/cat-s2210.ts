@@ -169,7 +169,7 @@ ACIDENTADO
 ACIDENTE
   Nº interno:    ${ocorrencia.numero_sequencial}
   Tipo (tpAcid): ${tpLabel}
-  Data/hora:     ${dt.toLocaleString("pt-BR")}
+  Data/hora:     ${dt.toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })}
   Local:         ${ocorrencia.local}
   Gravidade:     ${ocorrencia.gravidade ?? "—"}
   Dias afast.:   ${ocorrencia.dias_afastamento ?? 0}

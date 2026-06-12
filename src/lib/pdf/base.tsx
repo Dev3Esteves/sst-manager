@@ -2,6 +2,7 @@
 import { Document, Page, Text, View, StyleSheet, Image } from "@react-pdf/renderer"
 import QRCode from "qrcode"
 import type { ReactNode } from "react"
+import { agoraBrasiliaDataHora } from "@/lib/utils/data-brasilia"
 
 export const pdfStyles = StyleSheet.create({
   page: {
@@ -147,7 +148,7 @@ export function PdfHeader({ meta }: { meta: DocumentoMeta }) {
 }
 
 export function PdfFooter({ qrDataUrl }: { qrDataUrl?: string }) {
-  const now = new Date().toLocaleString("pt-BR")
+  const now = agoraBrasiliaDataHora()
   return (
     <View style={pdfStyles.footer} fixed>
       <Text>Documento gerado pelo Sistema SST — {now}</Text>

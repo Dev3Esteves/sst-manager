@@ -12,6 +12,8 @@ export const campanhaPsiSchema = z.object({
   data_inicio: z.string().min(1, "Data de início obrigatória"),
   data_fim: z.string().optional().nullable(),
   min_respondentes: z.coerce.number().int().min(3).max(50).default(5),
+  // Pesquisa qualitativa: nenhum | integrado (abertas + Likert) | separado (só abertas)
+  modo_qualitativo: z.enum(["nenhum", "integrado", "separado"]).default("nenhum"),
 })
 
 export type CampanhaPsiInput = z.infer<typeof campanhaPsiSchema>
@@ -33,6 +35,22 @@ export const respostaPsiSchema = z.object({
 })
 
 export type RespostaPsiInput = z.infer<typeof respostaPsiSchema>
+
+/** Submissão anônima das respostas abertas (pesquisa qualitativa). */
+export const respostaQualitativaSchema = z.object({
+  token: z.string().min(10, "Token inválido"),
+  respostas: z
+    .array(
+      z.object({
+        pergunta_idx: z.coerce.number().int().min(0),
+        pergunta_texto: z.string().min(1),
+        resposta_texto: z.string().trim().min(1).max(4000),
+      }),
+    )
+    .min(1, "Responda pelo menos uma pergunta"),
+})
+
+export type RespostaQualitativaInput = z.infer<typeof respostaQualitativaSchema>
 
 export const FAIXAS_ETARIAS = ["18-24", "25-34", "35-44", "45-54", "55+"] as const
 export const SEXOS = [

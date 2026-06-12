@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Pencil, Plus } from "lucide-react"
 import { GheForm } from "../ghe-form"
-import { updateGhe, deleteGhe, importarEquipeDaObra } from "../actions"
+import { updateGhe, deleteGhe } from "../actions"
 import { CargosEditor } from "./cargos-editor"
 import { ImportarEquipeButton } from "./importar-equipe-button"
 import {

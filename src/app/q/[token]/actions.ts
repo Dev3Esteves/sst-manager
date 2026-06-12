@@ -1,7 +1,12 @@
 "use server"
 
 import { createAdminClient } from "@/lib/supabase/admin"
-import { respostaPsiSchema, type RespostaPsiInput } from "@/lib/validations/psicossocial"
+import {
+  respostaPsiSchema,
+  respostaQualitativaSchema,
+  type RespostaPsiInput,
+  type RespostaQualitativaInput,
+} from "@/lib/validations/psicossocial"
 
 /**
  * Submissão ANÔNIMA de uma resposta de questionário psicossocial.
@@ -55,6 +60,45 @@ export async function submeterResposta(
   const { error: e2 } = await admin.from("psi_resposta_item").insert(itens)
   if (e2) return { ok: false, error: e2.message }
 
+  return { ok: true }
+}
+
+/**
+ * Submissão ANÔNIMA das respostas abertas (pesquisa qualitativa). Mesma postura
+ * de anonimato da submeterResposta: valida token + campanha 'aberta', grava só
+ * campanha + GHE (sem vínculo com a pessoa), via service role.
+ */
+export async function submeterRespostaQualitativa(
+  input: RespostaQualitativaInput,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const parsed = respostaQualitativaSchema.safeParse(input)
+  if (!parsed.success) {
+    return { ok: false, error: parsed.error.errors[0]?.message ?? "Dados inválidos" }
+  }
+
+  const admin = createAdminClient()
+  const { data: convite } = await admin
+    .from("psi_convite")
+    .select("campanha_id, pgr_ghe_id, empresa_id, psi_campanha(status)")
+    .eq("token", parsed.data.token)
+    .maybeSingle()
+
+  if (!convite) return { ok: false, error: "Link inválido ou expirado." }
+  const campanha = Array.isArray(convite.psi_campanha) ? convite.psi_campanha[0] : convite.psi_campanha
+  if (campanha?.status !== "aberta") {
+    return { ok: false, error: "Esta pesquisa não está aberta para respostas no momento." }
+  }
+
+  const linhas = parsed.data.respostas.map((r) => ({
+    empresa_id: convite.empresa_id,
+    campanha_id: convite.campanha_id,
+    pgr_ghe_id: convite.pgr_ghe_id,
+    pergunta_idx: r.pergunta_idx,
+    pergunta_texto: r.pergunta_texto,
+    resposta_texto: r.resposta_texto,
+  }))
+  const { error } = await admin.from("psi_resposta_qualitativa").insert(linhas)
+  if (error) return { ok: false, error: error.message }
   return { ok: true }
 }
 

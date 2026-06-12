@@ -11,6 +11,7 @@ import {
   definicaoArmazenada,
   INSTRUMENTO_PADRAO,
 } from "@/lib/psicossocial/instrumentos"
+import { PERGUNTAS_QUALITATIVAS_PADRAO } from "@/lib/psicossocial/qualitativo"
 import {
   processarInstrumento,
   probabilidadeDoScore,
@@ -82,6 +83,7 @@ export async function criarCampanha(formData: FormData): Promise<ActionResult> {
     data_inicio: formData.get("data_inicio"),
     data_fim: (formData.get("data_fim") as string) || null,
     min_respondentes: formData.get("min_respondentes") || 5,
+    modo_qualitativo: formData.get("modo_qualitativo") || "nenhum",
   })
   if (!parsed.success) return { error: parsed.error.errors[0]?.message ?? "Dados inválidos" }
 
@@ -113,6 +115,9 @@ export async function criarCampanha(formData: FormData): Promise<ActionResult> {
       data_inicio: parsed.data.data_inicio,
       data_fim: parsed.data.data_fim,
       min_respondentes: parsed.data.min_respondentes,
+      modo_qualitativo: parsed.data.modo_qualitativo,
+      perguntas_qualitativas:
+        parsed.data.modo_qualitativo === "nenhum" ? null : PERGUNTAS_QUALITATIVAS_PADRAO,
       status: "rascunho",
     })
     .select("id")

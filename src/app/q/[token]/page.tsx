@@ -2,6 +2,7 @@ import { unstable_noStore as noStore } from "next/cache"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { flattenItens, type InstrumentoDef } from "@/lib/psicossocial/scoring"
 import { ESCALA_PADRAO, type DefinicaoArmazenada } from "@/lib/psicossocial/instrumentos"
+import { perguntasDaCampanha, type ModoQualitativo } from "@/lib/psicossocial/qualitativo"
 import { logger } from "@/lib/logger"
 import { QuestionarioForm } from "./questionario-form"
 import { BrandLogo } from "@/components/brand-logo"
@@ -18,7 +19,7 @@ export default async function ColetaPage({ params }: { params: Promise<{ token: 
 
   const { data: convite, error } = await admin
     .from("psi_convite")
-    .select("token, psi_campanha(titulo, versao_aplicada, status, psi_instrumento(definicao))")
+    .select("token, psi_campanha(titulo, versao_aplicada, status, modo_qualitativo, perguntas_qualitativas, psi_instrumento(definicao))")
     .eq("token", token)
     .maybeSingle()
 
@@ -49,6 +50,14 @@ export default async function ColetaPage({ params }: { params: Promise<{ token: 
   const itens = valido && definicao ? flattenItens(definicao as InstrumentoDef, versao) : []
   const escala = definicao?.escala ?? ESCALA_PADRAO
   const instrucao = definicao?.instrucao ?? "Pense nas suas condições de trabalho e marque a frequência."
+
+  // Pesquisa qualitativa (perguntas abertas) — configuração da campanha.
+  const modoQualitativo = ((campanha as { modo_qualitativo?: string } | null)?.modo_qualitativo ?? "nenhum") as ModoQualitativo
+  const perguntasQualitativas =
+    valido && modoQualitativo !== "nenhum"
+      ? perguntasDaCampanha((campanha as { perguntas_qualitativas?: unknown } | null)?.perguntas_qualitativas)
+      : []
+
   const marca = await getMarca()
 
   return (
@@ -63,7 +72,15 @@ export default async function ColetaPage({ params }: { params: Promise<{ token: 
 
       <main className="mx-auto max-w-2xl p-4">
         {valido ? (
-          <QuestionarioForm token={token} titulo={campanha?.titulo ?? "Pesquisa"} itens={itens} escala={escala} instrucao={instrucao} />
+          <QuestionarioForm
+            token={token}
+            titulo={campanha?.titulo ?? "Pesquisa"}
+            itens={itens}
+            escala={escala}
+            instrucao={instrucao}
+            modoQualitativo={modoQualitativo}
+            perguntasQualitativas={perguntasQualitativas}
+          />
         ) : (
           <div className="mt-10 rounded-lg border bg-background p-6 text-center">
             <h1 className="text-lg font-semibold">Pesquisa indisponível</h1>

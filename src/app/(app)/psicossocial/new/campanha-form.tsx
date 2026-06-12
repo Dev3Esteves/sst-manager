@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Loader2 } from "lucide-react"
 import { criarCampanha } from "../actions"
 import { INSTRUMENTOS, getInstrumento, INSTRUMENTO_PADRAO, NATUREZA_LABEL } from "@/lib/psicossocial/instrumentos"
+import { PERGUNTAS_QUALITATIVAS_PADRAO } from "@/lib/psicossocial/qualitativo"
 
 export function CampanhaForm({ pgrs }: { pgrs: { id: string; label: string }[] }) {
   const [pgrId, setPgrId] = useState(pgrs[0]?.id ?? "")
@@ -17,6 +18,7 @@ export function CampanhaForm({ pgrs }: { pgrs: { id: string; label: string }[] }
   const instrInfo = getInstrumento(instrumentoKey)
   const versoesDisponiveis = instrInfo?.versoes ?? []
   const [versao, setVersao] = useState<string>(versoesDisponiveis[0]?.value ?? "curto")
+  const [modoQualitativo, setModoQualitativo] = useState<"nenhum" | "integrado" | "separado">("nenhum")
   const [erro, setErro] = useState<string | null>(null)
   const [pending, startTransition] = useTransition()
 
@@ -30,6 +32,7 @@ export function CampanhaForm({ pgrs }: { pgrs: { id: string; label: string }[] }
     formData.set("pgr_id", pgrId)
     formData.set("instrumento_key", instrumentoKey)
     formData.set("versao_aplicada", versao)
+    formData.set("modo_qualitativo", modoQualitativo)
     startTransition(async () => {
       const r = await criarCampanha(formData)
       if (r && "error" in r) setErro(r.error)
@@ -104,6 +107,30 @@ export function CampanhaForm({ pgrs }: { pgrs: { id: string; label: string }[] }
             <Label htmlFor="data_fim">Data de fim</Label>
             <Input id="data_fim" name="data_fim" type="date" />
           </div>
+
+          <div className="space-y-2 md:col-span-2">
+            <Label>Pesquisa qualitativa (perguntas abertas)</Label>
+            <Select value={modoQualitativo} onValueChange={(v) => setModoQualitativo(v as typeof modoQualitativo)}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="nenhum">Não usar (somente questionário quantitativo)</SelectItem>
+                <SelectItem value="integrado">Integrada — perguntas abertas antes do questionário</SelectItem>
+                <SelectItem value="separado">Separada — campanha só com perguntas abertas</SelectItem>
+              </SelectContent>
+            </Select>
+            {modoQualitativo !== "nenhum" && (
+              <div className="rounded-md border bg-muted/30 p-3 text-sm">
+                <p className="text-xs text-muted-foreground mb-1">Perguntas abertas (template padrão):</p>
+                <ul className="list-disc pl-5 space-y-0.5 text-muted-foreground">
+                  {PERGUNTAS_QUALITATIVAS_PADRAO.map((p, i) => <li key={i}>{p}</li>)}
+                </ul>
+                <p className="text-[11px] text-muted-foreground mt-2">
+                  Respostas anônimas, com síntese por IA e supressão por grupo (k-anonimato).
+                </p>
+              </div>
+            )}
+          </div>
+
           {erro && <p className="text-sm text-destructive md:col-span-2" role="alert">{erro}</p>}
         </CardContent>
       </Card>

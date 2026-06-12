@@ -1,9 +1,10 @@
 "use client"
 
 import { useState, useTransition } from "react"
-import { Loader2, CheckCircle2, ShieldCheck, FileText } from "lucide-react"
+import { Loader2, CheckCircle2, ShieldCheck, FileText, MessageSquareText } from "lucide-react"
 import { FAIXAS_ETARIAS, SEXOS } from "@/lib/validations/psicossocial"
-import { submeterResposta, registrarRecusa } from "./actions"
+import { INSTRUCAO_QUALITATIVA, type ModoQualitativo } from "@/lib/psicossocial/qualitativo"
+import { submeterResposta, submeterRespostaQualitativa, registrarRecusa } from "./actions"
 
 type Item = { id: string; dominio: string; dimensao: string; texto: string; reverso: boolean }
 type Escala = { rotulos: string[]; valores: number[] }
@@ -14,14 +15,19 @@ export function QuestionarioForm({
   itens,
   escala,
   instrucao,
+  modoQualitativo = "nenhum",
+  perguntasQualitativas = [],
 }: {
   token: string
   titulo: string
   itens: Item[]
   escala: Escala
   instrucao: string
+  modoQualitativo?: ModoQualitativo
+  perguntasQualitativas?: string[]
 }) {
   const [respostas, setRespostas] = useState<Record<string, number>>({})
+  const [qual, setQual] = useState<Record<number, string>>({})
   const [faixaEtaria, setFaixaEtaria] = useState<string>("")
   const [sexo, setSexo] = useState<string>("")
   const [erro, setErro] = useState<string | null>(null)
@@ -31,6 +37,9 @@ export function QuestionarioForm({
   const [consentido, setConsentido] = useState(false)
   const [recusado, setRecusado] = useState(false)
   const [motivo, setMotivo] = useState("")
+
+  const temQuantitativo = modoQualitativo !== "separado"
+  const temQualitativo = modoQualitativo !== "nenhum" && perguntasQualitativas.length > 0
 
   function recusar() {
     setErro(null)
@@ -44,21 +53,42 @@ export function QuestionarioForm({
   const total = itens.length
   const respondidos = Object.keys(respostas).length
 
+  function montarQualitativas() {
+    return perguntasQualitativas
+      .map((p, idx) => ({ pergunta_idx: idx, pergunta_texto: p, resposta_texto: (qual[idx] ?? "").trim() }))
+      .filter((r) => r.resposta_texto.length > 0)
+  }
+
   function enviar() {
     setErro(null)
-    if (respondidos < total) {
+    // Valida o quantitativo quando aplicável
+    if (temQuantitativo && respondidos < total) {
       setErro(`Responda todas as ${total} perguntas (${respondidos}/${total}).`)
       return
     }
+    const qualitativas = montarQualitativas()
+    // No modo separado (só abertas), exige pelo menos uma resposta
+    if (!temQuantitativo && qualitativas.length === 0) {
+      setErro("Responda pelo menos uma das perguntas abertas.")
+      return
+    }
     startTransition(async () => {
-      const r = await submeterResposta({
-        token,
-        faixa_etaria: (faixaEtaria || null) as never,
-        sexo: (sexo || null) as never,
-        itens: itens.map((it) => ({ item_id: it.id, valor: respostas[it.id] })),
-      })
-      if (r.ok) setEnviado(true)
-      else setErro(r.error)
+      // Envia as abertas (se houver) — anônimo
+      if (temQualitativo && qualitativas.length > 0) {
+        const rq = await submeterRespostaQualitativa({ token, respostas: qualitativas })
+        if (!rq.ok) { setErro(rq.error); return }
+      }
+      // Envia o quantitativo (se aplicável)
+      if (temQuantitativo) {
+        const r = await submeterResposta({
+          token,
+          faixa_etaria: (faixaEtaria || null) as never,
+          sexo: (sexo || null) as never,
+          itens: itens.map((it) => ({ item_id: it.id, valor: respostas[it.id] })),
+        })
+        if (!r.ok) { setErro(r.error); return }
+      }
+      setEnviado(true)
     })
   }
 
@@ -159,38 +189,63 @@ export function QuestionarioForm({
 
       <div className="rounded-lg border bg-background p-4">
         <h1 className="font-semibold">{titulo}</h1>
-        <p className="text-sm text-muted-foreground">{instrucao}</p>
-        <div className="mt-3 grid grid-cols-2 gap-3">
-          <label className="text-sm">
-            Faixa etária (opcional)
-            <select
-              value={faixaEtaria}
-              onChange={(e) => setFaixaEtaria(e.target.value)}
-              className="mt-1 w-full rounded-md border bg-background px-2 py-1.5 text-sm"
-            >
-              <option value="">—</option>
-              {FAIXAS_ETARIAS.map((f) => (
-                <option key={f} value={f}>{f}</option>
-              ))}
-            </select>
-          </label>
-          <label className="text-sm">
-            Sexo (opcional)
-            <select
-              value={sexo}
-              onChange={(e) => setSexo(e.target.value)}
-              className="mt-1 w-full rounded-md border bg-background px-2 py-1.5 text-sm"
-            >
-              <option value="">—</option>
-              {SEXOS.map((s) => (
-                <option key={s.value} value={s.value}>{s.label}</option>
-              ))}
-            </select>
-          </label>
-        </div>
+        <p className="text-sm text-muted-foreground">{temQuantitativo ? instrucao : INSTRUCAO_QUALITATIVA}</p>
+        {temQuantitativo && (
+          <div className="mt-3 grid grid-cols-2 gap-3">
+            <label className="text-sm">
+              Faixa etária (opcional)
+              <select
+                value={faixaEtaria}
+                onChange={(e) => setFaixaEtaria(e.target.value)}
+                className="mt-1 w-full rounded-md border bg-background px-2 py-1.5 text-sm"
+              >
+                <option value="">—</option>
+                {FAIXAS_ETARIAS.map((f) => (
+                  <option key={f} value={f}>{f}</option>
+                ))}
+              </select>
+            </label>
+            <label className="text-sm">
+              Sexo (opcional)
+              <select
+                value={sexo}
+                onChange={(e) => setSexo(e.target.value)}
+                className="mt-1 w-full rounded-md border bg-background px-2 py-1.5 text-sm"
+              >
+                <option value="">—</option>
+                {SEXOS.map((s) => (
+                  <option key={s.value} value={s.value}>{s.label}</option>
+                ))}
+              </select>
+            </label>
+          </div>
+        )}
       </div>
 
-      {itens.map((it, idx) => (
+      {temQualitativo && (
+        <div className="rounded-lg border bg-background p-4 space-y-4">
+          <div className="flex items-center gap-2 text-sm font-semibold">
+            <MessageSquareText className="h-4 w-4 text-primary" />
+            Perguntas abertas
+          </div>
+          <p className="text-xs text-muted-foreground">{INSTRUCAO_QUALITATIVA}</p>
+          {perguntasQualitativas.map((p, idx) => (
+            <label key={idx} className="block text-sm">
+              {idx + 1}. {p}
+              <textarea
+                value={qual[idx] ?? ""}
+                onChange={(e) => setQual((prev) => ({ ...prev, [idx]: e.target.value }))}
+                rows={3}
+                maxLength={4000}
+                className="mt-1 w-full rounded-md border bg-background px-2 py-1.5 text-sm"
+                placeholder="Sua resposta (anônima)…"
+              />
+            </label>
+          ))}
+        </div>
+      )}
+
+      {temQuantitativo && itens.map((it, idx) => (
         <div key={it.id} className="rounded-lg border bg-background p-4">
           <div className="text-[11px] uppercase tracking-wider text-primary font-semibold">{it.dominio}</div>
           <p className="mt-1 text-sm font-medium">{idx + 1}. {it.texto}</p>
@@ -222,7 +277,7 @@ export function QuestionarioForm({
       )}
 
       <div className="sticky bottom-0 -mx-4 border-t bg-background/95 px-4 py-3 backdrop-blur">
-        <div className="mb-2 text-xs text-muted-foreground">{respondidos}/{total} respondidas</div>
+        {temQuantitativo && <div className="mb-2 text-xs text-muted-foreground">{respondidos}/{total} respondidas</div>}
         <button
           type="button"
           onClick={enviar}

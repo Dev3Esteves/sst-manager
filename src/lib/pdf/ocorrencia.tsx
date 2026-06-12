@@ -2,6 +2,8 @@ import { Text, View } from "@react-pdf/renderer"
 import { BasePdfDocument, pdfStyles, buildQrDataUrl, type DocumentoMeta } from "./base"
 import type { OcorrenciaPdfData } from "./ocorrencia-builder"
 import { formatCNPJ } from "@/lib/validations/shared"
+import { BodyMapPdf } from "./body-map"
+import { REGIOES_LABELS, type RegiaoCorpo } from "@/lib/body-regions"
 
 function formatDate(iso: string | null | undefined): string {
   if (!iso) return "—"
@@ -88,6 +90,17 @@ export async function renderOcorrenciaPdf(data: OcorrenciaPdfData, appUrl: strin
           )}
         </View>
       </View>
+
+      {/* Mapa do corpo — regiões atingidas (acidentes) */}
+      {data.regioes_corpo && data.regioes_corpo.length > 0 && (
+        <View style={pdfStyles.section} wrap={false}>
+          <Text style={pdfStyles.sectionTitle}>{sectionNum++}. Mapa do corpo — regiões atingidas</Text>
+          <BodyMapPdf regioes={data.regioes_corpo} />
+          <Text style={{ fontSize: 8.5, color: "#475569", textAlign: "center", marginTop: 4 }}>
+            {data.regioes_corpo.map((r) => REGIOES_LABELS[r as RegiaoCorpo] ?? r).join(" · ")}
+          </Text>
+        </View>
+      )}
 
       {/* Descrição */}
       <View style={pdfStyles.section}>

@@ -11,6 +11,7 @@ export type OcorrenciaPdfData = {
   gravidade: string | null
   gravidade_label: string | null
   parte_corpo_atingida: string | null
+  regioes_corpo: string[] | null
   natureza_lesao: string | null
   agente_causador: string | null
   dias_afastamento: number | null
@@ -78,6 +79,7 @@ export async function buildOcorrenciaPdfData(
       gravidade: oc.gravidade,
       gravidade_label: oc.gravidade ? GRAVIDADE[oc.gravidade] ?? oc.gravidade : null,
       parte_corpo_atingida: oc.parte_corpo_atingida,
+      regioes_corpo: (oc.regioes_corpo as string[] | null) ?? null,
       natureza_lesao: oc.natureza_lesao,
       agente_causador: oc.agente_causador,
       dias_afastamento: oc.dias_afastamento,

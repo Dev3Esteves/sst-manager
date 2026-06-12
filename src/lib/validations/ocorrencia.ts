@@ -20,6 +20,7 @@ export const ocorrenciaSchema = z.object({
   colaborador_id: z.string().uuid().optional().nullable(),
   gravidade: z.enum(["leve", "moderado", "grave", "fatal"]).optional().nullable(),
   parte_corpo_atingida: z.string().optional().nullable(),
+  regioes_corpo: z.array(z.string()).optional().nullable(),
   natureza_lesao: z.string().optional().nullable(),
   agente_causador: z.string().optional().nullable(),
   dias_afastamento: z.coerce.number().int().min(0).optional().nullable(),

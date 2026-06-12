@@ -27,6 +27,7 @@ type OcorrenciaExistente = {
   colaborador_id: string | null
   gravidade: string | null
   parte_corpo_atingida: string | null
+  regioes_corpo?: string[] | null
   natureza_lesao: string | null
   agente_causador: string | null
   dias_afastamento: number | null
@@ -62,7 +63,9 @@ export function OcorrenciaForm({
     const ol = obraLocais.find((o) => o.id === id)
     if (ol) setLocal(`${ol.obra_nome} — ${ol.nome}`)
   }
-  const [regioesAtingidas, setRegioesAtingidas] = useState<RegiaoCorpo[]>([])
+  const [regioesAtingidas, setRegioesAtingidas] = useState<RegiaoCorpo[]>(
+    (ocorrencia?.regioes_corpo as RegiaoCorpo[] | undefined) ?? [],
+  )
   const [parteCorpoAtingida, setParteCorpoAtingida] = useState(ocorrencia?.parte_corpo_atingida ?? "")
   const [naturezaLesao, setNaturezaLesao] = useState(ocorrencia?.natureza_lesao ?? templateInit?.natureza_lesao_sugerida ?? "")
   const [agenteCausador, setAgenteCausador] = useState(ocorrencia?.agente_causador ?? templateInit?.agente_causador_sugerido ?? "")
@@ -86,6 +89,7 @@ export function OcorrenciaForm({
       colaborador_id: colabId || null,
       gravidade: (gravidade as OcorrenciaInput["gravidade"]) || null,
       parte_corpo_atingida: parteCorpoFinal,
+      regioes_corpo: regioesAtingidas.length > 0 ? regioesAtingidas : null,
       natureza_lesao: naturezaLesao || null,
       agente_causador: agenteCausador || null,
       obra_local_id: obraLocalId || null,

@@ -145,7 +145,7 @@ export async function renderPsicossocialRelatorioPdf(
             <Cell w="12%" head>Nível</Cell>
           </View>
           {data.resultados.map((r, i) => (
-            <View key={i} style={i === data.resultados.length - 1 ? pdfStyles.tableRowLast : pdfStyles.tableRow}>
+            <View key={i} wrap={false} style={i === data.resultados.length - 1 ? pdfStyles.tableRowLast : pdfStyles.tableRow}>
               <Cell w="16%">{r.gheCodigo}</Cell>
               <Cell w="44%">{r.dimensao}</Cell>
               <Cell w="14%">{r.suprimido ? "—" : r.score}</Cell>
@@ -176,7 +176,7 @@ export async function renderPsicossocialRelatorioPdf(
               <Cell w="20%" head>Nível</Cell>
             </View>
             {prioritarios.map((r, i) => (
-              <View key={i} style={i === prioritarios.length - 1 ? pdfStyles.tableRowLast : pdfStyles.tableRow}>
+              <View key={i} wrap={false} style={i === prioritarios.length - 1 ? pdfStyles.tableRowLast : pdfStyles.tableRow}>
                 <Cell w="16%">{r.gheCodigo}</Cell>
                 <Cell w="50%">{r.dimensao}</Cell>
                 <Cell w="14%">{r.score}</Cell>

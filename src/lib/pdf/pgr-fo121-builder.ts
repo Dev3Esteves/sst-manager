@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
+import { formatCNPJ } from "@/lib/validations/shared"
 import {
   ACAO_STATUS_LABEL,
   CATEGORIA_RISCO_LABEL,
@@ -409,7 +410,7 @@ export async function buildPgrFo121Data(
     empresa_logo_url: contratada.logo_url,
 
     contratada_razao_social: contratada.razao_social,
-    contratada_cnpj: contratada.cnpj,
+    contratada_cnpj: formatCNPJ(contratada.cnpj),
     contratada_endereco: formatEndereco(contratada.endereco),
     contratada_telefone: formatTelefone(contratada.telefones),
 

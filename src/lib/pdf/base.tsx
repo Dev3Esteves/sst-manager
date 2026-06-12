@@ -6,7 +6,9 @@ import type { ReactNode } from "react"
 export const pdfStyles = StyleSheet.create({
   page: {
     padding: 40,
-    paddingBottom: 60,
+    // Reserva espaço para o rodapé fixo (QR de 56pt em bottom:24 → ~84pt); evita sobreposição
+    // do conteúdo com o rodapé em relatórios longos (ex.: tabelas do psicossocial).
+    paddingBottom: 92,
     fontSize: 10,
     fontFamily: "Helvetica",
     color: "#111827",

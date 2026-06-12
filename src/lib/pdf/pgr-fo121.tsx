@@ -363,7 +363,7 @@ function CaracterizacaoPage({ data }: { data: PgrFo121Data }) {
         </View>
         <View style={styles.tr}>
           <Text style={[styles.th, { flex: 1.2 }]}>CNPJ</Text>
-          <Text style={[styles.tdLast, { flex: 2, fontFamily: "Courier" }]}>
+          <Text style={[styles.tdLast, { flex: 2 }]}>
             {data.contratada_cnpj}
           </Text>
         </View>
@@ -404,7 +404,7 @@ function CaracterizacaoPage({ data }: { data: PgrFo121Data }) {
         </View>
         <View style={styles.tr}>
           <Text style={[styles.th, { flex: 1.2 }]}>CNO</Text>
-          <Text style={[styles.tdLast, { flex: 2, fontFamily: "Courier" }]}>
+          <Text style={[styles.tdLast, { flex: 2 }]}>
             {data.obra_cno ?? "—"}
           </Text>
         </View>

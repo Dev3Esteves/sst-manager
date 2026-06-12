@@ -48,14 +48,18 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginBottom: 18,
   },
+  nomeBloco: {
+    width: "70%",
+    alignSelf: "center",
+    borderBottom: "1 solid #94a3b8",
+    paddingBottom: 4,
+    marginBottom: 4,
+  },
   nomeAluno: {
     fontSize: 22,
     fontWeight: "bold",
-    marginBottom: 4,
     textAlign: "center",
-    borderBottom: "1 solid #94a3b8",
-    paddingBottom: 4,
-    minWidth: 400,
+    width: "100%",
   },
   cpfAluno: { fontSize: 10, color: "#64748b", marginBottom: 16, textAlign: "center" },
   dataLocal: { fontSize: 10, marginTop: 10, textAlign: "center" },
@@ -73,10 +77,12 @@ const styles = StyleSheet.create({
   qrBox: { width: 70, height: 70 },
   numeroCertif: { fontSize: 9, color: "#64748b", marginTop: 4 },
 
-  versoTitulo: { fontSize: 14, fontWeight: "bold", marginBottom: 12, textAlign: "center", color: "#1e293b" },
+  versoTitulo: { fontSize: 14, fontWeight: "bold", marginBottom: 8, textAlign: "center", color: "#1e293b" },
   versoSecTitulo: { fontSize: 11, fontWeight: "bold", marginBottom: 4, color: "#1e293b" },
-  versoItem: { fontSize: 10, marginBottom: 3, paddingLeft: 12 },
-  versoParagrafo: { fontSize: 10, marginBottom: 8, lineHeight: 1.4 },
+  versoItem: { fontSize: 10, marginBottom: 2, paddingLeft: 12, lineHeight: 1.25 },
+  versoLista: { flexDirection: "row", flexWrap: "wrap" },
+  versoItemCol: { width: "50%", fontSize: 10, marginBottom: 2, paddingRight: 10, lineHeight: 1.25 },
+  versoParagrafo: { fontSize: 10, marginBottom: 6, lineHeight: 1.3 },
   versoFooter: { fontSize: 8, color: "#64748b", textAlign: "center", marginTop: "auto" },
 })
 
@@ -105,6 +111,20 @@ function formatPtBr(iso: string | null | undefined): string {
   if (!iso) return "—"
   const [y, m, dd] = iso.slice(0, 10).split("-")
   return `${dd}/${m}/${y}`
+}
+
+/**
+ * Limpa um item de conteúdo programático para exibição.
+ * Origem dos dados (colar do Word) costuma trazer marcadores Wingdings literais
+ * — "ü"/"" (checkmark), bullets e TABs — que se sobrepõem ao texto no PDF.
+ * Remove esses prefixos e normaliza espaços; o bullet "•" é adicionado na renderização.
+ */
+export function limparItemConteudo(item: string): string {
+  return item
+    .replace(/[\t ]+/g, " ") // TAB e NBSP viram espaço
+    .replace(/^[\s•·ü✓✔•·\-–—*]+/, "") // marcadores à esquerda
+    .replace(/\s{2,}/g, " ")
+    .trim()
 }
 
 /**
@@ -165,7 +185,9 @@ export async function renderCertificadoPdf(d: CertificadoData) {
             <Text style={styles.certificadoTitulo}>CERTIFICADO</Text>
             <Text style={styles.certificadoSubtitulo}>DE PARTICIPAÇÃO EM TREINAMENTO</Text>
 
-            <Text style={styles.nomeAluno}>{d.aluno_nome}</Text>
+            <View style={styles.nomeBloco}>
+              <Text style={styles.nomeAluno}>{d.aluno_nome}</Text>
+            </View>
             <Text style={styles.cpfAluno}>CPF {d.aluno_cpf}</Text>
 
             <Text style={styles.textoCorpo}>{textoCorpo}</Text>
@@ -201,7 +223,7 @@ export async function renderCertificadoPdf(d: CertificadoData) {
       {/* VERSO */}
       <Page size="A4" orientation="landscape" style={styles.page}>
         <View style={styles.borderOuter}>
-          <View style={{ ...styles.borderInner, alignItems: "stretch" }}>
+          <View style={{ ...styles.borderInner, alignItems: "stretch", padding: 20, paddingTop: 20 }}>
             <Text style={styles.versoTitulo}>CONTEÚDO PROGRAMÁTICO E BASE LEGAL</Text>
 
             <Text style={styles.versoSecTitulo}>Treinamento</Text>
@@ -211,9 +233,11 @@ export async function renderCertificadoPdf(d: CertificadoData) {
 
             <Text style={styles.versoSecTitulo}>Conteúdo programático</Text>
             {(d.conteudo_programatico ?? []).length > 0 ? (
-              (d.conteudo_programatico ?? []).map((item, i) => (
-                <Text key={i} style={styles.versoItem}>• {item}</Text>
-              ))
+              <View style={styles.versoLista}>
+                {(d.conteudo_programatico ?? []).map((item, i) => (
+                  <Text key={i} style={styles.versoItemCol}>• {limparItemConteudo(item)}</Text>
+                ))}
+              </View>
             ) : (
               <Text style={styles.versoItem}>• Conforme ementa da NR aplicável e requisitos do empregador.</Text>
             )}

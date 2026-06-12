@@ -48,58 +48,42 @@ export async function renderOcorrenciaPdf(data: OcorrenciaPdfData, appUrl: strin
         <View style={pdfStyles.table}>
           <View style={pdfStyles.tableRow}>
             <Text style={[pdfStyles.tableCellHead, { flex: 1 }]}>Tipo</Text>
-            <Text style={[pdfStyles.tableCell, { flex: 1 }]}>{data.tipo_label}</Text>
+            <Text style={[pdfStyles.tableCell, { flex: 2 }]}>{data.tipo_label}</Text>
             <Text style={[pdfStyles.tableCellHead, { flex: 1 }]}>Data</Text>
-            <Text style={[pdfStyles.tableCell, { flex: 1, borderRightWidth: 0 }]}>{formatDate(data.data_ocorrencia)}</Text>
+            <Text style={[pdfStyles.tableCell, { flex: 2, borderRightWidth: 0 }]}>{formatDate(data.data_ocorrencia)}</Text>
           </View>
           <View style={pdfStyles.tableRow}>
             <Text style={[pdfStyles.tableCellHead, { flex: 1 }]}>Local</Text>
-            <Text style={[pdfStyles.tableCell, { flex: 3, borderRightWidth: 0 }]}>{data.local}</Text>
+            <Text style={[pdfStyles.tableCell, { flex: 5, borderRightWidth: 0 }]}>{data.local}</Text>
           </View>
           <View style={pdfStyles.tableRow}>
             <Text style={[pdfStyles.tableCellHead, { flex: 1 }]}>Envolvido</Text>
-            <Text style={[pdfStyles.tableCell, { flex: 1 }]}>{data.colaborador_nome ?? "Não informado"}</Text>
+            <Text style={[pdfStyles.tableCell, { flex: 2 }]}>{data.colaborador_nome ?? "Não informado"}</Text>
             <Text style={[pdfStyles.tableCellHead, { flex: 1 }]}>Status</Text>
-            <Text style={[pdfStyles.tableCell, { flex: 1, borderRightWidth: 0, textTransform: "capitalize" }]}>{data.status}</Text>
+            <Text style={[pdfStyles.tableCell, { flex: 2, borderRightWidth: 0, textTransform: "capitalize" }]}>{data.status}</Text>
           </View>
           {data.gravidade && (
             <View style={pdfStyles.tableRow}>
               <Text style={[pdfStyles.tableCellHead, { flex: 1 }]}>Gravidade</Text>
-              <Text style={[pdfStyles.tableCell, { flex: 3, borderRightWidth: 0, color: gravidadeColor(data.gravidade), fontWeight: "bold" }]}>
+              <Text style={[pdfStyles.tableCell, { flex: 5, borderRightWidth: 0, color: gravidadeColor(data.gravidade), fontWeight: "bold" }]}>
                 {data.gravidade_label}
               </Text>
             </View>
           )}
           {(data.parte_corpo_atingida || data.natureza_lesao) && (
             <View style={pdfStyles.tableRow}>
-              {data.parte_corpo_atingida && (
-                <>
-                  <Text style={[pdfStyles.tableCellHead, { flex: 1 }]}>Parte atingida</Text>
-                  <Text style={[pdfStyles.tableCell, { flex: 1 }]}>{data.parte_corpo_atingida}</Text>
-                </>
-              )}
-              {data.natureza_lesao && (
-                <>
-                  <Text style={[pdfStyles.tableCellHead, { flex: 1 }]}>Natureza da lesão</Text>
-                  <Text style={[pdfStyles.tableCell, { flex: 1, borderRightWidth: 0 }]}>{data.natureza_lesao}</Text>
-                </>
-              )}
+              <Text style={[pdfStyles.tableCellHead, { flex: 1 }]}>Parte atingida</Text>
+              <Text style={[pdfStyles.tableCell, { flex: 2 }]}>{data.parte_corpo_atingida ?? "—"}</Text>
+              <Text style={[pdfStyles.tableCellHead, { flex: 1 }]}>Natureza da lesão</Text>
+              <Text style={[pdfStyles.tableCell, { flex: 2, borderRightWidth: 0 }]}>{data.natureza_lesao ?? "—"}</Text>
             </View>
           )}
           {(data.agente_causador || data.dias_afastamento != null) && (
             <View style={pdfStyles.tableRowLast}>
-              {data.agente_causador && (
-                <>
-                  <Text style={[pdfStyles.tableCellHead, { flex: 1 }]}>Agente causador</Text>
-                  <Text style={[pdfStyles.tableCell, { flex: 1 }]}>{data.agente_causador}</Text>
-                </>
-              )}
-              {data.dias_afastamento != null && (
-                <>
-                  <Text style={[pdfStyles.tableCellHead, { flex: 1 }]}>Dias afastamento</Text>
-                  <Text style={[pdfStyles.tableCell, { flex: 1, borderRightWidth: 0 }]}>{data.dias_afastamento}</Text>
-                </>
-              )}
+              <Text style={[pdfStyles.tableCellHead, { flex: 1 }]}>Agente causador</Text>
+              <Text style={[pdfStyles.tableCell, { flex: 2 }]}>{data.agente_causador ?? "—"}</Text>
+              <Text style={[pdfStyles.tableCellHead, { flex: 1 }]}>Dias afastamento</Text>
+              <Text style={[pdfStyles.tableCell, { flex: 2, borderRightWidth: 0 }]}>{data.dias_afastamento != null ? data.dias_afastamento : "—"}</Text>
             </View>
           )}
         </View>

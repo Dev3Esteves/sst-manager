@@ -61,13 +61,13 @@ export async function renderDdsPdf(meta: DocumentoMeta, conteudo: DdsConteudo) {
         <View style={pdfStyles.table}>
           <View style={pdfStyles.tableRow}>
             <Text style={[pdfStyles.tableCellHead, { flex: 1 }]}>Tema</Text>
-            <Text style={[pdfStyles.tableCell, { flex: 3, borderRightWidth: 0 }]}>{conteudo.tema}</Text>
+            <Text style={[pdfStyles.tableCell, { flex: 5, borderRightWidth: 0 }]}>{conteudo.tema}</Text>
           </View>
           <View style={pdfStyles.tableRow}>
             <Text style={[pdfStyles.tableCellHead, { flex: 1 }]}>Data</Text>
-            <Text style={[pdfStyles.tableCell, { flex: 1 }]}>{formatDate(conteudo.data_dds)}</Text>
+            <Text style={[pdfStyles.tableCell, { flex: 2 }]}>{formatDate(conteudo.data_dds)}</Text>
             <Text style={[pdfStyles.tableCellHead, { flex: 1 }]}>Horário</Text>
-            <Text style={[pdfStyles.tableCell, { flex: 1, borderRightWidth: 0 }]}>
+            <Text style={[pdfStyles.tableCell, { flex: 2, borderRightWidth: 0 }]}>
               {conteudo.hora_inicio ?? "—"}
             </Text>
           </View>
@@ -75,13 +75,13 @@ export async function renderDdsPdf(meta: DocumentoMeta, conteudo: DdsConteudo) {
             <Text style={[pdfStyles.tableCellHead, { flex: 1 }]}>Local</Text>
             <Text style={[pdfStyles.tableCell, { flex: 2 }]}>{conteudo.local}</Text>
             <Text style={[pdfStyles.tableCellHead, { flex: 1 }]}>Duração</Text>
-            <Text style={[pdfStyles.tableCell, { flex: 1, borderRightWidth: 0 }]}>
+            <Text style={[pdfStyles.tableCell, { flex: 2, borderRightWidth: 0 }]}>
               {conteudo.duracao_minutos} min
             </Text>
           </View>
           <View style={pdfStyles.tableRowLast}>
             <Text style={[pdfStyles.tableCellHead, { flex: 1 }]}>Mediador</Text>
-            <Text style={[pdfStyles.tableCell, { flex: 3, borderRightWidth: 0 }]}>
+            <Text style={[pdfStyles.tableCell, { flex: 5, borderRightWidth: 0 }]}>
               {conteudo.mediador_nome}
               {conteudo.mediador_cargo ? ` — ${conteudo.mediador_cargo}` : ""}
             </Text>

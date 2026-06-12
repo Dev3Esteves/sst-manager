@@ -18,6 +18,14 @@ export type RelatorioResultado = {
   suprimido: boolean
 }
 
+export type RelatorioQualitativoGhe = {
+  gheCodigo: string
+  temas: { titulo: string; frequencia: number; resumo: string }[]
+  sugestoes: string[]
+  /** Trechos verbatim — apenas os aprovados na revisão (vazio se não revisado). */
+  verbatim: string[]
+}
+
 export type RelatorioPsiData = {
   empresaRazaoSocial: string
   empresaCnpj: string
@@ -33,6 +41,7 @@ export type RelatorioPsiData = {
   recusas?: number
   ghes: RelatorioGhe[]
   resultados: RelatorioResultado[]
+  qualitativo?: RelatorioQualitativoGhe[]
 }
 
 const COR: Record<string, string> = { verde: "#2e9e5b", amarelo: "#c98a00", vermelho: "#BE3A31" }
@@ -200,9 +209,42 @@ export async function renderPsicossocialRelatorioPdf(
         </Text>
       </View>
 
+      {/* Análise qualitativa (perguntas abertas) */}
+      {(data.qualitativo ?? []).length > 0 && (
+        <View style={pdfStyles.section}>
+          <Text style={pdfStyles.sectionTitle}>6. Análise qualitativa (perguntas abertas)</Text>
+          <Text style={[s.note, { marginBottom: 6 }]}>
+            Síntese temática das respostas abertas por GHE (de-identificada). GHE com menos de{" "}
+            {data.minRespondentes} respondentes é suprimido para preservar o anonimato.
+          </Text>
+          {(data.qualitativo ?? []).map((q, i) => (
+            <View key={i} style={{ marginBottom: 8 }} wrap={false}>
+              <Text style={{ fontSize: 10, fontWeight: "bold", color: "#1e293b" }}>{q.gheCodigo}</Text>
+              {q.temas.map((t, j) => (
+                <Text key={j} style={[s.note, { marginTop: 2 }]}>
+                  • <Text style={{ fontWeight: "bold" }}>{t.titulo}</Text> ({t.frequencia}): {t.resumo}
+                </Text>
+              ))}
+              {q.verbatim.length > 0 && (
+                <View style={{ marginTop: 2 }}>
+                  {q.verbatim.map((v, k) => (
+                    <Text key={k} style={[s.note, { fontStyle: "italic", color: "#475569" }]}>“{v}”</Text>
+                  ))}
+                </View>
+              )}
+              {q.sugestoes.length > 0 && (
+                <Text style={[s.note, { marginTop: 2 }]}>
+                  Sugestões: {q.sugestoes.join(" · ")}
+                </Text>
+              )}
+            </View>
+          ))}
+        </View>
+      )}
+
       {/* Metodologia */}
       <View style={pdfStyles.section}>
-        <Text style={pdfStyles.sectionTitle}>6. Nota metodológica e conformidade</Text>
+        <Text style={pdfStyles.sectionTitle}>{(data.qualitativo ?? []).length > 0 ? "7" : "6"}. Nota metodológica e conformidade</Text>
         <Text style={s.note}>
           Instrumento {data.instrumentoNome}, escala Likert convertida para 0–100, com aplicação da
           direção de risco por dimensão. A avaliação

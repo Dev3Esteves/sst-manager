@@ -79,6 +79,22 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
     suprimido: r.suprimido,
   }))
 
+  // Síntese qualitativa (perguntas abertas): temas/sugestões; verbatim só dos revisados.
+  const { data: sinteses } = await supabase
+    .from("psi_sintese_qualitativa")
+    .select("pgr_ghe_id, temas, sugestoes, verbatim_aprovado, revisado")
+    .eq("campanha_id", id)
+  const qualitativo = (sinteses ?? []).map((sq) => ({
+    gheCodigo: codigoPorGhe.get(sq.pgr_ghe_id as string) ?? "GHE",
+    temas: ((sq.temas ?? []) as { titulo: string; frequencia: number; resumo: string }[]).map((t) => ({
+      titulo: t.titulo,
+      frequencia: t.frequencia,
+      resumo: t.resumo,
+    })),
+    sugestoes: (sq.sugestoes ?? []) as string[],
+    verbatim: sq.revisado ? ((sq.verbatim_aprovado ?? []) as string[]) : [],
+  }))
+
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? ""
   const pdf = await renderPsicossocialRelatorioPdf(
     {
@@ -96,6 +112,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
       recusas: recusas ?? 0,
       ghes,
       resultados,
+      qualitativo,
     },
     appUrl,
     id,

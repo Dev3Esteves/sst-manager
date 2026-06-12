@@ -37,4 +37,25 @@ describe("renderPsicossocialRelatorioPdf", () => {
     const buf = await renderToBuffer(el)
     expect(buf.length).toBeGreaterThan(500)
   })
+
+  it("renderiza a seção qualitativa (temas + verbatim aprovado) sem quebrar", async () => {
+    const el = await renderPsicossocialRelatorioPdf(
+      {
+        ...base,
+        recusas: 2,
+        qualitativo: [
+          {
+            gheCodigo: "GHE 01",
+            temas: [{ titulo: "Carga de trabalho", frequencia: 4, resumo: "Relatos de excesso de demandas." }],
+            sugestoes: ["Revisar dimensionamento da equipe."],
+            verbatim: ["O ritmo é muito puxado no fim do mês."],
+          },
+        ],
+      },
+      "https://app.test",
+      "abcd1234-ef56-7890-abcd-ef1234567890",
+    )
+    const buf = await renderToBuffer(el)
+    expect(buf.length).toBeGreaterThan(1000)
+  })
 })

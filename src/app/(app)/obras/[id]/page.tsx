@@ -4,6 +4,7 @@ import { ObraForm } from "../obra-form"
 import { updateObra, inativarObra } from "../actions"
 import { InativarButton } from "@/components/shared/inativar-button"
 import { ObraLocaisManager } from "./obra-locais-manager"
+import { ObraEquipeManager } from "./obra-equipe-manager"
 
 export default async function EditObraPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -24,6 +25,12 @@ export default async function EditObraPage({ params }: { params: Promise<{ id: s
       .order("razao_social"),
     supabase.from("obra_locais").select("id, nome, tipo, ativo").eq("obra_id", id).order("created_at"),
   ])
+  const { data: equipe } = await supabase
+    .from("obra_equipe")
+    .select("id, cargo_titulo, quantidade")
+    .eq("obra_id", id)
+    .order("ordem")
+    .order("cargo_titulo")
   if (!obra) notFound()
 
   return (
@@ -38,6 +45,7 @@ export default async function EditObraPage({ params }: { params: Promise<{ id: s
         action={updateObra.bind(null, id)}
       />
       <ObraLocaisManager obraId={id} locais={locais ?? []} />
+      <ObraEquipeManager obraId={id} equipe={equipe ?? []} />
     </div>
   )
 }

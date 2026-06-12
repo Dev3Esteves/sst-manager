@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
-import { obraSchema, obraLocalSchema, type ObraLocalInput } from "@/lib/validations/obra"
+import { obraSchema, obraLocalSchema, obraEquipeSchema, type ObraLocalInput, type ObraEquipeInput } from "@/lib/validations/obra"
 
 function parseForm(formData: FormData) {
   const contratanteRaw = (formData.get("contratante_id") as string | null)?.trim()
@@ -85,6 +85,33 @@ export async function createObraLocal(payload: ObraLocalInput) {
 export async function toggleObraLocal(id: string, obraId: string, ativo: boolean) {
   const supabase = await createClient()
   const { error } = await supabase.from("obra_locais").update({ ativo }).eq("id", id)
+  if (error) return { error: { _form: [error.message] } }
+  revalidatePath(`/obras/${obraId}`)
+  return { ok: true as const }
+}
+
+// ---- obra_equipe (alocação por função + headcount) ----
+export async function createObraEquipe(payload: ObraEquipeInput) {
+  const parsed = obraEquipeSchema.safeParse(payload)
+  if (!parsed.success) return { error: { _form: [parsed.error.errors[0]?.message || "Dados inválidos"] } }
+  const supabase = await createClient()
+  const { error } = await supabase.from("obra_equipe").insert({
+    obra_id: parsed.data.obra_id,
+    cargo_titulo: parsed.data.cargo_titulo.trim(),
+    cargo_id: parsed.data.cargo_id ?? null,
+    quantidade: parsed.data.quantidade,
+  })
+  if (error) {
+    if (error.code === "23505") return { error: { _form: ["Esta função já está na equipe da obra"] } }
+    return { error: { _form: [error.message] } }
+  }
+  revalidatePath(`/obras/${parsed.data.obra_id}`)
+  return { ok: true as const }
+}
+
+export async function removeObraEquipe(id: string, obraId: string) {
+  const supabase = await createClient()
+  const { error } = await supabase.from("obra_equipe").delete().eq("id", id)
   if (error) return { error: { _form: [error.message] } }
   revalidatePath(`/obras/${obraId}`)
   return { ok: true as const }

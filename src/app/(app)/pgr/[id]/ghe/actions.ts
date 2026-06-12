@@ -120,3 +120,50 @@ export async function removeCargoFromGhe(cargoRowId: string, gheId: string, pgrI
   if (error) return { error: { _form: [error.message] } }
   revalidatePath(`/pgr/${pgrId}/ghe/${gheId}`)
 }
+
+/**
+ * Auto-preenche o GHE a partir da equipe da obra do PGR: adiciona os cargos da
+ * `obra_equipe` como cargos do GHE (ignorando os já presentes) e ajusta o nº de
+ * expostos para o total alocado na obra. Não remove nada (não destrutivo).
+ */
+export async function importarEquipeDaObra(gheId: string, pgrId: string) {
+  const supabase = await createClient()
+  const ghe = await resolveEmpresaIdFromGhe(supabase, gheId)
+  if (!ghe) return { error: { _form: ["GHE inválido"] } }
+
+  const { data: pgr } = await supabase.from("pgr").select("obra_id").eq("id", pgrId).single()
+  if (!pgr?.obra_id) return { error: { _form: ["PGR sem obra vinculada"] } }
+
+  const { data: equipe } = await supabase
+    .from("obra_equipe")
+    .select("cargo_titulo, cargo_id, quantidade")
+    .eq("obra_id", pgr.obra_id)
+  if (!equipe || equipe.length === 0) {
+    return { error: { _form: ["A obra não tem equipe (funções) cadastrada"] } }
+  }
+
+  const { data: existentes } = await supabase
+    .from("pgr_ghe_cargo")
+    .select("cargo_titulo")
+    .eq("pgr_ghe_id", gheId)
+  const jaTem = new Set((existentes ?? []).map((c) => c.cargo_titulo.trim().toLowerCase()))
+
+  const novos = equipe
+    .filter((e) => !jaTem.has(e.cargo_titulo.trim().toLowerCase()))
+    .map((e) => ({
+      empresa_id: ghe.empresa_id,
+      pgr_ghe_id: gheId,
+      cargo_titulo: e.cargo_titulo,
+      cargo_id: e.cargo_id ?? null,
+    }))
+  if (novos.length > 0) {
+    const { error } = await supabase.from("pgr_ghe_cargo").insert(novos)
+    if (error) return { error: { _form: [error.message] } }
+  }
+
+  const totalExpostos = equipe.reduce((s, e) => s + (e.quantidade ?? 0), 0)
+  await supabase.from("pgr_ghe").update({ num_empregados_expostos: totalExpostos }).eq("id", gheId)
+
+  revalidatePath(`/pgr/${pgrId}/ghe/${gheId}`)
+  return { ok: true as const, adicionados: novos.length, totalExpostos }
+}

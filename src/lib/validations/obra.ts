@@ -39,3 +39,12 @@ export const obraLocalSchema = z.object({
 })
 
 export type ObraLocalInput = z.infer<typeof obraLocalSchema>
+
+export const obraEquipeSchema = z.object({
+  obra_id: z.string().uuid(),
+  cargo_titulo: z.string().min(2, "Função obrigatória (mín. 2 caracteres)"),
+  cargo_id: z.string().uuid().optional().nullable(),
+  quantidade: z.coerce.number().int().min(0, "Quantidade inválida").default(1),
+})
+
+export type ObraEquipeInput = z.infer<typeof obraEquipeSchema>

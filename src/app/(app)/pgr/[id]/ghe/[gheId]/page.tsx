@@ -7,8 +7,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Pencil, Plus } from "lucide-react"
 import { GheForm } from "../ghe-form"
-import { updateGhe, deleteGhe } from "../actions"
+import { updateGhe, deleteGhe, importarEquipeDaObra } from "../actions"
 import { CargosEditor } from "./cargos-editor"
+import { ImportarEquipeButton } from "./importar-equipe-button"
 import {
   RISCO_CATEGORIA_LABEL,
   CATEGORIA_RISCO_LABEL,
@@ -64,7 +65,7 @@ export default async function EditGhePage({
       .order("cargo_titulo"),
     supabase
       .from("pgr")
-      .select("numero_revisao, obras(nome)")
+      .select("numero_revisao, obra_id, obras(nome)")
       .eq("id", pgrId)
       .single(),
     supabase
@@ -84,6 +85,13 @@ export default async function EditGhePage({
   ])
 
   if (!ghe || !pgr) notFound()
+
+  const { count: equipeCount } = pgr.obra_id
+    ? await supabase
+        .from("obra_equipe")
+        .select("id", { count: "exact", head: true })
+        .eq("obra_id", pgr.obra_id)
+    : { count: 0 }
 
   const obra = Array.isArray(pgr.obras) ? pgr.obras[0] : pgr.obras
   const riscosList = riscos ?? []
@@ -119,6 +127,9 @@ export default async function EditGhePage({
             pode aparecer em vários GHEs entre obras. Persistência é imediata —
             adicione e remova sem precisar salvar o formulário.
           </p>
+          {(equipeCount ?? 0) > 0 && (
+            <ImportarEquipeButton gheId={gheId} pgrId={pgrId} equipeCount={equipeCount ?? 0} />
+          )}
           <CargosEditor gheId={gheId} pgrId={pgrId} cargos={cargos ?? []} />
         </CardContent>
       </Card>

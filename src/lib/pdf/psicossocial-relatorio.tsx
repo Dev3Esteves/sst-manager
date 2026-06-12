@@ -30,6 +30,7 @@ export type RelatorioPsiData = {
   dataFim: string | null
   status: string
   minRespondentes: number
+  recusas?: number
   ghes: RelatorioGhe[]
   resultados: RelatorioResultado[]
 }
@@ -131,6 +132,12 @@ export async function renderPsicossocialRelatorioPdf(
             </View>
           ))}
         </View>
+        {(data.recusas ?? 0) > 0 && (
+          <Text style={[s.note, { marginTop: 4 }]}>
+            Termo de consentimento: {data.recusas} recusa(s) registrada(s) de forma anônima
+            (participação voluntária — NR-01/LGPD). Não compõem as respostas válidas acima.
+          </Text>
+        )}
       </View>
 
       {/* Resultados por dimensão */}

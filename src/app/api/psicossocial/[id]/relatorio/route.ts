@@ -46,6 +46,12 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
   const countPorGhe = new Map<string, number>()
   for (const r of respostas ?? []) countPorGhe.set(r.pgr_ghe_id, (countPorGhe.get(r.pgr_ghe_id) ?? 0) + 1)
 
+  // Recusas ao termo de consentimento (anônimas) — também via service role
+  const { count: recusas } = await admin
+    .from("psi_recusa")
+    .select("id", { count: "exact", head: true })
+    .eq("campanha_id", id)
+
   const codigoPorGhe = new Map<string, string>()
   const ghes: RelatorioGhe[] = (convites ?? []).map((c) => {
     const g = Array.isArray(c.pgr_ghe) ? c.pgr_ghe[0] : c.pgr_ghe
@@ -87,6 +93,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
       dataFim: campanha.data_fim,
       status: campanha.status,
       minRespondentes: campanha.min_respondentes,
+      recusas: recusas ?? 0,
       ghes,
       resultados,
     },

@@ -57,3 +57,41 @@ export async function submeterResposta(
 
   return { ok: true }
 }
+
+/**
+ * Registra ANONIMAMENTE a recusa ao termo de consentimento. Sem qualquer vínculo
+ * com a pessoa — apenas campanha + GHE (+ motivo opcional). Usada quando o
+ * respondente não concorda em participar; entra na contagem do relatório final.
+ */
+export async function registrarRecusa(
+  input: { token: string; motivo?: string | null },
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const token = typeof input?.token === "string" ? input.token : ""
+  if (!token) return { ok: false, error: "Link inválido." }
+
+  const admin = createAdminClient()
+  const { data: convite } = await admin
+    .from("psi_convite")
+    .select("campanha_id, pgr_ghe_id, empresa_id, psi_campanha(status)")
+    .eq("token", token)
+    .maybeSingle()
+
+  if (!convite) return { ok: false, error: "Link inválido ou expirado." }
+  const campanha = Array.isArray(convite.psi_campanha) ? convite.psi_campanha[0] : convite.psi_campanha
+  if (campanha?.status !== "aberta") {
+    return { ok: false, error: "Esta pesquisa não está aberta no momento." }
+  }
+
+  const motivo = typeof input.motivo === "string" && input.motivo.trim().length > 0
+    ? input.motivo.trim().slice(0, 500)
+    : null
+
+  const { error } = await admin.from("psi_recusa").insert({
+    empresa_id: convite.empresa_id,
+    campanha_id: convite.campanha_id,
+    pgr_ghe_id: convite.pgr_ghe_id,
+    motivo,
+  })
+  if (error) return { ok: false, error: error.message }
+  return { ok: true }
+}

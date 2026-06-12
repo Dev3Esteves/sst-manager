@@ -14,6 +14,8 @@ import type { InstrumentoDef } from "./scoring"
 export type EscalaDef = { rotulos: string[]; valores: number[] }
 export type VersaoOpt = { value: string; label: string }
 
+export type NaturezaInstrumento = "exposicao" | "desfecho" | "misto"
+
 export type InstrumentoRegistro = {
   key: string
   nome: string
@@ -21,9 +23,19 @@ export type InstrumentoRegistro = {
   oficial: boolean
   fonte: string
   instrucao: string
+  /** Natureza p/ a NR-1: exposição alimenta o PGR; desfecho é só monitoramento. */
+  natureza: NaturezaInstrumento
+  /** Resumo curto exibido na UI (o que mede / vai ou não ao PGR). */
+  resumo: string
   versoes: VersaoOpt[]
   def: InstrumentoDef
   escala: EscalaDef
+}
+
+export const NATUREZA_LABEL: Record<NaturezaInstrumento, string> = {
+  exposicao: "Exposição — vai ao Inventário do PGR",
+  desfecho: "Desfecho — monitoramento (não vai ao PGR)",
+  misto: "Misto — exposição (PGR) + desfecho (monitoramento)",
 }
 
 export const INSTRUMENTOS: InstrumentoRegistro[] = [
@@ -33,6 +45,8 @@ export const INSTRUMENTOS: InstrumentoRegistro[] = [
     versao_schema: COPSOQ_META.versao_schema,
     oficial: COPSOQ_META.oficial,
     fonte: COPSOQ_META.fonte,
+    natureza: "exposicao",
+    resumo: "Copenhagen Psychosocial Questionnaire (8 dimensões). Mede fatores psicossociais do trabalho; alimenta o Inventário do PGR.",
     instrucao: "Pense nas suas condições de trabalho nas últimas semanas e marque a frequência.",
     versoes: [
       { value: "curto", label: "Curta (frentes de obra)" },
@@ -47,6 +61,8 @@ export const INSTRUMENTOS: InstrumentoRegistro[] = [
     versao_schema: HSE_META.versao_schema,
     oficial: HSE_META.oficial,
     fonte: HSE_META.fonte,
+    natureza: "exposicao",
+    resumo: "HSE Management Standards (7 dimensões: demandas, controle, apoio, relacionamentos, função, mudança). Alimenta o PGR.",
     instrucao: HSE_META.instrucao,
     versoes: [{ value: "unica", label: "Única (35 itens, 7 dimensões)" }],
     def: HSE_IT_BR,
@@ -58,6 +74,8 @@ export const INSTRUMENTOS: InstrumentoRegistro[] = [
     versao_schema: PROART_META.versao_schema,
     oficial: PROART_META.oficial,
     fonte: PROART_META.fonte,
+    natureza: "misto",
+    resumo: "Protocolo de Avaliação dos Riscos Psicossociais no Trabalho. Organização e estilos de gestão = exposição (PGR); sofrimento e danos = desfecho (monitoramento).",
     instrucao: PROART_META.instrucao,
     versoes: [{ value: "unica", label: "Única (91 itens, 4 escalas)" }],
     def: PROART_BR,
@@ -69,6 +87,8 @@ export const INSTRUMENTOS: InstrumentoRegistro[] = [
     versao_schema: CBI_META.versao_schema,
     oficial: CBI_META.oficial,
     fonte: CBI_META.fonte,
+    natureza: "desfecho",
+    resumo: "Copenhagen Burnout Inventory (burnout pessoal/trabalho/cliente). Desfecho — usado para monitoramento; não vai ao PGR.",
     instrucao: CBI_META.instrucao,
     versoes: [{ value: "unica", label: "Única (19 itens — burnout)" }],
     def: CBI_BR,
@@ -80,6 +100,8 @@ export const INSTRUMENTOS: InstrumentoRegistro[] = [
     versao_schema: DASS_META.versao_schema,
     oficial: DASS_META.oficial,
     fonte: DASS_META.fonte,
+    natureza: "desfecho",
+    resumo: "DASS-21 — depressão, ansiedade e estresse (3 subescalas). Desfecho — monitoramento da saúde do grupo; não vai ao PGR.",
     instrucao: DASS_META.instrucao,
     versoes: [{ value: "unica", label: "Única (21 itens — D/A/E)" }],
     def: DASS21_BR,

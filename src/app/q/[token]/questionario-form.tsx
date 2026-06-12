@@ -1,9 +1,9 @@
 "use client"
 
 import { useState, useTransition } from "react"
-import { Loader2, CheckCircle2, ShieldCheck } from "lucide-react"
+import { Loader2, CheckCircle2, ShieldCheck, FileText } from "lucide-react"
 import { FAIXAS_ETARIAS, SEXOS } from "@/lib/validations/psicossocial"
-import { submeterResposta } from "./actions"
+import { submeterResposta, registrarRecusa } from "./actions"
 
 type Item = { id: string; dominio: string; dimensao: string; texto: string; reverso: boolean }
 type Escala = { rotulos: string[]; valores: number[] }
@@ -27,6 +27,19 @@ export function QuestionarioForm({
   const [erro, setErro] = useState<string | null>(null)
   const [enviado, setEnviado] = useState(false)
   const [pending, startTransition] = useTransition()
+  // Termo de consentimento (NR-01 + LGPD): respondente decide antes de responder.
+  const [consentido, setConsentido] = useState(false)
+  const [recusado, setRecusado] = useState(false)
+  const [motivo, setMotivo] = useState("")
+
+  function recusar() {
+    setErro(null)
+    startTransition(async () => {
+      const r = await registrarRecusa({ token, motivo: motivo || null })
+      if (r.ok) setRecusado(true)
+      else setErro(r.error)
+    })
+  }
 
   const total = itens.length
   const respondidos = Object.keys(respostas).length
@@ -58,6 +71,78 @@ export function QuestionarioForm({
           Sua participação é anônima e ajuda a melhorar as condições de trabalho.
           Você já pode fechar esta página.
         </p>
+      </div>
+    )
+  }
+
+  if (recusado) {
+    return (
+      <div className="mt-10 rounded-lg border bg-background p-8 text-center">
+        <CheckCircle2 className="mx-auto h-12 w-12 text-muted-foreground" />
+        <h1 className="mt-3 text-lg font-semibold">Tudo bem. Sua decisão foi registrada.</h1>
+        <p className="mt-2 text-sm text-muted-foreground">
+          A participação é voluntária. Registramos apenas que houve uma recusa (de forma
+          anônima), sem qualquer identificação. Você já pode fechar esta página.
+        </p>
+      </div>
+    )
+  }
+
+  if (!consentido) {
+    return (
+      <div className="space-y-4 py-4">
+        <div className="rounded-lg border bg-background p-5">
+          <div className="flex items-center gap-2">
+            <FileText className="h-5 w-5 text-primary" />
+            <h1 className="font-semibold">Termo de consentimento</h1>
+          </div>
+          <div className="mt-3 space-y-2 text-sm text-muted-foreground">
+            <p>
+              Você está sendo convidado(a) a participar de uma avaliação de <b>fatores
+              psicossociais relacionados ao trabalho</b> (NR-01), aplicada ao seu grupo de
+              trabalho. A avaliação mede <b>condições de trabalho</b>, não sintomas individuais.
+            </p>
+            <p>
+              A participação é <b>voluntária e anônima</b>: suas respostas não são identificadas
+              e os resultados só são apresentados de forma agregada por grupo (mínimo de
+              respondentes), em conformidade com a NR-01 e a LGPD. Você pode não concordar sem
+              qualquer prejuízo.
+            </p>
+          </div>
+          <label className="mt-3 block text-sm">
+            Motivo (opcional, caso não concorde)
+            <textarea
+              value={motivo}
+              onChange={(e) => setMotivo(e.target.value)}
+              rows={2}
+              className="mt-1 w-full rounded-md border bg-background px-2 py-1.5 text-sm"
+              placeholder="Se quiser, registre um motivo. É anônimo."
+            />
+          </label>
+          {erro && (
+            <div className="mt-3 rounded-md border border-destructive bg-destructive/10 p-3 text-sm text-destructive">
+              {erro}
+            </div>
+          )}
+          <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+            <button
+              type="button"
+              onClick={() => { setErro(null); setConsentido(true) }}
+              className="flex-1 rounded-md bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground"
+            >
+              Li e concordo — quero participar
+            </button>
+            <button
+              type="button"
+              onClick={recusar}
+              disabled={pending}
+              className="flex-1 flex items-center justify-center gap-2 rounded-md border px-4 py-3 text-sm font-semibold disabled:opacity-60"
+            >
+              {pending && <Loader2 className="h-4 w-4 animate-spin" />}
+              Não concordo
+            </button>
+          </div>
+        </div>
       </div>
     )
   }

@@ -9,12 +9,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Loader2 } from "lucide-react"
 import { criarCampanha } from "../actions"
-import { INSTRUMENTOS, getInstrumento, INSTRUMENTO_PADRAO } from "@/lib/psicossocial/instrumentos"
+import { INSTRUMENTOS, getInstrumento, INSTRUMENTO_PADRAO, NATUREZA_LABEL } from "@/lib/psicossocial/instrumentos"
 
 export function CampanhaForm({ pgrs }: { pgrs: { id: string; label: string }[] }) {
   const [pgrId, setPgrId] = useState(pgrs[0]?.id ?? "")
   const [instrumentoKey, setInstrumentoKey] = useState(INSTRUMENTO_PADRAO)
-  const versoesDisponiveis = getInstrumento(instrumentoKey)?.versoes ?? []
+  const instrInfo = getInstrumento(instrumentoKey)
+  const versoesDisponiveis = instrInfo?.versoes ?? []
   const [versao, setVersao] = useState<string>(versoesDisponiveis[0]?.value ?? "curto")
   const [erro, setErro] = useState<string | null>(null)
   const [pending, startTransition] = useTransition()
@@ -74,6 +75,23 @@ export function CampanhaForm({ pgrs }: { pgrs: { id: string; label: string }[] }
               </SelectContent>
             </Select>
           </div>
+          {instrInfo && (
+            <div className="md:col-span-2 rounded-md border bg-muted/30 p-3 text-sm space-y-1">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="font-medium">{instrInfo.nome}</span>
+                <span className="rounded-full bg-primary/10 text-primary px-2 py-0.5 text-[11px] font-medium">
+                  {NATUREZA_LABEL[instrInfo.natureza]}
+                </span>
+                {!instrInfo.oficial && (
+                  <span className="rounded-full bg-amber-100 text-amber-800 px-2 py-0.5 text-[11px]">
+                    texto adaptado (não licenciado)
+                  </span>
+                )}
+              </div>
+              <p className="text-muted-foreground">{instrInfo.resumo}</p>
+              <p className="text-xs text-muted-foreground">Fonte: {instrInfo.fonte}</p>
+            </div>
+          )}
           <div className="space-y-2">
             <Label htmlFor="min_respondentes">Mín. respondentes / GHE</Label>
             <Input id="min_respondentes" name="min_respondentes" type="number" defaultValue={5} min={3} max={50} />

@@ -1,5 +1,5 @@
 /**
- * Webhook receiver do People (RH).
+ * Webhook receiver do Sistenge People.
  *
  * Autenticação: HMAC-SHA256 do corpo bruto no header `x-people-signature`,
  * validado contra PEOPLE_WEBHOOK_SECRET. Idempotência: cada `event_id` é
@@ -18,6 +18,7 @@ import {
   peopleCargoSchema,
   peopleColaboradorSchema,
   peopleDeleteSchema,
+  peopleAsoAgendamentoSchema,
 } from "@/lib/integracao/people/contrato"
 import { upsertCargo, upsertColaborador, desativarPorExternalId } from "@/lib/integracao/people/sync"
 
@@ -47,7 +48,8 @@ export async function POST(req: Request) {
 
     const parsed = peopleEventoSchema.safeParse(json)
     if (!parsed.success) {
-      return NextResponse.json({ error: "Evento inválido", issues: parsed.error.flatten() }, { status: 400 })
+      // 422 (não 400): payload inválido é erro de dados — o People não deve re-enfileirar.
+      return NextResponse.json({ ok: false, error: "Evento inválido", issues: parsed.error.flatten() }, { status: 422 })
     }
     const evento = parsed.data
     const scoped = log.child({ eventId: evento.event_id, eventType: evento.event_type })
@@ -72,18 +74,25 @@ export async function POST(req: Request) {
           await upsertColaborador(admin, peopleColaboradorSchema.parse(evento.data)); break
         case "colaborador.deleted":
           await desativarPorExternalId(admin, "colaboradores", peopleDeleteSchema.parse(evento.data).external_id); break
+        case "aso.agendamento_solicitado":
+          // Pré-cadastro de exame admissional (SOC). Sem fluxo de destino ainda no SST:
+          // validamos e "estacionamos" o payload em integr_evento (visível no monitor)
+          // para tratamento posterior, sem perder o dado nem re-enfileirar.
+          peopleAsoAgendamentoSchema.parse(evento.data); break
       }
     } catch (err) {
       const msg = (err as Error).message
       scoped.exception("falha ao aplicar evento", err)
       await admin.from("integr_evento").upsert({
-        event_id: evento.event_id, tipo: evento.event_type, status: "erro", detalhe: msg.slice(0, 500),
+        event_id: evento.event_id, tipo: evento.event_type, status: "erro",
+        detalhe: msg.slice(0, 500), payload: evento.data,
       })
       return NextResponse.json({ ok: false, error: msg }, { status: 422 })
     }
 
     await admin.from("integr_evento").upsert({
-      event_id: evento.event_id, tipo: evento.event_type, status: "processado", detalhe: null,
+      event_id: evento.event_id, tipo: evento.event_type, status: "processado",
+      detalhe: null, payload: evento.data,
     })
     scoped.info("evento aplicado")
     return NextResponse.json({ ok: true })

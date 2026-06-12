@@ -145,12 +145,18 @@ export async function renderDdsPdf(meta: DocumentoMeta, conteudo: DdsConteudo) {
         </View>
       </View>
 
-      <View style={pdfStyles.section}>
+      <View style={pdfStyles.section} wrap={false}>
         <Text style={pdfStyles.sectionTitle}>Mediador responsável</Text>
-        <View style={{ ...pdfStyles.signatureBlock, maxWidth: 260, alignSelf: "flex-start", marginTop: 10 }}>
-          {assinaturaMediadorData && <Image src={assinaturaMediadorData} style={pdfStyles.signatureImg} />}
-          <Text style={{ fontSize: 9, fontWeight: "bold" }}>{conteudo.mediador_nome}</Text>
-          <Text style={{ fontSize: 8, color: "#64748b" }}>{conteudo.mediador_cargo ?? "Mediador"}</Text>
+        <View style={{ width: 240, marginTop: 18 }}>
+          {assinaturaMediadorData ? (
+            <Image src={assinaturaMediadorData} style={{ height: 40, marginBottom: 2, objectFit: "contain", alignSelf: "flex-start" }} />
+          ) : (
+            <View style={{ height: 40 }} />
+          )}
+          <View style={{ borderTop: "1 solid #111", paddingTop: 4 }}>
+            <Text style={{ fontSize: 9, fontWeight: "bold" }}>{conteudo.mediador_nome}</Text>
+            <Text style={{ fontSize: 8, color: "#64748b" }}>{conteudo.mediador_cargo ?? "Mediador"}</Text>
+          </View>
         </View>
       </View>
     </BasePdfDocument>

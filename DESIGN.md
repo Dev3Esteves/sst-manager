@@ -84,3 +84,38 @@ Dois caminhos: **PDF programático** (`@react-pdf/renderer`, em `src/lib/pdf/*` 
 3. Densidade alta: `text-xs`/`text-sm` em tabelas, `tabular-nums` em números.
 4. Cada tela de relatório precisa funcionar no print (cores + quebras de página).
 5. Acessibilidade: respeite o contraste do amarelo (`alerta` → texto preto).
+
+## Checklist de revisão de UI
+
+Destilado dos `craft/*.md` do **open-design** (`nexu-io/open-design`), filtrado para o que este app
+usa (formulários, tabelas densas, badges de status, relatórios). Use ao criar/revisar uma tela.
+
+**Acessibilidade (WCAG 2.1 AA — piso):**
+- Todo elemento interativo é alcançável por teclado; foco visível; sem `tabindex` positivo.
+- Elemento nativo primeiro (`<button>`/`<a href>`); ARIA só quando nenhum nativo serve.
+- `<img alt>` em imagens de conteúdo; `aria-label` em botões só-ícone; **gráfico/mapa de calor precisa
+  de alternativa textual** (ex.: tabela/resumo dos scores).
+- Contraste texto ≥ 4.5:1; um `<h1>` por página, sem pular níveis; landmarks (`<main>`/`<nav>`…).
+
+**Cor & status:**
+- Só tokens semânticos; o semáforo `status-*` é a linguagem de status — não inventar cores.
+- Cor nunca é o único portador de informação (pareie com ícone/rótulo): daltônicos.
+- Acento com parcimônia (poucos usos por tela); evitar gradientes decorativos sem função.
+
+**Tipografia:**
+- Máx. 2 famílias (Inter já cobre); 3 pesos: corpo / UI-rótulos / títulos.
+- Máx. ~3 tamanhos visíveis por dobra; sem `text-align: justify` (cria "rios"); `tabular-nums` em números.
+
+**Formulários (Zod + Constraint Validation):**
+- **Servidor é a verdade, cliente é otimização** — mesmo schema nos dois; a action **retorna** `{ errors }` (não joga exceção).
+- Mantenha `required`/`pattern`/`type` (sobrevivem sem JS, integram com autofill); mensagem de erro amarrada ao campo e foco move pro primeiro erro.
+- Ações com consequência (legal/financeira/dados): reversibilidade **ou** tela de confirmação antes de commitar.
+
+**Cobertura de estados (toda lista/tela tem 5):**
+- `loading` · `empty` · `error` · `populated` · `edge`. Nunca colapsar erro em vazio.
+- Vazio = onboarding (headline + valor + CTA); "sem resultados" ecoa a busca e sugere alternativa.
+- Spinner não roda infinito: após ~60 s vira progresso/cancelar; retry com backoff e, após 3 falhas, "contatar suporte" + ID copiável.
+
+**Anti-slop & movimento:**
+- Tokens em vez de hex cru espalhado; sem CDNs de placeholder (unsplash/placehold).
+- Movimento **confirma** uma mudança já feita (UI otimista primeiro); respeita `prefers-reduced-motion`; transições ≤ ~500 ms; nada piscando > 5 s sem pausa.

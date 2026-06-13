@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { useState, useTransition, useRef } from "react"
+import { useState, useTransition, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -83,6 +83,13 @@ export function EmpresaForm({
   const [errors, setErrors] = useState<FormErrors>({})
   const [pending, startTransition] = useTransition()
   const [tab, setTab] = useState<TabKey>("identificacao")
+  // Campo a focar após um erro de submit (depois que a aba certa renderiza).
+  const [focusKey, setFocusKey] = useState<string | null>(null)
+  useEffect(() => {
+    if (!focusKey) return
+    document.getElementById(focusKey)?.focus()
+    setFocusKey(null)
+  }, [focusKey, tab])
 
   // Identificação
   const [cnpj, setCnpj] = useState(empresa?.cnpj ?? "")
@@ -296,11 +303,14 @@ export function EmpresaForm({
       if (result?.error) {
         setErrors(result.error)
         if (result.error._form?.[0]) toast.error(result.error._form[0])
-        // Leva o usuário à aba do primeiro erro relevante.
+        // Leva o usuário à aba do primeiro erro relevante (e foca o campo).
         if (result.error.papeis) setTab("papeis")
         else if (result.error.enderecos) setTab("enderecos")
         else if (result.error.contatos) setTab("contatos")
-        else if (result.error.razao_social || result.error.cnpj) setTab("identificacao")
+        else if (result.error.razao_social || result.error.cnpj) {
+          setTab("identificacao")
+          setFocusKey(result.error.cnpj ? "cnpj" : "razao_social")
+        }
       }
     })
   }
@@ -426,7 +436,7 @@ export function EmpresaForm({
               <div key={i} className="rounded-md border p-3 space-y-3">
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-3 flex-wrap">
-                    <select className={cn(selectCls, "w-40")} value={e.tipo}
+                    <select className={cn(selectCls, "w-40")} value={e.tipo} aria-label="Tipo de endereço"
                       onChange={(ev) => updEndereco(i, { tipo: ev.target.value })}>
                       {ENDERECO_TIPO_VALUES.map((v) => (
                         <option key={v} value={v}>{ENDERECO_TIPO_LABEL[v]}</option>
@@ -445,9 +455,9 @@ export function EmpresaForm({
                 </div>
                 <div className="grid gap-3 md:grid-cols-6">
                   <div className="space-y-1 md:col-span-2">
-                    <Label className="text-xs">CEP</Label>
+                    <Label htmlFor={`end-${i}-cep`} className="text-xs">CEP</Label>
                     <div className="flex gap-2">
-                      <Input value={e.cep} onChange={(ev) => updEndereco(i, { cep: ev.target.value })}
+                      <Input id={`end-${i}-cep`} value={e.cep} onChange={(ev) => updEndereco(i, { cep: ev.target.value })}
                         placeholder="00000-000" inputMode="numeric" />
                       <Button type="button" variant="outline" size="icon" onClick={() => buscarCep(i)}
                         disabled={cepLoading === i} aria-label="Buscar CEP">
@@ -456,28 +466,28 @@ export function EmpresaForm({
                     </div>
                   </div>
                   <div className="space-y-1 md:col-span-3">
-                    <Label className="text-xs">Logradouro</Label>
-                    <Input value={e.logradouro} onChange={(ev) => updEndereco(i, { logradouro: ev.target.value })} />
+                    <Label htmlFor={`end-${i}-logradouro`} className="text-xs">Logradouro</Label>
+                    <Input id={`end-${i}-logradouro`} value={e.logradouro} onChange={(ev) => updEndereco(i, { logradouro: ev.target.value })} />
                   </div>
                   <div className="space-y-1 md:col-span-1">
-                    <Label className="text-xs">Número</Label>
-                    <Input value={e.numero} onChange={(ev) => updEndereco(i, { numero: ev.target.value })} inputMode="numeric" />
+                    <Label htmlFor={`end-${i}-numero`} className="text-xs">Número</Label>
+                    <Input id={`end-${i}-numero`} value={e.numero} onChange={(ev) => updEndereco(i, { numero: ev.target.value })} inputMode="numeric" />
                   </div>
                   <div className="space-y-1 md:col-span-2">
-                    <Label className="text-xs">Complemento</Label>
-                    <Input value={e.complemento} onChange={(ev) => updEndereco(i, { complemento: ev.target.value })} />
+                    <Label htmlFor={`end-${i}-complemento`} className="text-xs">Complemento</Label>
+                    <Input id={`end-${i}-complemento`} value={e.complemento} onChange={(ev) => updEndereco(i, { complemento: ev.target.value })} />
                   </div>
                   <div className="space-y-1 md:col-span-2">
-                    <Label className="text-xs">Bairro</Label>
-                    <Input value={e.bairro} onChange={(ev) => updEndereco(i, { bairro: ev.target.value })} />
+                    <Label htmlFor={`end-${i}-bairro`} className="text-xs">Bairro</Label>
+                    <Input id={`end-${i}-bairro`} value={e.bairro} onChange={(ev) => updEndereco(i, { bairro: ev.target.value })} />
                   </div>
                   <div className="space-y-1 md:col-span-1">
-                    <Label className="text-xs">Município</Label>
-                    <Input value={e.municipio} onChange={(ev) => updEndereco(i, { municipio: ev.target.value })} />
+                    <Label htmlFor={`end-${i}-municipio`} className="text-xs">Município</Label>
+                    <Input id={`end-${i}-municipio`} value={e.municipio} onChange={(ev) => updEndereco(i, { municipio: ev.target.value })} />
                   </div>
                   <div className="space-y-1 md:col-span-1">
-                    <Label className="text-xs">UF</Label>
-                    <Input value={e.uf} maxLength={2}
+                    <Label htmlFor={`end-${i}-uf`} className="text-xs">UF</Label>
+                    <Input id={`end-${i}-uf`} value={e.uf} maxLength={2}
                       onChange={(ev) => updEndereco(i, { uf: ev.target.value.toUpperCase() })} />
                   </div>
                 </div>
@@ -501,8 +511,8 @@ export function EmpresaForm({
             {contatos.map((c, i) => (
               <div key={i} className="grid gap-3 md:grid-cols-12 items-end rounded-md border p-3">
                 <div className="space-y-1 md:col-span-2">
-                  <Label className="text-xs">Tipo</Label>
-                  <select className={selectCls} value={c.tipo}
+                  <Label htmlFor={`ct-${i}-tipo`} className="text-xs">Tipo</Label>
+                  <select id={`ct-${i}-tipo`} className={selectCls} value={c.tipo}
                     onChange={(ev) => updContato(i, { tipo: ev.target.value })}>
                     {CONTATO_TIPO_VALUES.map((v) => (
                       <option key={v} value={v}>{CONTATO_TIPO_LABEL[v]}</option>
@@ -510,17 +520,18 @@ export function EmpresaForm({
                   </select>
                 </div>
                 <div className="space-y-1 md:col-span-3">
-                  <Label className="text-xs">Valor</Label>
-                  <Input value={c.valor} onChange={(ev) => updContato(i, { valor: ev.target.value })}
+                  <Label htmlFor={`ct-${i}-valor`} className="text-xs">Valor</Label>
+                  <Input id={`ct-${i}-valor`} value={c.valor} onChange={(ev) => updContato(i, { valor: ev.target.value })}
+                    inputMode={c.tipo === "telefone" ? "tel" : undefined}
                     placeholder={c.tipo === "email" ? "contato@exemplo.com" : "(00) 0000-0000"} />
                 </div>
                 <div className="space-y-1 md:col-span-3">
-                  <Label className="text-xs">Nome do contato</Label>
-                  <Input value={c.nome_contato} onChange={(ev) => updContato(i, { nome_contato: ev.target.value })} />
+                  <Label htmlFor={`ct-${i}-nome`} className="text-xs">Nome do contato</Label>
+                  <Input id={`ct-${i}-nome`} value={c.nome_contato} onChange={(ev) => updContato(i, { nome_contato: ev.target.value })} />
                 </div>
                 <div className="space-y-1 md:col-span-2">
-                  <Label className="text-xs">Cargo</Label>
-                  <Input value={c.cargo_contato} onChange={(ev) => updContato(i, { cargo_contato: ev.target.value })} />
+                  <Label htmlFor={`ct-${i}-cargo`} className="text-xs">Cargo</Label>
+                  <Input id={`ct-${i}-cargo`} value={c.cargo_contato} onChange={(ev) => updContato(i, { cargo_contato: ev.target.value })} />
                 </div>
                 <div className="md:col-span-2 flex items-center justify-between gap-2">
                   <label className="inline-flex items-center gap-1.5 text-sm">

@@ -19,7 +19,13 @@ import {
   probabilidadeDoScore,
   nivelRiscoNR1,
   nivelNR1ParaCategoriaRiscoPGR,
+  distribuicaoRiscoPorDimensao,
+  calibrarFaixasPercentil,
+  aplicarFaixasPorDimensao,
+  PERCENTIS_PADRAO,
+  MIN_AMOSTRAL_CALIBRACAO,
   type InstrumentoDef,
+  type FaixaDef,
   type NivelNR1,
   type Respondente,
 } from "@/lib/psicossocial/scoring"
@@ -235,6 +241,16 @@ export async function calcularResultados(id: string): Promise<ActionResult> {
     : campanha.psi_instrumento
   const definicao = (instr?.definicao ?? getInstrumento(INSTRUMENTO_PADRAO)?.def) as InstrumentoDef
 
+  // Calibração por percentis da empresa (se houver): injeta a faixa de corte de
+  // cada dimensão na definição. Sem calibração, processa com a faixa do
+  // instrumento (tercis). Ver calibrarFaixas + migration 0056.
+  const definicaoEfetiva = await aplicarCalibracao(
+    admin,
+    definicao,
+    campanha.empresa_id as string,
+    campanha.versao_aplicada as string,
+  )
+
   const { data: respostas } = await admin
     .from("psi_resposta")
     .select("id, pgr_ghe_id")
@@ -266,7 +282,7 @@ export async function calcularResultados(id: string): Promise<ActionResult> {
   const linhas: Record<string, unknown>[] = []
   for (const [gheId, respondentes] of Array.from(porGhe.entries())) {
     const resultados = processarInstrumento(
-      definicao,
+      definicaoEfetiva,
       respondentes,
       campanha.versao_aplicada as string,
       campanha.min_respondentes ?? CLASSIFICACAO_TERCIS.min_respondentes_ghe,
@@ -299,6 +315,147 @@ export async function calcularResultados(id: string): Promise<ActionResult> {
   await admin.from("psi_campanha").update({ status: "analisada" }).eq("id", id)
   revalidatePath(`/psicossocial/${id}`)
   return { ok: true }
+}
+
+type AdminClient = ReturnType<typeof createAdminClient>
+
+/**
+ * Carrega a calibração por percentis da empresa (se houver) e devolve a
+ * definição com a faixa de corte de cada dimensão injetada. Sem calibração,
+ * devolve a definição original (faixa do instrumento / tercis).
+ */
+async function aplicarCalibracao(
+  admin: AdminClient,
+  definicao: InstrumentoDef,
+  empresaId: string,
+  versao: string,
+): Promise<InstrumentoDef> {
+  const instrKey = (definicao as { key?: string }).key
+  if (!instrKey) return definicao
+  const { data: cal } = await admin
+    .from("psi_calibracao")
+    .select("dimensao_id, verde_max, amarelo_max")
+    .eq("empresa_id", empresaId)
+    .eq("instrumento_key", instrKey)
+    .eq("versao", versao)
+  if (!cal || cal.length === 0) return definicao
+  const faixasPorDim = new Map<string, FaixaDef>(
+    cal.map((c) => [
+      c.dimensao_id as string,
+      { verdeMax: Number(c.verde_max), amareloMax: Number(c.amarelo_max) },
+    ]),
+  )
+  return aplicarFaixasPorDimensao(definicao, faixasPorDim)
+}
+
+/**
+ * Calibra as faixas de corte (verde/amarelo/vermelho) por percentis das
+ * respostas acumuladas DA PRÓPRIA EMPRESA para este instrumento+versão — uma
+ * norma relativa por dimensão (P50/P80 por padrão), em vez de tercis fixos.
+ *
+ * Só para instrumentos `calibravel` (cortes arbitrários: COPSOQ/HSE). Cortes
+ * ancorados (PROART/CBI/DASS) não são recalibrados. Após gravar a calibração,
+ * recalcula os resultados desta campanha aplicando-a.
+ */
+export async function calibrarFaixas(id: string): Promise<ActionResult> {
+  try {
+    await requireRole(ROLES)
+  } catch (e) {
+    return { error: e instanceof AuthError ? e.message : "Não autorizado" }
+  }
+  const admin = createAdminClient()
+
+  const { data: campanha } = await admin
+    .from("psi_campanha")
+    .select("id, empresa_id, versao_aplicada, instrumento_id, psi_instrumento(definicao)")
+    .eq("id", id)
+    .maybeSingle()
+  if (!campanha) return { error: "Campanha não encontrada." }
+
+  const instr = Array.isArray(campanha.psi_instrumento)
+    ? campanha.psi_instrumento[0]
+    : campanha.psi_instrumento
+  const definicao = (instr?.definicao ?? getInstrumento(INSTRUMENTO_PADRAO)?.def) as InstrumentoDef
+  const instrKey = (definicao as { key?: string }).key
+  const reg = instrKey ? getInstrumento(instrKey) : undefined
+  if (!reg?.calibravel) {
+    return {
+      error:
+        "Este instrumento usa cortes ancorados (clínicos/protocolo) e não é calibrável por percentis.",
+    }
+  }
+
+  const empresaId = campanha.empresa_id as string
+  const versao = campanha.versao_aplicada as string
+
+  // Referência = todas as campanhas DESTA empresa com o mesmo instrumento+versão.
+  const { data: camps } = await admin
+    .from("psi_campanha")
+    .select("id")
+    .eq("empresa_id", empresaId)
+    .eq("instrumento_id", campanha.instrumento_id)
+    .eq("versao_aplicada", versao)
+  const campIds = (camps ?? []).map((c) => c.id as string)
+
+  const { data: respostas } = await admin
+    .from("psi_resposta")
+    .select("id")
+    .in("campanha_id", campIds)
+  const respIds = (respostas ?? []).map((r) => r.id as string)
+  if (respIds.length === 0) return { error: "Ainda não há respostas desta empresa para calibrar." }
+
+  const { data: itens } = await admin
+    .from("psi_resposta_item")
+    .select("resposta_id, item_id, valor")
+    .in("resposta_id", respIds)
+
+  const porResposta = new Map<string, Respondente>()
+  for (const it of itens ?? []) {
+    const r = porResposta.get(it.resposta_id) ?? {}
+    r[it.item_id] = it.valor
+    porResposta.set(it.resposta_id, r)
+  }
+  const respondentes = Array.from(porResposta.values())
+
+  const distribuicao = distribuicaoRiscoPorDimensao(definicao, respondentes, versao)
+  const faixas = calibrarFaixasPercentil(distribuicao, {
+    pVerde: PERCENTIS_PADRAO.pVerde,
+    pAmarelo: PERCENTIS_PADRAO.pAmarelo,
+    minN: MIN_AMOSTRAL_CALIBRACAO,
+  })
+  if (faixas.size === 0) {
+    return {
+      error: `Amostra insuficiente para calibrar (mínimo ${MIN_AMOSTRAL_CALIBRACAO} respondentes por dimensão; base atual: ${respondentes.length}).`,
+    }
+  }
+
+  // Substitui a calibração anterior desta empresa+instrumento+versão.
+  await admin
+    .from("psi_calibracao")
+    .delete()
+    .eq("empresa_id", empresaId)
+    .eq("instrumento_key", instrKey)
+    .eq("versao", versao)
+  const linhas = Array.from(faixas.entries()).map(([dimId, f]) => ({
+    empresa_id: empresaId,
+    instrumento_key: instrKey,
+    versao,
+    dimensao_id: dimId,
+    verde_max: f.verdeMax,
+    amarelo_max: f.amareloMax,
+    p_verde: f.pVerde,
+    p_amarelo: f.pAmarelo,
+    n_amostral: f.n,
+  }))
+  const { error: errIns } = await admin.from("psi_calibracao").insert(linhas)
+  if (errIns) return { error: errIns.message }
+
+  // Recalcula os resultados desta campanha já aplicando a nova calibração.
+  const rec = await calcularResultados(id)
+  if ("error" in rec) return rec
+
+  revalidatePath(`/psicossocial/${id}`)
+  return { ok: true, id: `${faixas.size} dimensões` }
 }
 
 /** Uma avaliação técnica de severidade/exposição para um resultado (GHE × dimensão). */

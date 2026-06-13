@@ -4,10 +4,10 @@ import { useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
-import { Loader2, Play, Square, Calculator, FileUp, QrCode } from "lucide-react"
-import { mudarStatusCampanha, calcularResultados, lancarNoInventarioPgr, sincronizarConvites } from "../actions"
+import { Loader2, Play, Square, Calculator, FileUp, QrCode, SlidersHorizontal } from "lucide-react"
+import { mudarStatusCampanha, calcularResultados, lancarNoInventarioPgr, sincronizarConvites, calibrarFaixas } from "../actions"
 
-export function AcoesCampanha({ id, status, temResultados }: { id: string; status: string; temResultados: boolean }) {
+export function AcoesCampanha({ id, status, temResultados, calibravel = false }: { id: string; status: string; temResultados: boolean; calibravel?: boolean }) {
   const router = useRouter()
   const [pending, start] = useTransition()
 
@@ -42,6 +42,11 @@ export function AcoesCampanha({ id, status, temResultados }: { id: string; statu
       {(status === "encerrada" || status === "aberta" || status === "analisada") && (
         <Button size="sm" variant="outline" disabled={pending} onClick={() => run(() => calcularResultados(id), "Resultados calculados")}>
           {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Calculator className="h-4 w-4" />} Calcular resultados
+        </Button>
+      )}
+      {temResultados && calibravel && (
+        <Button size="sm" variant="outline" disabled={pending} onClick={() => run(() => calibrarFaixas(id), "Faixas calibradas pelos percentis da empresa")} title="Recalcula os cortes verde/amarelo/vermelho de cada dimensão pelos percentis (P50/P80) das respostas desta empresa">
+          {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <SlidersHorizontal className="h-4 w-4" />} Calibrar faixas (percentis da empresa)
         </Button>
       )}
       {temResultados && (

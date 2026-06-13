@@ -25,6 +25,13 @@ export type InstrumentoRegistro = {
   instrucao: string
   /** Natureza p/ a NR-1: exposição alimenta o PGR; desfecho é só monitoramento. */
   natureza: NaturezaInstrumento
+  /**
+   * Se as faixas podem ser calibradas pelos percentis da empresa (norma
+   * relativa). true para cortes arbitrários (tercis: COPSOQ, HSE). false para
+   * cortes ANCORADOS (PROART/protocolo; CBI/DASS clínicos) — recalibrar
+   * destruiria o significado absoluto da escala.
+   */
+  calibravel: boolean
   /** Resumo curto exibido na UI (o que mede / vai ou não ao PGR). */
   resumo: string
   versoes: VersaoOpt[]
@@ -46,6 +53,7 @@ export const INSTRUMENTOS: InstrumentoRegistro[] = [
     oficial: COPSOQ_META.oficial,
     fonte: COPSOQ_META.fonte,
     natureza: "exposicao",
+    calibravel: true,
     resumo: "Copenhagen Psychosocial Questionnaire (8 dimensões). Mede fatores psicossociais do trabalho; alimenta o Inventário do PGR.",
     instrucao: "Pense nas suas condições de trabalho nas últimas semanas e marque a frequência.",
     versoes: [
@@ -62,6 +70,7 @@ export const INSTRUMENTOS: InstrumentoRegistro[] = [
     oficial: HSE_META.oficial,
     fonte: HSE_META.fonte,
     natureza: "exposicao",
+    calibravel: true,
     resumo: "HSE Management Standards (7 dimensões: demandas, controle, apoio, relacionamentos, função, mudança). Alimenta o PGR.",
     instrucao: HSE_META.instrucao,
     versoes: [{ value: "unica", label: "Única (35 itens, 7 dimensões)" }],
@@ -75,6 +84,7 @@ export const INSTRUMENTOS: InstrumentoRegistro[] = [
     oficial: PROART_META.oficial,
     fonte: PROART_META.fonte,
     natureza: "misto",
+    calibravel: false,
     resumo: "Protocolo de Avaliação dos Riscos Psicossociais no Trabalho. Organização e estilos de gestão = exposição (PGR); sofrimento e danos = desfecho (monitoramento).",
     instrucao: PROART_META.instrucao,
     versoes: [{ value: "unica", label: "Única (91 itens, 4 escalas)" }],
@@ -88,6 +98,7 @@ export const INSTRUMENTOS: InstrumentoRegistro[] = [
     oficial: CBI_META.oficial,
     fonte: CBI_META.fonte,
     natureza: "desfecho",
+    calibravel: false,
     resumo: "Copenhagen Burnout Inventory (burnout pessoal/trabalho/cliente). Desfecho — usado para monitoramento; não vai ao PGR.",
     instrucao: CBI_META.instrucao,
     versoes: [{ value: "unica", label: "Única (19 itens — burnout)" }],
@@ -101,6 +112,7 @@ export const INSTRUMENTOS: InstrumentoRegistro[] = [
     oficial: DASS_META.oficial,
     fonte: DASS_META.fonte,
     natureza: "desfecho",
+    calibravel: false,
     resumo: "DASS-21 — depressão, ansiedade e estresse (3 subescalas). Desfecho — monitoramento da saúde do grupo; não vai ao PGR.",
     instrucao: DASS_META.instrucao,
     versoes: [{ value: "unica", label: "Única (21 itens — D/A/E)" }],

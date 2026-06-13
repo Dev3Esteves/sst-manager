@@ -49,6 +49,12 @@ export type DimensaoDef = {
   tipo?: TipoDimensao
   /** Para instrumentos método "dass21": a qual subescala a dimensão pertence. */
   dassSubescala?: DassSubescala
+  /**
+   * Faixas de corte PRÓPRIAS desta dimensão. Quando presente, têm prioridade
+   * sobre as faixas do instrumento (que por sua vez caem em tercis). É o que a
+   * calibração por percentis da empresa injeta — cada dimensão tem o seu corte.
+   */
+  faixas?: FaixaDef
   versoes?: string[]
   itens: ItemDef[]
 }
@@ -194,13 +200,16 @@ export function processarGHE(
       if (!incluiNaVersao) continue
       const itensDef = dim.itens.filter((it) => !it.versoes || it.versoes.includes(versao))
       if (itensDef.length === 0) continue
+      // Faixa por dimensão (calibração da empresa) tem prioridade; senão a do
+      // instrumento; senão tercis.
+      const faixaDim = dim.faixas ?? faixas
       out.push({
         dominio: dom.nome,
         dimensao_id: dim.id,
         dimensao: dim.nome,
         risco_direcao: dim.risco_direcao,
         tipo: dim.tipo ?? "exposicao",
-        ...agregarDimensaoGHE(itensDef, respondentes, minRespondentes, faixas),
+        ...agregarDimensaoGHE(itensDef, respondentes, minRespondentes, faixaDim),
       })
     }
   }
@@ -400,4 +409,106 @@ export function processarInstrumento(
     return processarGHEDass(instrumento, respondentes, minRespondentes)
   }
   return processarGHE(instrumento, respondentes, versao, minRespondentes)
+}
+
+// ============================================================================
+// Calibração de faixas por PERCENTIS da própria base (norma relativa)
+// ============================================================================
+//
+// Em vez de tercis fixos (0-33-67-100), os cortes podem ser derivados da
+// distribuição real de scores de risco da própria empresa. Cada DIMENSÃO ganha
+// seu corte (percentil calibração é intrinsecamente por-dimensão). Aplica-se a
+// instrumentos de método "media"; DASS-21 usa cortes clínicos absolutos (não
+// calibrável). Mapeamento padrão P50/P80: verde ≤ mediana; amarelo até P80;
+// vermelho = os ~20% piores.
+
+/** Percentis padrão (verde/amarelo) sobre o score de RISCO 0-100 (maior = pior). */
+export const PERCENTIS_PADRAO = { pVerde: 50, pAmarelo: 80 } as const
+/** Amostra mínima (respondentes individuais) por dimensão para calibrar. */
+export const MIN_AMOSTRAL_CALIBRACAO = 30
+
+export type FaixaCalibrada = FaixaDef & { n: number; pVerde: number; pAmarelo: number }
+
+/**
+ * Percentil (0-100) por interpolação linear sobre valores já ordenados asc.
+ * Vazio → NaN; um único valor → o próprio valor.
+ */
+export function percentil(ordenados: number[], p: number): number {
+  if (ordenados.length === 0) return NaN
+  if (ordenados.length === 1) return ordenados[0]
+  const pc = Math.max(0, Math.min(100, p))
+  const idx = (pc / 100) * (ordenados.length - 1)
+  const lo = Math.floor(idx)
+  const hi = Math.ceil(idx)
+  if (lo === hi) return ordenados[lo]
+  return ordenados[lo] + (ordenados[hi] - ordenados[lo]) * (idx - lo)
+}
+
+/**
+ * Distribuição do score de risco (0-100) POR DIMENSÃO, um valor por respondente.
+ * É a matéria-prima dos percentis. Só dimensões aplicáveis à versão.
+ */
+export function distribuicaoRiscoPorDimensao(
+  instrumento: InstrumentoDef,
+  respondentes: Respondente[],
+  versao = "unica",
+): Map<string, number[]> {
+  const out = new Map<string, number[]>()
+  for (const dom of instrumento.dominios) {
+    for (const dim of dom.dimensoes) {
+      if (dim.versoes && !dim.versoes.includes(versao)) continue
+      const itensDef = dim.itens.filter((it) => !it.versoes || it.versoes.includes(versao))
+      if (itensDef.length === 0) continue
+      const vals: number[] = []
+      for (const resp of respondentes) {
+        const s = scoreDimensaoRespondente(itensDef, resp)
+        if (s !== null) vals.push(s)
+      }
+      out.set(dim.id, vals)
+    }
+  }
+  return out
+}
+
+/**
+ * Deriva as faixas de corte por dimensão a partir dos percentis da distribuição.
+ * `pVerde < pAmarelo` (ex.: 50/80): verde ≤ P(pVerde), amarelo ≤ P(pAmarelo),
+ * resto vermelho. Dimensões com n < minN são OMITIDAS (caem na faixa padrão do
+ * instrumento). Garante monotonicidade (amareloMax ≥ verdeMax).
+ */
+export function calibrarFaixasPercentil(
+  distribuicao: Map<string, number[]>,
+  opts: { pVerde: number; pAmarelo: number; minN: number },
+): Map<string, FaixaCalibrada> {
+  const { pVerde, pAmarelo, minN } = opts
+  const out = new Map<string, FaixaCalibrada>()
+  for (const [dimId, valores] of Array.from(distribuicao.entries())) {
+    if (valores.length < minN) continue
+    const ordenados = [...valores].sort((a, b) => a - b)
+    const verdeMax = Math.round(percentil(ordenados, pVerde) * 100) / 100
+    const amareloMax = Math.max(verdeMax, Math.round(percentil(ordenados, pAmarelo) * 100) / 100)
+    out.set(dimId, { verdeMax, amareloMax, n: valores.length, pVerde, pAmarelo })
+  }
+  return out
+}
+
+/**
+ * Retorna uma cópia do instrumento com `faixas` por dimensão preenchidas a
+ * partir do mapa (dimensao_id → FaixaDef). Dimensões sem entrada ficam como
+ * estão (faixa do instrumento / tercis). Imutável — não altera o original.
+ */
+export function aplicarFaixasPorDimensao(
+  def: InstrumentoDef,
+  faixasPorDim: Map<string, FaixaDef>,
+): InstrumentoDef {
+  return {
+    ...def,
+    dominios: def.dominios.map((dom) => ({
+      ...dom,
+      dimensoes: dom.dimensoes.map((dim) => {
+        const f = faixasPorDim.get(dim.id)
+        return f ? { ...dim, faixas: f } : dim
+      }),
+    })),
+  }
 }

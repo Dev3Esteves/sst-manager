@@ -9,8 +9,13 @@ import {
   nivelRiscoNR1,
   nivelNR1ParaCategoriaRiscoPGR,
   FAIXAS_TERCIS,
+  percentil,
+  distribuicaoRiscoPorDimensao,
+  calibrarFaixasPercentil,
+  aplicarFaixasPorDimensao,
   type ItemDef,
   type FaixaDef,
+  type InstrumentoDef,
   type Respondente,
 } from "./scoring"
 import { COPSOQ_BR, itensDaVersao } from "./copsoq"
@@ -194,5 +199,99 @@ describe("itensDaVersao", () => {
     expect(curto.find((i) => i.id === "Q1B")?.reverso).toBe(true)
     expect(curto.find((i) => i.id === "Q1A")?.reverso).toBe(false)
     expect(curto.find((i) => i.id === "Q4A")?.reverso).toBe(true)
+  })
+})
+
+// ── Calibração por percentis ────────────────────────────────────────────────
+
+describe("percentil (interpolação linear)", () => {
+  const v = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100] // 11 valores, P50 = 50
+  it("P0/P100 = extremos", () => {
+    expect(percentil(v, 0)).toBe(0)
+    expect(percentil(v, 100)).toBe(100)
+  })
+  it("P50 = mediana", () => expect(percentil(v, 50)).toBe(50))
+  it("P80 interpola", () => expect(percentil(v, 80)).toBeCloseTo(80, 5))
+  it("vazio = NaN; único = o valor", () => {
+    expect(Number.isNaN(percentil([], 50))).toBe(true)
+    expect(percentil([42], 50)).toBe(42)
+  })
+})
+
+describe("distribuicaoRiscoPorDimensao", () => {
+  const inst: InstrumentoDef = {
+    dominios: [
+      {
+        id: "d", nome: "D",
+        dimensoes: [
+          { id: "dir", nome: "Direta", risco_direcao: "direto", itens: [{ id: "A", reverso: false }] },
+          { id: "inv", nome: "Inversa", risco_direcao: "inverso", itens: [{ id: "B", reverso: true }] },
+        ],
+      },
+    ],
+  }
+  it("coleta um score de risco por respondente, por dimensão (respeita reverso)", () => {
+    const resp: Respondente[] = [{ A: 20, B: 100 }, { A: 80, B: 0 }]
+    const dist = distribuicaoRiscoPorDimensao(inst, resp, "unica")
+    expect(dist.get("dir")).toEqual([20, 80])
+    expect(dist.get("inv")).toEqual([0, 100]) // reverso: 100→0, 0→100
+  })
+  it("ignora itens sem resposta", () => {
+    const dist = distribuicaoRiscoPorDimensao(inst, [{ A: null }, { A: 50 }], "unica")
+    expect(dist.get("dir")).toEqual([50])
+  })
+})
+
+describe("calibrarFaixasPercentil (P50/P80)", () => {
+  it("deriva verdeMax=P50 e amareloMax=P80 quando há amostra suficiente", () => {
+    const dist = new Map<string, number[]>([
+      ["x", [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]],
+    ])
+    const cal = calibrarFaixasPercentil(dist, { pVerde: 50, pAmarelo: 80, minN: 5 })
+    const f = cal.get("x")!
+    expect(f.verdeMax).toBe(50)
+    expect(f.amareloMax).toBeCloseTo(80, 5)
+    expect(f.n).toBe(11)
+  })
+  it("OMITE dimensões abaixo do mínimo amostral", () => {
+    const dist = new Map<string, number[]>([["x", [10, 20, 30]]])
+    const cal = calibrarFaixasPercentil(dist, { pVerde: 50, pAmarelo: 80, minN: 30 })
+    expect(cal.has("x")).toBe(false)
+  })
+  it("garante monotonicidade (amareloMax ≥ verdeMax)", () => {
+    // Distribuição degenerada: todos iguais → P50 = P80 = 40.
+    const dist = new Map<string, number[]>([["x", Array.from({ length: 10 }, () => 40)]])
+    const f = calibrarFaixasPercentil(dist, { pVerde: 50, pAmarelo: 80, minN: 5 }).get("x")!
+    expect(f.amareloMax).toBeGreaterThanOrEqual(f.verdeMax)
+  })
+})
+
+describe("aplicarFaixasPorDimensao + processarGHE", () => {
+  const inst: InstrumentoDef = {
+    faixas: FAIXAS_TERCIS,
+    dominios: [
+      {
+        id: "d", nome: "D",
+        dimensoes: [
+          { id: "x", nome: "X", risco_direcao: "direto", itens: [{ id: "I", reverso: false }] },
+          { id: "y", nome: "Y", risco_direcao: "direto", itens: [{ id: "J", reverso: false }] },
+        ],
+      },
+    ],
+  }
+  it("injeta faixa só na dimensão calibrada; original fica imutável", () => {
+    const calMap = new Map<string, FaixaDef>([["x", { verdeMax: 20, amareloMax: 50 }]])
+    const def2 = aplicarFaixasPorDimensao(inst, calMap)
+    expect(def2.dominios[0].dimensoes[0].faixas).toEqual({ verdeMax: 20, amareloMax: 50 })
+    expect(def2.dominios[0].dimensoes[1].faixas).toBeUndefined()
+    expect(inst.dominios[0].dimensoes[0].faixas).toBeUndefined() // não mutou o original
+  })
+  it("score 30 → vermelho na dimensão calibrada (faixa própria) e verde na não-calibrada", () => {
+    const calMap = new Map<string, FaixaDef>([["x", { verdeMax: 10, amareloMax: 25 }]])
+    const def2 = aplicarFaixasPorDimensao(inst, calMap)
+    const resp = Array.from({ length: 5 }, () => ({ I: 30, J: 30 }))
+    const res = processarGHE(def2, resp, "unica", 5)
+    expect(res.find((r) => r.dimensao_id === "x")?.classificacao).toBe("vermelho") // 30 > 25
+    expect(res.find((r) => r.dimensao_id === "y")?.classificacao).toBe("verde") // tercil: 30 ≤ 33.3
   })
 })

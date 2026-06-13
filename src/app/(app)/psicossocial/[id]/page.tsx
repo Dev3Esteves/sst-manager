@@ -10,6 +10,7 @@ import { ArrowLeft, FileDown } from "lucide-react"
 import { AcoesCampanha, CopiarLink } from "./acoes"
 import { AvaliacaoSeveridade, type ItemSeveridade } from "./avaliacao-severidade"
 import { AnaliseQualitativa, type GheQualitativo, type TemaQualitativo } from "./analise-qualitativa"
+import { getInstrumento } from "@/lib/psicossocial/instrumentos"
 
 export const dynamic = "force-dynamic"
 
@@ -25,10 +26,15 @@ export default async function CampanhaDetalhePage({ params }: { params: Promise<
 
   const { data: campanha } = await supabase
     .from("psi_campanha")
-    .select("id, titulo, status, versao_aplicada, data_inicio, data_fim, min_respondentes, modo_qualitativo, pgr(numero_revisao, obras(nome))")
+    .select("id, titulo, status, versao_aplicada, data_inicio, data_fim, min_respondentes, modo_qualitativo, empresa_id, pgr(numero_revisao, obras(nome)), psi_instrumento(definicao)")
     .eq("id", id)
     .maybeSingle()
   if (!campanha) notFound()
+
+  // Instrumento desta campanha → se as faixas são calibráveis por percentis.
+  const instrCamp = Array.isArray(campanha.psi_instrumento) ? campanha.psi_instrumento[0] : campanha.psi_instrumento
+  const instrKey = (instrCamp?.definicao as { key?: string } | undefined)?.key
+  const calibravel = !!(instrKey && getInstrumento(instrKey)?.calibravel)
 
   const pgr = Array.isArray(campanha.pgr) ? campanha.pgr[0] : campanha.pgr
   const obra = pgr ? (Array.isArray(pgr.obras) ? pgr.obras[0] : pgr.obras) : null
@@ -58,6 +64,27 @@ export default async function CampanhaDetalhePage({ params }: { params: Promise<
     .from("psi_resultado_dimensao")
     .select("pgr_ghe_id, dimensao_id, dimensao_nome, score_risco, classificacao, suprimido, n_respondentes, probabilidade, severidade, exposicao, nivel_risco_nr1, tipo, nivel_desfecho")
     .eq("campanha_id", id)
+
+  // Status da calibração de faixas (percentis da empresa) para este instrumento+versão.
+  const { data: calib } = calibravel && instrKey
+    ? await admin
+        .from("psi_calibracao")
+        .select("p_verde, p_amarelo, n_amostral, calculado_em")
+        .eq("empresa_id", campanha.empresa_id)
+        .eq("instrumento_key", instrKey)
+        .eq("versao", campanha.versao_aplicada)
+        .order("calculado_em", { ascending: false })
+    : { data: [] }
+  const calibracao = (calib ?? []) as { p_verde: number; p_amarelo: number; n_amostral: number; calculado_em: string }[]
+  const calibrado = calibracao.length > 0
+    ? {
+        dimensoes: calibracao.length,
+        pVerde: calibracao[0].p_verde,
+        pAmarelo: calibracao[0].p_amarelo,
+        nMax: Math.max(...calibracao.map((c) => c.n_amostral)),
+        em: new Date(calibracao[0].calculado_em).toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo" }),
+      }
+    : null
 
   // Pesquisa qualitativa: respondentes (lotes distintos) por GHE + sínteses salvas.
   const modoQualitativo = (campanha as { modo_qualitativo?: string }).modo_qualitativo ?? "nenhum"
@@ -166,7 +193,7 @@ export default async function CampanhaDetalhePage({ params }: { params: Promise<
           </div>
         </CardHeader>
         <CardContent>
-          <AcoesCampanha id={id} status={campanha.status} temResultados={temResultados} />
+          <AcoesCampanha id={id} status={campanha.status} temResultados={temResultados} calibravel={calibravel} />
         </CardContent>
       </Card>
 
@@ -203,7 +230,20 @@ export default async function CampanhaDetalhePage({ params }: { params: Promise<
         <Card>
           <CardHeader>
             <CardTitle className="text-base">Mapa de calor — risco por GHE × dimensão</CardTitle>
-            <CardDescription>Verde/amarelo/vermelho = risco baixo/médio/alto. Cinza = suprimido (poucos respondentes).</CardDescription>
+            <CardDescription>
+              Verde/amarelo/vermelho = risco baixo/médio/alto. Cinza = suprimido (poucos respondentes).
+              {calibrado ? (
+                <span className="block mt-1 text-foreground">
+                  <b>Faixas calibradas pelos percentis da empresa</b> (P{calibrado.pVerde}/P{calibrado.pAmarelo}) ·
+                  {" "}{calibrado.dimensoes} dimensõe{calibrado.dimensoes === 1 ? "" : "s"} · base de até {calibrado.nMax} respondentes ·
+                  {" "}atualizado em {calibrado.em}.
+                </span>
+              ) : calibravel ? (
+                <span className="block mt-1">
+                  Faixas padrão (tercis). Use <b>Calibrar faixas</b> para classificar por percentis das respostas desta empresa.
+                </span>
+              ) : null}
+            </CardDescription>
           </CardHeader>
           <CardContent className="overflow-x-auto">
             <table className="w-full border-collapse text-xs">

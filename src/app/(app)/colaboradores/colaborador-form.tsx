@@ -62,7 +62,12 @@ export function ColaboradorForm({
     formData.set("status", status)
     startTransition(async () => {
       const result = await action(formData)
-      if (result?.error) setErrors(result.error)
+      if (result?.error) {
+        setErrors(result.error)
+        // Move o foco para o primeiro campo com erro (checklist: acessibilidade).
+        const primeiro = Object.keys(result.error).find((k) => k !== "_form")
+        if (primeiro) setTimeout(() => document.getElementById(primeiro)?.focus(), 0)
+      }
     })
   }
 
@@ -76,13 +81,15 @@ export function ColaboradorForm({
         <CardContent className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2 md:col-span-2">
             <Label htmlFor="nome_completo">Nome completo *</Label>
-            <Input id="nome_completo" name="nome_completo" defaultValue={colaborador?.nome_completo} required />
-            <FieldError error={errors.nome_completo} />
+            <Input id="nome_completo" name="nome_completo" defaultValue={colaborador?.nome_completo} required
+              aria-invalid={!!errors.nome_completo} aria-describedby={errors.nome_completo ? "nome_completo-error" : undefined} />
+            <FieldError error={errors.nome_completo} id="nome_completo-error" />
           </div>
           <div className="space-y-2">
             <Label htmlFor="cpf">CPF *</Label>
-            <Input id="cpf" name="cpf" defaultValue={colaborador?.cpf} placeholder="000.000.000-00" required />
-            <FieldError error={errors.cpf} />
+            <Input id="cpf" name="cpf" defaultValue={colaborador?.cpf} placeholder="000.000.000-00" required inputMode="numeric"
+              aria-invalid={!!errors.cpf} aria-describedby={errors.cpf ? "cpf-error" : undefined} />
+            <FieldError error={errors.cpf} id="cpf-error" />
           </div>
           <div className="space-y-2">
             <Label htmlFor="rg">RG</Label>
@@ -105,22 +112,26 @@ export function ColaboradorForm({
           </div>
           <div className="space-y-2">
             <Label htmlFor="telefone">Telefone</Label>
-            <Input id="telefone" name="telefone" defaultValue={colaborador?.telefone ?? ""} placeholder="(11) 91234-5678" />
+            <Input id="telefone" name="telefone" type="tel" inputMode="tel" defaultValue={colaborador?.telefone ?? ""} placeholder="(11) 91234-5678" />
           </div>
           <div className="space-y-2">
             <Label htmlFor="email">E-mail</Label>
-            <Input id="email" name="email" type="email" defaultValue={colaborador?.email ?? ""} />
-            <FieldError error={errors.email} />
+            <Input id="email" name="email" type="email" defaultValue={colaborador?.email ?? ""}
+              aria-invalid={!!errors.email} aria-describedby={errors.email ? "email-error" : undefined} />
+            <FieldError error={errors.email} id="email-error" />
           </div>
           <div className="space-y-2">
             <Label htmlFor="empresa_id">Empresa *</Label>
             <Select value={empresaId} onValueChange={setEmpresaId}>
-              <SelectTrigger id="empresa_id"><SelectValue placeholder="Selecione" /></SelectTrigger>
+              <SelectTrigger id="empresa_id" aria-invalid={!!errors.empresa_id}
+                aria-describedby={errors.empresa_id ? "empresa_id-error" : undefined}>
+                <SelectValue placeholder="Selecione" />
+              </SelectTrigger>
               <SelectContent>
                 {empresas.map(e => <SelectItem key={e.id} value={e.id}>{e.razao_social}</SelectItem>)}
               </SelectContent>
             </Select>
-            <FieldError error={errors.empresa_id} />
+            <FieldError error={errors.empresa_id} id="empresa_id-error" />
           </div>
           <div className="space-y-2">
             <Label htmlFor="cargo_id">Cargo</Label>
@@ -153,8 +164,9 @@ export function ColaboradorForm({
           </div>
           <div className="space-y-2">
             <Label htmlFor="data_admissao">Data de admissão *</Label>
-            <Input id="data_admissao" name="data_admissao" type="date" defaultValue={colaborador?.data_admissao} required />
-            <FieldError error={errors.data_admissao} />
+            <Input id="data_admissao" name="data_admissao" type="date" defaultValue={colaborador?.data_admissao} required
+              aria-invalid={!!errors.data_admissao} aria-describedby={errors.data_admissao ? "data_admissao-error" : undefined} />
+            <FieldError error={errors.data_admissao} id="data_admissao-error" />
           </div>
           <div className="space-y-2">
             <Label htmlFor="tipo_vinculo">Vínculo *</Label>
@@ -204,7 +216,7 @@ export function ColaboradorForm({
   )
 }
 
-function FieldError({ error }: { error?: string[] }) {
+function FieldError({ error, id }: { error?: string[]; id?: string }) {
   if (!error?.length) return null
-  return <p className="text-xs text-destructive">{error[0]}</p>
+  return <p id={id} role="alert" className="text-xs text-destructive">{error[0]}</p>
 }

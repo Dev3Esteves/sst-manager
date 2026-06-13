@@ -343,18 +343,20 @@ export function EmpresaForm({
               <Label htmlFor="cnpj">CNPJ *</Label>
               <div className="flex gap-2">
                 <Input id="cnpj" value={cnpj} onChange={(e) => setCnpj(e.target.value)}
-                  placeholder="00.000.000/0000-00" required />
+                  placeholder="00.000.000/0000-00" required inputMode="numeric"
+                  aria-invalid={!!errors.cnpj} aria-describedby={errors.cnpj ? "cnpj-error" : undefined} />
                 <Button type="button" variant="outline" onClick={buscarCnpj} disabled={buscandoCnpj}>
                   {buscandoCnpj ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
                   Buscar
                 </Button>
               </div>
-              <FieldError error={errors.cnpj} />
+              <FieldError error={errors.cnpj} id="cnpj-error" />
             </div>
             <div className="space-y-2 md:col-span-2">
               <Label htmlFor="razao_social">Razão social *</Label>
-              <Input id="razao_social" value={razaoSocial} onChange={(e) => setRazaoSocial(e.target.value)} required />
-              <FieldError error={errors.razao_social} />
+              <Input id="razao_social" value={razaoSocial} onChange={(e) => setRazaoSocial(e.target.value)} required
+                aria-invalid={!!errors.razao_social} aria-describedby={errors.razao_social ? "razao_social-error" : undefined} />
+              <FieldError error={errors.razao_social} id="razao_social-error" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="nome_fantasia">Nome fantasia</Label>
@@ -367,7 +369,7 @@ export function EmpresaForm({
             </div>
             <div className="flex items-center gap-2 md:col-span-2">
               <input type="checkbox" id="ativo" checked={ativo} onChange={(e) => setAtivo(e.target.checked)}
-                className="h-4 w-4 rounded border-gray-300" />
+                className="h-4 w-4 rounded border-input" />
               <Label htmlFor="ativo">Empresa ativa</Label>
             </div>
           </CardContent>
@@ -446,7 +448,7 @@ export function EmpresaForm({
                     <Label className="text-xs">CEP</Label>
                     <div className="flex gap-2">
                       <Input value={e.cep} onChange={(ev) => updEndereco(i, { cep: ev.target.value })}
-                        placeholder="00000-000" />
+                        placeholder="00000-000" inputMode="numeric" />
                       <Button type="button" variant="outline" size="icon" onClick={() => buscarCep(i)}
                         disabled={cepLoading === i} aria-label="Buscar CEP">
                         {cepLoading === i ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
@@ -459,7 +461,7 @@ export function EmpresaForm({
                   </div>
                   <div className="space-y-1 md:col-span-1">
                     <Label className="text-xs">Número</Label>
-                    <Input value={e.numero} onChange={(ev) => updEndereco(i, { numero: ev.target.value })} />
+                    <Input value={e.numero} onChange={(ev) => updEndereco(i, { numero: ev.target.value })} inputMode="numeric" />
                   </div>
                   <div className="space-y-1 md:col-span-2">
                     <Label className="text-xs">Complemento</Label>
@@ -553,7 +555,7 @@ export function EmpresaForm({
                 {PAPEL_VALUES.map((p) => (
                   <label key={p} className="inline-flex items-center gap-2 text-sm rounded-md border p-2.5">
                     <input type="checkbox" checked={papeis.includes(p)} onChange={() => togglePapel(p)}
-                      className="h-4 w-4 rounded border-gray-300" />
+                      className="h-4 w-4 rounded border-input" />
                     {PAPEL_LABEL[p]}
                   </label>
                 ))}
@@ -564,7 +566,7 @@ export function EmpresaForm({
             <div className="rounded-md border bg-muted/30 p-3 space-y-2">
               <label className="flex items-start gap-2">
                 <input type="checkbox" checked={donaSistema} onChange={(e) => toggleDona(e.target.checked)}
-                  className="h-4 w-4 mt-0.5 rounded border-gray-300" />
+                  className="h-4 w-4 mt-0.5 rounded border-input" />
                 <span>
                   <span className="font-semibold text-sm">Empresa dona do sistema (multi-tenant)</span>
                   <span className="block text-xs text-muted-foreground">
@@ -656,7 +658,7 @@ export function EmpresaForm({
   )
 }
 
-function FieldError({ error }: { error?: string[] }) {
+function FieldError({ error, id }: { error?: string[]; id?: string }) {
   if (!error?.length) return null
-  return <p className="text-xs text-destructive">{error[0]}</p>
+  return <p id={id} role="alert" className="text-xs text-destructive">{error[0]}</p>
 }

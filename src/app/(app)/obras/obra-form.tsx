@@ -102,7 +102,12 @@ export function ObraForm({
     formData.set("empreitada", empreitada || "none")
     startTransition(async () => {
       const result = await action(formData)
-      if (result?.error) setErrors(result.error)
+      if (result?.error) {
+        setErrors(result.error)
+        // Move o foco para o primeiro campo com erro (checklist: acessibilidade).
+        const primeiro = Object.keys(result.error).find((k) => k !== "_form")
+        if (primeiro) setTimeout(() => document.getElementById(primeiro)?.focus(), 0)
+      }
     })
   }
 
@@ -122,20 +127,27 @@ export function ObraForm({
             <Input
               id="nome" name="nome" defaultValue={obra?.nome}
               placeholder="DANTE / RACIONAL" required
+              aria-invalid={!!errors.nome}
+              aria-describedby={errors.nome ? "nome-error" : undefined}
             />
-            {errors.nome && <p className="text-xs text-destructive">{errors.nome[0]}</p>}
+            {errors.nome && <p id="nome-error" role="alert" className="text-xs text-destructive">{errors.nome[0]}</p>}
           </div>
           <div className="space-y-2">
             <Label htmlFor="empresa_id">Empresa dona *</Label>
             <Select value={empresaId} onValueChange={setEmpresaId}>
-              <SelectTrigger id="empresa_id"><SelectValue /></SelectTrigger>
+              <SelectTrigger id="empresa_id" aria-invalid={!!errors.empresa_id}
+                aria-describedby={errors.empresa_id ? "empresa_id-error" : undefined}>
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
                 {donas.map((e) => (
                   <SelectItem key={e.id} value={e.id}>{e.razao_social}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
-            <p className="text-xs text-muted-foreground">Quem executa a obra.</p>
+            {errors.empresa_id
+              ? <p id="empresa_id-error" role="alert" className="text-xs text-destructive">{errors.empresa_id[0]}</p>
+              : <p className="text-xs text-muted-foreground">Quem executa a obra.</p>}
           </div>
           <div className="space-y-2">
             <Label htmlFor="contratante_id">Contratante</Label>
@@ -183,7 +195,7 @@ export function ObraForm({
               id="ativa"
               name="ativa"
               defaultChecked={obra?.ativa ?? true}
-              className="h-4 w-4 rounded border-gray-300"
+              className="h-4 w-4 rounded border-input"
             />
             <Label htmlFor="ativa">Obra ativa</Label>
           </div>
@@ -201,7 +213,7 @@ export function ObraForm({
         <CardContent className="grid gap-4 md:grid-cols-12">
           <div className="space-y-2 md:col-span-5">
             <Label htmlFor="cnpj">CNPJ da obra</Label>
-            <Input id="cnpj" name="cnpj" value={cnpj} onChange={(e) => setCnpj(e.target.value)} placeholder="00.000.000/0000-00" />
+            <Input id="cnpj" name="cnpj" value={cnpj} onChange={(e) => setCnpj(e.target.value)} placeholder="00.000.000/0000-00" inputMode="numeric" />
           </div>
           <div className="space-y-2 md:col-span-3 flex flex-col justify-end">
             <Button type="button" variant="outline" onClick={buscarCnpj} disabled={buscandoCnpj}>
@@ -212,7 +224,7 @@ export function ObraForm({
           <div className="md:col-span-4" />
           <div className="space-y-2 md:col-span-3">
             <Label htmlFor="cep">CEP</Label>
-            <Input id="cep" name="cep" value={cep} onChange={(e) => setCep(e.target.value)} />
+            <Input id="cep" name="cep" value={cep} onChange={(e) => setCep(e.target.value)} inputMode="numeric" placeholder="00000-000" />
           </div>
           <div className="space-y-2 md:col-span-3 flex flex-col justify-end">
             <Button type="button" variant="outline" onClick={buscarCep} disabled={buscandoCep}>
@@ -227,7 +239,7 @@ export function ObraForm({
           </div>
           <div className="space-y-2 md:col-span-2">
             <Label htmlFor="numero">Número</Label>
-            <Input id="numero" name="numero" value={numero} onChange={(e) => setNumero(e.target.value)} />
+            <Input id="numero" name="numero" value={numero} onChange={(e) => setNumero(e.target.value)} inputMode="numeric" />
           </div>
           <div className="space-y-2 md:col-span-2">
             <Label htmlFor="complemento">Compl.</Label>

@@ -32,7 +32,7 @@ export default async function NovaCampanhaPage() {
       {opcoes.length === 0 ? (
         <Card>
           <CardContent className="flex items-center gap-3 py-8 text-muted-foreground">
-            <AlertTriangle className="h-5 w-5 text-amber-500" />
+            <AlertTriangle className="h-5 w-5 text-status-alerta" />
             <div>
               Nenhum PGR disponível. Crie um PGR (com seus GHEs) em{" "}
               <Link href="/pgr/new" className="text-primary underline">/pgr</Link> antes de iniciar uma campanha.

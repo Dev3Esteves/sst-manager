@@ -48,9 +48,9 @@ export function CampanhaForm({ pgrs }: { pgrs: { id: string; label: string }[] }
         </CardHeader>
         <CardContent className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2 md:col-span-2">
-            <Label>PGR (obra) *</Label>
+            <Label htmlFor="pgr_id">PGR (obra) *</Label>
             <Select value={pgrId} onValueChange={setPgrId}>
-              <SelectTrigger><SelectValue placeholder="Selecione o PGR" /></SelectTrigger>
+              <SelectTrigger id="pgr_id"><SelectValue placeholder="Selecione o PGR" /></SelectTrigger>
               <SelectContent>
                 {pgrs.map((p) => <SelectItem key={p.id} value={p.id}>{p.label}</SelectItem>)}
               </SelectContent>
@@ -61,18 +61,18 @@ export function CampanhaForm({ pgrs }: { pgrs: { id: string; label: string }[] }
             <Input id="titulo" name="titulo" placeholder="Ex.: Avaliação psicossocial 2026 — Obra X" required />
           </div>
           <div className="space-y-2">
-            <Label>Instrumento *</Label>
+            <Label htmlFor="instrumento">Instrumento *</Label>
             <Select value={instrumentoKey} onValueChange={trocarInstrumento}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger id="instrumento"><SelectValue /></SelectTrigger>
               <SelectContent>
                 {INSTRUMENTOS.map((i) => <SelectItem key={i.key} value={i.key}>{i.nome}</SelectItem>)}
               </SelectContent>
             </Select>
           </div>
           <div className="space-y-2">
-            <Label>Versão do questionário *</Label>
+            <Label htmlFor="versao">Versão do questionário *</Label>
             <Select value={versao} onValueChange={setVersao}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger id="versao"><SelectValue /></SelectTrigger>
               <SelectContent>
                 {versoesDisponiveis.map((v) => <SelectItem key={v.value} value={v.value}>{v.label}</SelectItem>)}
               </SelectContent>
@@ -109,9 +109,9 @@ export function CampanhaForm({ pgrs }: { pgrs: { id: string; label: string }[] }
           </div>
 
           <div className="space-y-2 md:col-span-2">
-            <Label>Pesquisa qualitativa (perguntas abertas)</Label>
+            <Label htmlFor="modo_qualitativo">Pesquisa qualitativa (perguntas abertas)</Label>
             <Select value={modoQualitativo} onValueChange={(v) => setModoQualitativo(v as typeof modoQualitativo)}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger id="modo_qualitativo"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="nenhum">Não usar (somente questionário quantitativo)</SelectItem>
                 <SelectItem value="integrado">Integrada — perguntas abertas antes do questionário</SelectItem>

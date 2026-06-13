@@ -55,7 +55,11 @@ export function CargoForm({
     formData.set("epis_obrigatorios", JSON.stringify({ obrigatorios, eventuais }))
     startTransition(async () => {
       const result = await action(formData)
-      if (result?.error) setErrors(result.error)
+      if (result?.error) {
+        setErrors(result.error)
+        const primeiro = Object.keys(result.error).find((k) => k !== "_form")
+        if (primeiro) setTimeout(() => document.getElementById(primeiro)?.focus(), 0)
+      }
     })
   }
 
@@ -69,16 +73,22 @@ export function CargoForm({
         <CardContent className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2 md:col-span-2">
             <Label htmlFor="titulo">Título *</Label>
-            <Input id="titulo" name="titulo" defaultValue={cargo?.titulo} required />
+            <Input id="titulo" name="titulo" defaultValue={cargo?.titulo} required
+              aria-invalid={!!errors.titulo} aria-describedby={errors.titulo ? "titulo-error" : undefined} />
+            <FieldError error={errors.titulo} id="titulo-error" />
           </div>
           <div className="space-y-2">
             <Label htmlFor="empresa_id">Empresa *</Label>
             <Select value={empresaId} onValueChange={setEmpresaId}>
-              <SelectTrigger id="empresa_id"><SelectValue /></SelectTrigger>
+              <SelectTrigger id="empresa_id" aria-invalid={!!errors.empresa_id}
+                aria-describedby={errors.empresa_id ? "empresa_id-error" : undefined}>
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
                 {empresas.map(e => <SelectItem key={e.id} value={e.id}>{e.razao_social}</SelectItem>)}
               </SelectContent>
             </Select>
+            <FieldError error={errors.empresa_id} id="empresa_id-error" />
           </div>
           <div className="space-y-2">
             <Label htmlFor="cbo">CBO</Label>
@@ -169,6 +179,11 @@ export function CargoForm({
   )
 }
 
+function FieldError({ error, id }: { error?: string[]; id?: string }) {
+  if (!error?.length) return null
+  return <p id={id} role="alert" className="text-xs text-destructive">{error[0]}</p>
+}
+
 function ListaEpis({
   titulo, descricao, lista, setLista, episDisponiveis, corBadge,
 }: {
@@ -251,7 +266,7 @@ function ListaEpis({
           <div className="space-y-1">
             <Label className="text-xs">EPI</Label>
             <Select value={epiId} onValueChange={setEpiId}>
-              <SelectTrigger><SelectValue placeholder="Selecione um EPI" /></SelectTrigger>
+              <SelectTrigger aria-label="Selecionar EPI"><SelectValue placeholder="Selecione um EPI" /></SelectTrigger>
               <SelectContent>
                 {disponiveis.map((e) => (
                   <SelectItem key={e.id} value={e.id}>
@@ -263,7 +278,7 @@ function ListaEpis({
           </div>
           <div className="space-y-1">
             <Label className="text-xs">Observação (opcional)</Label>
-            <Input value={obs} onChange={(e) => setObs(e.target.value)} placeholder="Ex.: Classe 3 para MT" />
+            <Input value={obs} onChange={(e) => setObs(e.target.value)} placeholder="Ex.: Classe 3 para MT" aria-label="Observação do EPI" />
           </div>
           <Button type="button" onClick={adicionar} disabled={!epiId}>
             <Plus className="h-4 w-4" /> Adicionar

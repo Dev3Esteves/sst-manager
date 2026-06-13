@@ -71,11 +71,13 @@ export default async function IntegracoesPage() {
       <div className="rounded-md border border-sky-200 bg-sky-50 p-3 text-sm flex gap-2">
         <Info className="h-5 w-5 text-sky-600 shrink-0" />
         <span className="text-sky-900">
-          Esta lista mostra apenas eventos que <b>passaram pela autenticação e validação</b>.
-          Eventos rejeitados por <b>assinatura inválida (401)</b> ou <b>formato inválido (400)</b> —
-          ex.: envio em lote/array não suportado — <b>não aparecem aqui</b>; verifique os logs do
-          servidor (rota <code>integr/people/webhook</code>). O webhook processa <b>um registro por
-          evento</b> (não há evento de lote).
+          Esta lista mostra apenas eventos que <b>passaram pela autenticação e pela validação do
+          envelope</b>. Eventos rejeitados por <b>assinatura inválida (401)</b>, <b>JSON malformado
+          (400)</b> ou <b>envelope inválido (422)</b> — ex.: envio em lote/array, que não é suportado —
+          <b>não aparecem aqui</b>; verifique os logs do servidor (rota{" "}
+          <code>integr/people/webhook</code>). O webhook processa <b>um registro por evento</b> (não há
+          evento de lote). Já um <b>erro de dados</b> (ex.: empresa não cadastrada) aparece abaixo como
+          evento com status <b>erro</b>.
         </span>
       </div>
 

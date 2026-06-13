@@ -32,7 +32,8 @@ export default async function ColaboradoresPage({
   if (sp.vinculo) query = query.eq("tipo_vinculo", sp.vinculo)
   if (sp.busca) query = query.ilike("nome_completo", `%${sp.busca}%`)
 
-  const { data: colaboradores } = await query
+  const { data: colaboradores, error } = await query
+  const temFiltro = !!(sp.busca || sp.status || sp.vinculo)
 
   return (
     <div className="container py-8 space-y-6">
@@ -151,6 +152,7 @@ export default async function ColaboradoresPage({
                         <Button
                           variant="ghost" size="icon" asChild
                           title="Baixar Ficha de EPI (histórico completo)"
+                          aria-label={`Baixar Ficha de EPI de ${c.nome_completo}`}
                         >
                           <a
                             href={`/api/colaboradores/${c.id}/ficha-epi/pdf`}
@@ -160,7 +162,8 @@ export default async function ColaboradoresPage({
                             <HardHat className="h-4 w-4" />
                           </a>
                         </Button>
-                        <Button variant="ghost" size="icon" asChild title="Editar">
+                        <Button variant="ghost" size="icon" asChild title="Editar"
+                          aria-label={`Editar ${c.nome_completo}`}>
                           <Link href={`/colaboradores/${c.id}`}>
                             <Pencil className="h-4 w-4" />
                           </Link>
@@ -172,8 +175,18 @@ export default async function ColaboradoresPage({
               })}
               {(!colaboradores || colaboradores.length === 0) && (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
-                    Nenhum colaborador cadastrado.
+                  <TableCell colSpan={6} className="text-center py-8">
+                    {error ? (
+                      <span className="text-destructive" role="alert">
+                        Não foi possível carregar os colaboradores. Recarregue a página.
+                      </span>
+                    ) : temFiltro ? (
+                      <span className="text-muted-foreground">
+                        Nenhum colaborador encontrado para os filtros aplicados.
+                      </span>
+                    ) : (
+                      <span className="text-muted-foreground">Nenhum colaborador cadastrado.</span>
+                    )}
                   </TableCell>
                 </TableRow>
               )}

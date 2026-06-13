@@ -9,7 +9,7 @@ import { Plus, Pencil, FileSpreadsheet } from "lucide-react"
 
 export default async function CargosPage() {
   const supabase = await createClient()
-  const { data: cargos } = await supabase
+  const { data: cargos, error } = await supabase
     .from("cargos")
     .select("id, titulo, cbo, grupo_risco, nrs_aplicaveis, empresas(razao_social)")
     .order("titulo")
@@ -82,7 +82,7 @@ export default async function CargosPage() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Button variant="ghost" size="icon" asChild>
+                      <Button variant="ghost" size="icon" asChild title="Editar" aria-label={`Editar ${c.titulo}`}>
                         <Link href={`/cargos/${c.id}`}><Pencil className="h-4 w-4" /></Link>
                       </Button>
                     </TableCell>
@@ -91,8 +91,14 @@ export default async function CargosPage() {
               })}
               {(!cargos || cargos.length === 0) && (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
-                    Nenhum cargo cadastrado.
+                  <TableCell colSpan={6} className="text-center py-8">
+                    {error ? (
+                      <span className="text-destructive" role="alert">
+                        Não foi possível carregar os cargos. Recarregue a página.
+                      </span>
+                    ) : (
+                      <span className="text-muted-foreground">Nenhum cargo cadastrado.</span>
+                    )}
                   </TableCell>
                 </TableRow>
               )}

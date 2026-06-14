@@ -84,8 +84,8 @@ export default async function InspecaoViewPage({ params }: { params: Promise<{ i
                 <div className="text-sm font-medium">{r.pergunta}</div>
                 {r.observacao && <div className="text-sm text-muted-foreground mt-1">→ {r.observacao}</div>}
                 {r.foto_url && (
-                  // eslint-disable-next-line @next/next/no-img-element
                   <a href={r.foto_url} target="_blank" rel="noopener noreferrer">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={r.foto_url}
                       alt={`Evidência: ${r.pergunta}`}

@@ -300,7 +300,7 @@ export default async function PgrDetailPage({ params }: { params: Promise<{ id: 
         </Card>
         <Card>
           <CardContent className="pt-6">
-            <div className="text-2xl font-bold text-orange-600">{riscosCriticos}</div>
+            <div className="text-2xl font-bold text-status-critico">{riscosCriticos}</div>
             <p className="text-xs text-muted-foreground">Riscos alto/muito alto</p>
           </CardContent>
         </Card>

@@ -143,7 +143,7 @@ export default async function PgrListPage() {
                     <TableCell className="text-sm">
                       {new Date(p.data_emissao).toLocaleDateString("pt-BR")}
                     </TableCell>
-                    <TableCell className={`text-sm ${venceuOuPerto ? "text-yellow-700 font-medium" : ""}`}>
+                    <TableCell className={`text-sm ${venceuOuPerto ? "text-status-alerta font-medium" : ""}`}>
                       {new Date(p.data_vencimento).toLocaleDateString("pt-BR")}
                       {venceuOuPerto && dias >= 0 && (
                         <div className="text-xs">em {dias}d</div>

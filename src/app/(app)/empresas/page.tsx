@@ -41,7 +41,7 @@ export default async function EmpresasPage({
   const tabInfo = TABS.find((t) => t.key === tab)!
 
   const supabase = await createClient()
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("empresas")
     .select("id, razao_social, nome_fantasia, cnpj, ativo, dona_sistema, empresa_mae_id, empresa_papeis(papel)")
     .order("dona_sistema", { ascending: false })
@@ -185,8 +185,14 @@ export default async function EmpresasPage({
               ))}
               {empresas.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
-                    Nenhuma empresa nesta aba.
+                  <TableCell colSpan={6} className="text-center py-8">
+                    {error ? (
+                      <span className="text-destructive" role="alert">
+                        Não foi possível carregar as empresas. Recarregue a página.
+                      </span>
+                    ) : (
+                      <span className="text-muted-foreground">Nenhuma empresa nesta aba.</span>
+                    )}
                   </TableCell>
                 </TableRow>
               )}

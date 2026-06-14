@@ -104,9 +104,9 @@ export function ObjetivoForm({
             <Input id="resp" value={responsavel} onChange={(e) => setResponsavel(e.target.value)} />
           </div>
           <div className="space-y-2">
-            <Label>Status</Label>
+            <Label htmlFor="status">Status</Label>
             <Select value={status} onValueChange={setStatus}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger id="status"><SelectValue /></SelectTrigger>
               <SelectContent>{Object.entries(OBJETIVO_STATUS).map(([k, v]) => <SelectItem key={k} value={k}>{v}</SelectItem>)}</SelectContent>
             </Select>
           </div>

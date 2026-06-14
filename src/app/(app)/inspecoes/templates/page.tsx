@@ -20,7 +20,7 @@ export default async function TemplatesInspecaoPage() {
     )
   }
 
-  const { data: templates } = await r.ctx.supabase
+  const { data: templates, error } = await r.ctx.supabase
     .from("templates_inspecao")
     .select("id, titulo, categoria, periodicidade, ativo, itens")
     .order("titulo")
@@ -30,7 +30,7 @@ export default async function TemplatesInspecaoPage() {
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" asChild>
+            <Button variant="ghost" size="icon" aria-label="Voltar para inspeções" asChild>
               <Link href="/inspecoes"><ArrowLeft className="h-4 w-4" /></Link>
             </Button>
             <h1 className="text-3xl font-bold tracking-tight">Templates de inspeção</h1>
@@ -81,8 +81,14 @@ export default async function TemplatesInspecaoPage() {
               {(!templates || templates.length === 0) && (
                 <TableRow>
                   <TableCell colSpan={6} className="text-center text-muted-foreground py-10">
-                    <ClipboardList className="mx-auto h-10 w-10 opacity-30 mb-2" />
-                    Nenhum template cadastrado.
+                    {error ? (
+                      <span className="text-destructive" role="alert">Não foi possível carregar os templates. Recarregue a página.</span>
+                    ) : (
+                      <>
+                        <ClipboardList className="mx-auto h-10 w-10 opacity-30 mb-2" />
+                        Nenhum template cadastrado.
+                      </>
+                    )}
                   </TableCell>
                 </TableRow>
               )}

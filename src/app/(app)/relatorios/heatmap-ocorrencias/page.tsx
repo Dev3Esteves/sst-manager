@@ -63,7 +63,7 @@ export default async function HeatmapPage({
     query = query.gte("data_ocorrencia", inicio.toISOString())
   }
 
-  const { data: ocorrencias } = await query
+  const { data: ocorrencias, error } = await query
 
   const lista = ocorrencias ?? []
 
@@ -336,7 +336,11 @@ export default async function HeatmapPage({
         <Card>
           <CardContent className="py-12 text-center text-muted-foreground">
             <MapPin className="mx-auto h-10 w-10 opacity-30 mb-2" />
-            Nenhuma ocorrência registrada no período. Ajuste o filtro ou registre ocorrências.
+            {error ? (
+              <span className="text-destructive" role="alert">Não foi possível carregar as ocorrências. Recarregue a página.</span>
+            ) : (
+              "Nenhuma ocorrência registrada no período. Ajuste o filtro ou registre ocorrências."
+            )}
           </CardContent>
         </Card>
       )}

@@ -70,6 +70,7 @@ export default async function UsuariosPage({
   ])
 
   const usuariosRows = usuariosResult.data
+  const usuariosError = usuariosResult.error
   const totalUsuarios = usuariosResult.count ?? 0
 
   const emailPorId = new Map<string, { email?: string; last_sign_in_at?: string | null }>()
@@ -145,7 +146,7 @@ export default async function UsuariosPage({
                     </TableCell>
                     <TableCell>
                       <Button variant="ghost" size="icon" asChild>
-                        <Link href={`/usuarios/${u.id}`}><Pencil className="h-4 w-4" /></Link>
+                        <Link href={`/usuarios/${u.id}`} aria-label="Editar usuário"><Pencil className="h-4 w-4" /></Link>
                       </Button>
                     </TableCell>
                   </TableRow>
@@ -153,8 +154,16 @@ export default async function UsuariosPage({
               })}
               {(!usuariosRows || usuariosRows.length === 0) && (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center text-muted-foreground py-10">
-                    {page > 1 ? "Nenhum usuário nesta página." : "Nenhum usuário cadastrado."}
+                  <TableCell colSpan={7} className="text-center py-10">
+                    {usuariosError ? (
+                      <span className="text-destructive" role="alert">
+                        Não foi possível carregar os usuários. Recarregue a página.
+                      </span>
+                    ) : (
+                      <span className="text-muted-foreground">
+                        {page > 1 ? "Nenhum usuário nesta página." : "Nenhum usuário cadastrado."}
+                      </span>
+                    )}
                   </TableCell>
                 </TableRow>
               )}

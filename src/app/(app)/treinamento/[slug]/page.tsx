@@ -65,7 +65,7 @@ export default async function ModuloTreinamentoPage({
   return (
     <div className="container py-8 max-w-3xl space-y-6">
       <div className="flex items-center gap-2">
-        <Button variant="ghost" size="icon" asChild><Link href="/treinamento"><ArrowLeft className="h-4 w-4" /></Link></Button>
+        <Button variant="ghost" size="icon" aria-label="Voltar à trilha" asChild><Link href="/treinamento"><ArrowLeft className="h-4 w-4" /></Link></Button>
         <div>
           <div className="text-xs uppercase tracking-wider text-muted-foreground">{modulo.secao} · Módulo {modulo.ordem}</div>
           <h1 className="text-3xl font-bold tracking-tight">{modulo.titulo}</h1>

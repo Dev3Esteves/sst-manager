@@ -182,18 +182,18 @@ export function EditarUsuarioForm({
         <CardHeader><CardTitle className="text-lg">Vínculo e permissões</CardTitle></CardHeader>
         <CardContent className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2">
-            <Label>Perfil *</Label>
+            <Label htmlFor="perfil">Perfil *</Label>
             <Select value={perfilId} onValueChange={setPerfilId}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger id="perfil"><SelectValue /></SelectTrigger>
               <SelectContent>
                 {perfis.map((p) => <SelectItem key={p.id} value={p.id}>{p.nome}</SelectItem>)}
               </SelectContent>
             </Select>
           </div>
           <div className="space-y-2">
-            <Label>Empresa principal *</Label>
+            <Label htmlFor="empresa-principal">Empresa principal *</Label>
             <Select value={empresaId} onValueChange={setEmpresaId}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger id="empresa-principal"><SelectValue /></SelectTrigger>
               <SelectContent>
                 {empresas.map((e) => <SelectItem key={e.id} value={e.id}>{e.razao_social}</SelectItem>)}
               </SelectContent>
@@ -221,9 +221,9 @@ export function EditarUsuarioForm({
             </div>
           )}
           <div className="space-y-2 md:col-span-2">
-            <Label>Colaborador vinculado</Label>
+            <Label htmlFor="colaborador-vinculado">Colaborador vinculado</Label>
             <Select value={colaboradorId || "__none__"} onValueChange={(v) => setColaboradorId(v === "__none__" ? "" : v)}>
-              <SelectTrigger><SelectValue placeholder="Sem vínculo" /></SelectTrigger>
+              <SelectTrigger id="colaborador-vinculado"><SelectValue placeholder="Sem vínculo" /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="__none__">(sem vínculo)</SelectItem>
                 {colaboradores.map((c) => <SelectItem key={c.id} value={c.id}>{c.nome_completo}</SelectItem>)}

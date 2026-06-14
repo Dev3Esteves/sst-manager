@@ -366,7 +366,7 @@ export default async function PgrDetailPage({ params }: { params: Promise<{ id: 
                         <Badge variant="outline" className="text-[10px]">{riscosGhe}</Badge>
                       </TableCell>
                       <TableCell>
-                        <Button variant="ghost" size="icon" asChild>
+                        <Button variant="ghost" size="icon" asChild aria-label="Editar GHE">
                           <Link href={`/pgr/${pgr.id}/ghe/${g.id}`}>
                             <Pencil className="h-3.5 w-3.5" />
                           </Link>
@@ -477,7 +477,7 @@ export default async function PgrDetailPage({ params }: { params: Promise<{ id: 
                       )}
                     </TableCell>
                     <TableCell>
-                      <Button variant="ghost" size="icon" asChild>
+                      <Button variant="ghost" size="icon" asChild aria-label="Editar medida de controle">
                         <Link href={`/pgr/${pgr.id}/medida/${m.id}`}>
                           <Pencil className="h-3.5 w-3.5" />
                         </Link>
@@ -537,7 +537,7 @@ export default async function PgrDetailPage({ params }: { params: Promise<{ id: 
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <Button variant="ghost" size="icon" asChild>
+                      <Button variant="ghost" size="icon" asChild aria-label="Editar ação">
                         <Link href={`/pgr/${pgr.id}/acao/${a.id}`}>
                           <Pencil className="h-3.5 w-3.5" />
                         </Link>

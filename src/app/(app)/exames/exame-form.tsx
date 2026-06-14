@@ -244,11 +244,11 @@ export function ExameForm({
           <input type="hidden" name="clinica_id" value={clinicaId} />
           <div className="space-y-2 md:col-span-2">
             <div className="flex items-center justify-between">
-              <Label>Médico responsável (cadastro)</Label>
+              <Label htmlFor="medico_cadastro">Médico responsável (cadastro)</Label>
               <Link href="/medicos/new" target="_blank" className="text-xs text-primary hover:underline">+ Cadastrar médico</Link>
             </div>
             <Select value={medicoId} onValueChange={selecionarMedico}>
-              <SelectTrigger><SelectValue placeholder={medicos.length ? "Selecione um médico cadastrado" : "Nenhum médico cadastrado"} /></SelectTrigger>
+              <SelectTrigger id="medico_cadastro"><SelectValue placeholder={medicos.length ? "Selecione um médico cadastrado" : "Nenhum médico cadastrado"} /></SelectTrigger>
               <SelectContent>
                 {medicos.map((m) => (
                   <SelectItem key={m.id} value={m.id}>
@@ -271,11 +271,11 @@ export function ExameForm({
           </div>
           <div className="space-y-2 md:col-span-2">
             <div className="flex items-center justify-between">
-              <Label>Clínica (cadastro)</Label>
+              <Label htmlFor="clinica_cadastro">Clínica (cadastro)</Label>
               <Link href="/clinicas/new" target="_blank" className="text-xs text-primary hover:underline">+ Cadastrar clínica</Link>
             </div>
             <Select value={clinicaId} onValueChange={selecionarClinica}>
-              <SelectTrigger><SelectValue placeholder={clinicas.length ? "Selecione uma clínica cadastrada" : "Nenhuma clínica cadastrada"} /></SelectTrigger>
+              <SelectTrigger id="clinica_cadastro"><SelectValue placeholder={clinicas.length ? "Selecione uma clínica cadastrada" : "Nenhuma clínica cadastrada"} /></SelectTrigger>
               <SelectContent>
                 {clinicas.map((c) => (
                   <SelectItem key={c.id} value={c.id}>

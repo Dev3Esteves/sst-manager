@@ -45,7 +45,7 @@ export default async function IntegracoesPage() {
 
   // integr_evento é deny-all (RLS): leitura via service role. A página já é admin-only.
   const admin = createAdminClient()
-  const { data: eventos } = await admin
+  const { data: eventos, error } = await admin
     .from("integr_evento")
     .select("event_id, tipo, status, detalhe, recebido_em")
     .order("recebido_em", { ascending: false })
@@ -161,10 +161,18 @@ export default async function IntegracoesPage() {
               ))}
               {lista.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={4} className="text-center text-muted-foreground py-10">
-                    Nenhum evento recebido do People ainda. Se você esperava dados, o problema está
-                    antes da aplicação: URL do webhook, segredo (assinatura) ou formato do envio —
-                    verifique os logs do servidor.
+                  <TableCell colSpan={4} className="text-center py-10">
+                    {error ? (
+                      <span className="text-destructive" role="alert">
+                        Não foi possível carregar os eventos de integração. Recarregue a página.
+                      </span>
+                    ) : (
+                      <span className="text-muted-foreground">
+                        Nenhum evento recebido do People ainda. Se você esperava dados, o problema está
+                        antes da aplicação: URL do webhook, segredo (assinatura) ou formato do envio —
+                        verifique os logs do servidor.
+                      </span>
+                    )}
                   </TableCell>
                 </TableRow>
               )}

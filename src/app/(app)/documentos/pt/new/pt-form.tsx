@@ -116,9 +116,9 @@ export function PtForm({
         <CardHeader><CardTitle className="text-lg">2. Identificação</CardTitle></CardHeader>
         <CardContent className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2">
-            <Label>Empresa *</Label>
+            <Label htmlFor="empresa">Empresa *</Label>
             <Select value={empresaId} onValueChange={setEmpresaId}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger id="empresa"><SelectValue /></SelectTrigger>
               <SelectContent>
                 {empresas.map(e => <SelectItem key={e.id} value={e.id}>{e.razao_social}</SelectItem>)}
               </SelectContent>

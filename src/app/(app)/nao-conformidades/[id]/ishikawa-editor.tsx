@@ -89,6 +89,7 @@ export function IshikawaEditor({
                   size="sm"
                   onClick={() => addItem(cat)}
                   className="shrink-0"
+                  aria-label={`Adicionar causa em ${ISHIKAWA_CATEGORIA_LABEL[cat]}`}
                 >
                   <Plus className="h-3 w-3" />
                 </Button>
@@ -118,6 +119,7 @@ export function IshikawaEditor({
                           variant="ghost"
                           size="icon"
                           onClick={() => removeItem(idx)}
+                          aria-label="Remover causa"
                         >
                           <Trash2 className="h-3.5 w-3.5" />
                         </Button>

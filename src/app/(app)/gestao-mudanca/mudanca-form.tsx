@@ -106,16 +106,16 @@ export function MudancaForm({
             <Input id="tit" value={titulo} onChange={(e) => setTitulo(e.target.value)} />
           </div>
           <div className="space-y-2">
-            <Label>Tipo *</Label>
+            <Label htmlFor="tipo">Tipo *</Label>
             <Select value={tipo} onValueChange={setTipo}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger id="tipo"><SelectValue /></SelectTrigger>
               <SelectContent>{Object.entries(MUDANCA_TIPOS).map(([k, v]) => <SelectItem key={k} value={k}>{v}</SelectItem>)}</SelectContent>
             </Select>
           </div>
           <div className="space-y-2">
-            <Label>Caráter</Label>
+            <Label htmlFor="carater">Caráter</Label>
             <Select value={carater} onValueChange={setCarater}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger id="carater"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="permanente">Permanente</SelectItem>
                 <SelectItem value="temporaria">Temporária</SelectItem>
@@ -129,9 +129,9 @@ export function MudancaForm({
             <Area id="mot" label="Motivo / justificativa" value={motivo} onChange={setMotivo} rows={2} />
           </div>
           <div className="space-y-2">
-            <Label>Obra (opcional)</Label>
+            <Label htmlFor="obra">Obra (opcional)</Label>
             <Select value={obraId || SEM_OBRA} onValueChange={(v) => setObraId(v === SEM_OBRA ? "" : v)}>
-              <SelectTrigger><SelectValue placeholder="—" /></SelectTrigger>
+              <SelectTrigger id="obra"><SelectValue placeholder="—" /></SelectTrigger>
               <SelectContent>
                 <SelectItem value={SEM_OBRA}>— Nenhuma —</SelectItem>
                 {obras.map((o) => <SelectItem key={o.id} value={o.id}>{o.nome}</SelectItem>)}
@@ -147,9 +147,9 @@ export function MudancaForm({
             <Input id="resp" value={responsavel} onChange={(e) => setResponsavel(e.target.value)} />
           </div>
           <div className="space-y-2">
-            <Label>Status</Label>
+            <Label htmlFor="status">Status</Label>
             <Select value={status} onValueChange={setStatus}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger id="status"><SelectValue /></SelectTrigger>
               <SelectContent>{Object.entries(MUDANCA_STATUS).map(([k, v]) => <SelectItem key={k} value={k}>{v}</SelectItem>)}</SelectContent>
             </Select>
           </div>

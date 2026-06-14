@@ -11,7 +11,7 @@ import { Plus, PenLine, HardHat } from "lucide-react"
 
 export default async function EntregasPage() {
   const supabase = await createClient()
-  const { data: entregas } = await supabase
+  const { data: entregas, error } = await supabase
     .from("epi_entregas")
     .select("id, data_entrega, quantidade, motivo, assinatura_url, colaboradores(nome_completo), epis(descricao, ca)")
     .order("data_entrega", { ascending: false })
@@ -95,8 +95,12 @@ export default async function EntregasPage() {
               })}
               {(!entregas || entregas.length === 0) && (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center text-muted-foreground py-10">
-                    Nenhuma entrega registrada.
+                  <TableCell colSpan={6} className="text-center py-10">
+                    {error ? (
+                      <span className="text-destructive" role="alert">Não foi possível carregar as entregas. Recarregue a página.</span>
+                    ) : (
+                      <span className="text-muted-foreground">Nenhuma entrega registrada.</span>
+                    )}
                   </TableCell>
                 </TableRow>
               )}

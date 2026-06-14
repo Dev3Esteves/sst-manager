@@ -276,9 +276,9 @@ export function LoteForm({
           {tipo === "autorizacao_nr" ? (
             <>
               <div className="space-y-2">
-                <Label>NR *</Label>
+                <Label htmlFor="nr">NR *</Label>
                 <Select value={nr} onValueChange={(v) => setNr(v as typeof nr)}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectTrigger id="nr"><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="NR-10">NR-10 — Eletricidade</SelectItem>
                     <SelectItem value="NR-35">NR-35 — Trabalho em altura</SelectItem>
@@ -287,9 +287,9 @@ export function LoteForm({
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label>Empresa emissora *</Label>
+                <Label htmlFor="empresa-emissora">Empresa emissora *</Label>
                 <Select value={empresaId} onValueChange={setEmpresaId}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectTrigger id="empresa-emissora"><SelectValue /></SelectTrigger>
                   <SelectContent>
                     {empresas.map((e) => <SelectItem key={e.id} value={e.id}>{e.razao_social}</SelectItem>)}
                   </SelectContent>
@@ -310,9 +310,9 @@ export function LoteForm({
             </>
           ) : (
             <div className="md:col-span-2 space-y-2">
-              <Label>Treinamento *</Label>
+              <Label htmlFor="treinamento">Treinamento *</Label>
               <Select value={treinamentoId} onValueChange={setTreinamentoId}>
-                <SelectTrigger><SelectValue placeholder="Escolha o treinamento" /></SelectTrigger>
+                <SelectTrigger id="treinamento"><SelectValue placeholder="Escolha o treinamento" /></SelectTrigger>
                 <SelectContent>
                   {treinamentos.map((t) => (
                     <SelectItem key={t.id} value={t.id}>
@@ -356,14 +356,14 @@ export function LoteForm({
               <Input value={busca} onChange={(e) => setBusca(e.target.value)} placeholder="Buscar por nome..." className="pl-8" />
             </div>
             <Select value={filtroCargo || "__todos__"} onValueChange={(v) => setFiltroCargo(v === "__todos__" ? "" : v)}>
-              <SelectTrigger><SelectValue placeholder="Todos os cargos" /></SelectTrigger>
+              <SelectTrigger aria-label="Filtrar por cargo"><SelectValue placeholder="Todos os cargos" /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="__todos__">Todos os cargos</SelectItem>
                 {cargosUnicos.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
               </SelectContent>
             </Select>
             <Select value={filtroEmpresa || "__todas__"} onValueChange={(v) => setFiltroEmpresa(v === "__todas__" ? "" : v)}>
-              <SelectTrigger><SelectValue placeholder="Todas as empresas" /></SelectTrigger>
+              <SelectTrigger aria-label="Filtrar por empresa"><SelectValue placeholder="Todas as empresas" /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="__todas__">Todas as empresas</SelectItem>
                 {empresas.map((e) => <SelectItem key={e.id} value={e.id}>{e.razao_social}</SelectItem>)}

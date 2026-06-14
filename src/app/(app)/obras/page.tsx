@@ -28,7 +28,7 @@ export default async function ObrasPage({
     .order("ativa", { ascending: false })
     .order("nome")
   if (filtroAtivas) query = query.eq("ativa", true)
-  const { data: obras } = await query
+  const { data: obras, error } = await query
 
   return (
     <div className="container py-8 space-y-6">
@@ -124,8 +124,16 @@ export default async function ObrasPage({
               })}
               {(!obras || obras.length === 0) && (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
-                    Nenhuma obra cadastrada.
+                  <TableCell colSpan={7} className="text-center py-8">
+                    {error ? (
+                      <span className="text-destructive" role="alert">
+                        Não foi possível carregar as obras. Recarregue a página.
+                      </span>
+                    ) : filtroAtivas ? (
+                      <span className="text-muted-foreground">Nenhuma obra ativa. Use “Mostrar todas” para ver as encerradas.</span>
+                    ) : (
+                      <span className="text-muted-foreground">Nenhuma obra cadastrada.</span>
+                    )}
                   </TableCell>
                 </TableRow>
               )}

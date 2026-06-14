@@ -46,9 +46,9 @@ export function ConstatacoesManager({ auditoriaId, constatacoes }: { auditoriaId
         <div className="space-y-2 rounded-md border p-3">
           <div className="grid gap-2 sm:grid-cols-4">
             <div className="space-y-1.5">
-              <Label className="text-xs">Tipo</Label>
+              <Label htmlFor="constatacao-tipo" className="text-xs">Tipo</Label>
               <Select value={tipo} onValueChange={setTipo}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectTrigger id="constatacao-tipo"><SelectValue /></SelectTrigger>
                 <SelectContent>{Object.entries(CONSTATACAO_TIPOS).map(([k, v]) => <SelectItem key={k} value={k}>{v}</SelectItem>)}</SelectContent>
               </Select>
             </div>
@@ -84,7 +84,7 @@ function ConstatacaoRow({ c, auditoriaId }: { c: Constatacao; auditoriaId: strin
         {c.clausula && <span className="text-xs text-muted-foreground mr-2">[{c.clausula}]</span>}
         <span className="text-sm">{c.descricao}</span>
       </div>
-      <Button type="button" variant="ghost" size="icon" className="text-destructive shrink-0" disabled={pending}
+      <Button type="button" variant="ghost" size="icon" aria-label="Remover constatação" className="text-destructive shrink-0" disabled={pending}
         onClick={() => startTransition(async () => { const r = await removeConstatacao(c.id, auditoriaId); if ("error" in r && r.error) toast.error(r.error._form[0]) })}>
         <Trash2 className="h-4 w-4" />
       </Button>

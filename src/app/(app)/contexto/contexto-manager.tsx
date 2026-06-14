@@ -106,9 +106,9 @@ function QuestoesCard({ questoes }: { questoes: Questao[] }) {
       <CardContent className="space-y-4">
         <div className="flex flex-wrap items-end gap-2 rounded-md border p-3">
           <div className="space-y-1.5 w-36">
-            <Label className="text-xs">Tipo</Label>
+            <Label htmlFor="questao-tipo" className="text-xs">Tipo</Label>
             <Select value={tipo} onValueChange={setTipo}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger id="questao-tipo"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="interna">Interna</SelectItem>
                 <SelectItem value="externa">Externa</SelectItem>
@@ -169,9 +169,9 @@ function PartesCard({ partes }: { partes: Parte[] }) {
               <Input value={nome} onChange={(e) => setNome(e.target.value)} placeholder="Ex: Trabalhadores, Clientes, Órgãos fiscalizadores, CIPA" />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs">Tipo</Label>
+              <Label htmlFor="parte-tipo" className="text-xs">Tipo</Label>
               <Select value={tipo} onValueChange={setTipo}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectTrigger id="parte-tipo"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="interna">Interna</SelectItem>
                   <SelectItem value="externa">Externa</SelectItem>

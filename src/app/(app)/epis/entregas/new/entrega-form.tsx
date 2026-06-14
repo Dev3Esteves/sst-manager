@@ -79,18 +79,18 @@ export function EntregaForm({
         <CardHeader><CardTitle className="text-lg">1. Dados da entrega</CardTitle></CardHeader>
         <CardContent className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2">
-            <Label>Colaborador *</Label>
+            <Label htmlFor="colaborador">Colaborador *</Label>
             <Select value={colabId} onValueChange={setColabId}>
-              <SelectTrigger><SelectValue placeholder="Selecione" /></SelectTrigger>
+              <SelectTrigger id="colaborador"><SelectValue placeholder="Selecione" /></SelectTrigger>
               <SelectContent>
                 {colaboradores.map(c => <SelectItem key={c.id} value={c.id}>{c.nome_completo}</SelectItem>)}
               </SelectContent>
             </Select>
           </div>
           <div className="space-y-2">
-            <Label>EPI *</Label>
+            <Label htmlFor="epi">EPI *</Label>
             <Select value={epiId} onValueChange={setEpiId}>
-              <SelectTrigger><SelectValue placeholder="Selecione" /></SelectTrigger>
+              <SelectTrigger id="epi"><SelectValue placeholder="Selecione" /></SelectTrigger>
               <SelectContent>
                 {epis.map(e => (
                   <SelectItem key={e.id} value={e.id}>
@@ -118,9 +118,9 @@ export function EntregaForm({
             <Input id="qtd" type="number" min="1" value={quantidade} onChange={(e) => setQuantidade(+e.target.value)} />
           </div>
           <div className="space-y-2 md:col-span-2">
-            <Label>Motivo *</Label>
+            <Label htmlFor="motivo">Motivo *</Label>
             <Select value={motivo} onValueChange={setMotivo}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger id="motivo"><SelectValue /></SelectTrigger>
               <SelectContent>
                 {Object.entries(MOTIVOS_LABEL).map(([k, v]) => (
                   <SelectItem key={k} value={k}>{v}</SelectItem>

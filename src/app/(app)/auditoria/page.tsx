@@ -31,7 +31,7 @@ export default async function AuditoriaPage() {
   const { supabase, perfil } = ctx
   const ehAdmin = perfil === "admin"
 
-  const { data: logs } = await supabase
+  const { data: logs, error } = await supabase
     .from("audit_log")
     .select("id, tabela, registro_id, acao, usuario_id, dados_anteriores, dados_novos, created_at")
     .order("created_at", { ascending: false })
@@ -117,7 +117,11 @@ export default async function AuditoriaPage() {
               {(!logs || logs.length === 0) && (
                 <TableRow>
                   <TableCell colSpan={6} className="text-center text-muted-foreground py-10">
-                    Sem eventos de auditoria ainda.
+                    {error ? (
+                      <span className="text-destructive" role="alert">Não foi possível carregar o log de auditoria. Recarregue a página.</span>
+                    ) : (
+                      "Sem eventos de auditoria ainda."
+                    )}
                   </TableCell>
                 </TableRow>
               )}

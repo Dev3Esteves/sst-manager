@@ -9,7 +9,7 @@ export const metadata = { title: "Normas Regulamentadoras" }
 
 export default async function NrCatalogPage() {
   const supabase = await createClient()
-  const { data: nrs } = await supabase
+  const { data: nrs, error } = await supabase
     .from("nr_catalog")
     .select("numero, titulo, status, data_atualizacao, ementa, fonte_url")
     .order("numero")
@@ -85,7 +85,11 @@ export default async function NrCatalogPage() {
               {(!nrs || nrs.length === 0) && (
                 <TableRow>
                   <TableCell colSpan={4} className="text-center text-muted-foreground py-8">
-                    Catálogo vazio. Execute <code className="text-xs">node scripts/seed-referencias-nr.mjs</code>.
+                    {error ? (
+                      <span className="text-destructive" role="alert">Não foi possível carregar o catálogo de NRs. Recarregue a página.</span>
+                    ) : (
+                      <>Catálogo vazio. Execute <code className="text-xs">node scripts/seed-referencias-nr.mjs</code>.</>
+                    )}
                   </TableCell>
                 </TableRow>
               )}

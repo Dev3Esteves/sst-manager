@@ -12,7 +12,7 @@ export default async function EntidadesPage() {
   if (r.status === "unauth") return <div className="container py-10 text-center text-muted-foreground">Sessão expirada.</div>
   if (r.status === "forbidden") return <div className="container py-10 text-center text-muted-foreground">Acesso restrito a Segurança/Administrador.</div>
 
-  const { data: entidades } = await r.ctx.supabase
+  const { data: entidades, error } = await r.ctx.supabase
     .from("entidades_treinamento").select("id, nome, nome_fantasia, cnpj, municipio, uf, ativo").order("nome")
 
   return (
@@ -54,7 +54,10 @@ export default async function EntidadesPage() {
               ))}
               {(!entidades || entidades.length === 0) && (
                 <TableRow><TableCell colSpan={5} className="text-center text-muted-foreground py-10">
-                  <School className="mx-auto h-10 w-10 opacity-30 mb-2" />Nenhuma entidade cadastrada.
+                  <School className="mx-auto h-10 w-10 opacity-30 mb-2" />
+                  {error
+                    ? <span className="text-destructive" role="alert">Não foi possível carregar as entidades. Recarregue a página.</span>
+                    : "Nenhuma entidade cadastrada."}
                 </TableCell></TableRow>
               )}
             </TableBody>

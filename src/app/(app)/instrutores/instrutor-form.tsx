@@ -70,9 +70,9 @@ export function InstrutorForm({
             <Input id="nome" value={nome} onChange={(e) => setNome(e.target.value)} />
           </div>
           <div className="space-y-2">
-            <Label>Tipo de registro</Label>
+            <Label htmlFor="registro_tipo">Tipo de registro</Label>
             <Select value={registroTipo} onValueChange={setRegistroTipo}>
-              <SelectTrigger><SelectValue placeholder="Nenhum" /></SelectTrigger>
+              <SelectTrigger id="registro_tipo"><SelectValue placeholder="Nenhum" /></SelectTrigger>
               <SelectContent>
                 <SelectItem value={NENHUM}>Nenhum</SelectItem>
                 {Object.entries(INSTRUTOR_REGISTRO_LABEL).map(([k, v]) => (

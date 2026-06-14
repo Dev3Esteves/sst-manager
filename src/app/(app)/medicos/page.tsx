@@ -23,7 +23,7 @@ export default async function MedicosPage() {
     return <div className="container py-10 text-center text-muted-foreground">Acesso restrito a Técnico de Segurança, RH ou Administrador.</div>
   }
 
-  const { data: medicos } = await r.ctx.supabase
+  const { data: medicos, error } = await r.ctx.supabase
     .from("medicos")
     .select("id, nome, crm, uf_crm, especialidade, status")
     .order("nome")
@@ -71,9 +71,15 @@ export default async function MedicosPage() {
               ))}
               {(!medicos || medicos.length === 0) && (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center text-muted-foreground py-10">
-                    <Stethoscope className="mx-auto h-10 w-10 opacity-30 mb-2" />
-                    Nenhum médico cadastrado.
+                  <TableCell colSpan={5} className="text-center py-10">
+                    {error ? (
+                      <span className="text-destructive" role="alert">Não foi possível carregar os médicos. Recarregue a página.</span>
+                    ) : (
+                      <span className="text-muted-foreground">
+                        <Stethoscope className="mx-auto h-10 w-10 opacity-30 mb-2" />
+                        Nenhum médico cadastrado.
+                      </span>
+                    )}
                   </TableCell>
                 </TableRow>
               )}

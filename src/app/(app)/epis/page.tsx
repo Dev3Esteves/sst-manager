@@ -10,7 +10,7 @@ import { Plus, Pencil, FileSpreadsheet, HardHat } from "lucide-react"
 
 export default async function EpisPage() {
   const supabase = await createClient()
-  const { data: epis } = await supabase
+  const { data: epis, error } = await supabase
     .from("epis")
     .select("id, descricao, ca, ca_validade, fabricante, tipo")
     .order("descricao")
@@ -86,7 +86,7 @@ export default async function EpisPage() {
                       {urg ? <Badge variant={urgenciaBadgeVariant(urg)}>{urgenciaLabel(urg)}</Badge> : <Badge variant="secondary">Sem data</Badge>}
                     </TableCell>
                     <TableCell>
-                      <Button variant="ghost" size="icon" asChild>
+                      <Button variant="ghost" size="icon" asChild aria-label="Editar EPI">
                         <Link href={`/epis/${e.id}`}><Pencil className="h-4 w-4" /></Link>
                       </Button>
                     </TableCell>
@@ -95,8 +95,12 @@ export default async function EpisPage() {
               })}
               {(!epis || epis.length === 0) && (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
-                    Nenhum EPI cadastrado.
+                  <TableCell colSpan={7} className="text-center py-8">
+                    {error ? (
+                      <span className="text-destructive" role="alert">Não foi possível carregar os EPIs. Recarregue a página.</span>
+                    ) : (
+                      <span className="text-muted-foreground">Nenhum EPI cadastrado.</span>
+                    )}
                   </TableCell>
                 </TableRow>
               )}

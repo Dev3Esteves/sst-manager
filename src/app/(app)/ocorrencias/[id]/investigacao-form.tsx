@@ -117,7 +117,7 @@ export function InvestigacaoForm({
                 value={a.descricao} onChange={(e) => updateAcao(i, { descricao: e.target.value })}
                 placeholder="O que será feito?"
               />
-              <Button type="button" variant="ghost" size="icon" onClick={() => removeAcao(i)} disabled={acoes.length === 1}>
+              <Button type="button" variant="ghost" size="icon" onClick={() => removeAcao(i)} disabled={acoes.length === 1} aria-label="Remover ação corretiva">
                 <Trash2 className="h-4 w-4" />
               </Button>
             </div>
@@ -131,7 +131,7 @@ export function InvestigacaoForm({
                 onChange={(e) => updateAcao(i, { prazo: e.target.value })}
               />
               <Select value={a.status} onValueChange={(v) => updateAcao(i, { status: v as AcaoCorretiva["status"] })}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectTrigger aria-label="Status da ação corretiva"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="pendente">Pendente</SelectItem>
                   <SelectItem value="em_andamento">Em andamento</SelectItem>

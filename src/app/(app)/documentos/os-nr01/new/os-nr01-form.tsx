@@ -102,7 +102,7 @@ export function OsNr01Form({
       </CardHeader>
       <CardContent className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2 md:col-span-2">
-          <Label>Empresa dona *</Label>
+          <Label htmlFor="empresa-dona">Empresa dona *</Label>
           <Select
             value={empresaId}
             onValueChange={(v) => {
@@ -111,7 +111,7 @@ export function OsNr01Form({
               setObraId("")
             }}
           >
-            <SelectTrigger><SelectValue placeholder="Selecione" /></SelectTrigger>
+            <SelectTrigger id="empresa-dona"><SelectValue placeholder="Selecione" /></SelectTrigger>
             <SelectContent>
               {empresas.map((e) => (
                 <SelectItem key={e.id} value={e.id}>{e.razao_social}</SelectItem>
@@ -121,9 +121,9 @@ export function OsNr01Form({
         </div>
 
         <div className="space-y-2">
-          <Label>Função (cargo) *</Label>
+          <Label htmlFor="cargo">Função (cargo) *</Label>
           <Select value={cargoId} onValueChange={setCargoId}>
-            <SelectTrigger><SelectValue placeholder="Selecione a função" /></SelectTrigger>
+            <SelectTrigger id="cargo"><SelectValue placeholder="Selecione a função" /></SelectTrigger>
             <SelectContent>
               {cargosDaEmpresa.length === 0 && (
                 <div className="px-3 py-2 text-xs text-muted-foreground">
@@ -138,9 +138,9 @@ export function OsNr01Form({
         </div>
 
         <div className="space-y-2">
-          <Label>Obra *</Label>
+          <Label htmlFor="obra">Obra *</Label>
           <Select value={obraId} onValueChange={setObraId}>
-            <SelectTrigger><SelectValue placeholder="Selecione a obra" /></SelectTrigger>
+            <SelectTrigger id="obra"><SelectValue placeholder="Selecione a obra" /></SelectTrigger>
             <SelectContent>
               {obrasDaEmpresa.length === 0 && (
                 <div className="px-3 py-2 text-xs text-muted-foreground">

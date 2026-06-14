@@ -66,9 +66,9 @@ export function RequisitoForm({
         <CardHeader><CardTitle className="text-base">Requisito</CardTitle></CardHeader>
         <CardContent className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2">
-            <Label>Tipo *</Label>
+            <Label htmlFor="tipo">Tipo *</Label>
             <Select value={tipo} onValueChange={setTipo}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger id="tipo"><SelectValue /></SelectTrigger>
               <SelectContent>{Object.entries(REQ_TIPOS).map(([k, v]) => <SelectItem key={k} value={k}>{v}</SelectItem>)}</SelectContent>
             </Select>
           </div>
@@ -92,9 +92,9 @@ export function RequisitoForm({
         <CardHeader><CardTitle className="text-base">Avaliação de atendimento</CardTitle></CardHeader>
         <CardContent className="grid gap-4 md:grid-cols-3">
           <div className="space-y-2">
-            <Label>Atende?</Label>
+            <Label htmlFor="atende">Atende?</Label>
             <Select value={atende} onValueChange={setAtende}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger id="atende"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="sim">Sim — atende</SelectItem>
                 <SelectItem value="nao">Não atende</SelectItem>

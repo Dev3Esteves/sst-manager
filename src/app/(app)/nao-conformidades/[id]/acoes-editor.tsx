@@ -236,7 +236,7 @@ function AcForm({
         <div>
           <Label className="text-xs">Tipo *</Label>
           <Select name="tipo" defaultValue={initial?.tipo ?? "corretiva"}>
-            <SelectTrigger>
+            <SelectTrigger aria-label="Tipo da ação">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -249,7 +249,7 @@ function AcForm({
         <div>
           <Label className="text-xs">Status</Label>
           <Select name="status" defaultValue={initial?.status ?? "planejada"}>
-            <SelectTrigger>
+            <SelectTrigger aria-label="Status da ação">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -337,7 +337,7 @@ function AcForm({
                 initial?.eficaz === true ? "sim" : initial?.eficaz === false ? "nao" : "none"
               }
             >
-              <SelectTrigger>
+              <SelectTrigger aria-label="Resultado da verificação de eficácia">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>

@@ -15,7 +15,7 @@ export default async function AnaliseCriticaPage() {
   if (r.status === "unauth") return <div className="container py-10 text-center text-muted-foreground">Sessão expirada.</div>
   if (r.status === "forbidden") return <div className="container py-10 text-center text-muted-foreground">Acesso restrito a Segurança/Direção.</div>
 
-  const { data: analises } = await r.ctx.supabase
+  const { data: analises, error } = await r.ctx.supabase
     .from("analise_critica")
     .select("id, data_reuniao, periodo, status")
     .order("data_reuniao", { ascending: false })
@@ -56,7 +56,12 @@ export default async function AnaliseCriticaPage() {
               {(!analises || analises.length === 0) && (
                 <TableRow>
                   <TableCell colSpan={4} className="text-center text-muted-foreground py-10">
-                    <ClipboardCheck className="mx-auto h-10 w-10 opacity-30 mb-2" />Nenhuma análise crítica registrada.
+                    <ClipboardCheck className="mx-auto h-10 w-10 opacity-30 mb-2" />
+                    {error ? (
+                      <span className="text-destructive" role="alert">Não foi possível carregar as análises críticas. Recarregue a página.</span>
+                    ) : (
+                      "Nenhuma análise crítica registrada."
+                    )}
                   </TableCell>
                 </TableRow>
               )}

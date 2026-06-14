@@ -16,7 +16,7 @@ const TIPO_LABEL: Record<string, string> = {
 
 export default async function TreinamentosPage() {
   const supabase = await createClient()
-  const { data: treinamentos } = await supabase
+  const { data: treinamentos, error } = await supabase
     .from("treinamentos")
     .select("id, titulo, nr_referencia, carga_horaria_horas, validade_meses, tipo, modalidade")
     .order("titulo")
@@ -90,7 +90,7 @@ export default async function TreinamentosPage() {
                   <TableCell>{TIPO_LABEL[t.tipo] ?? t.tipo}</TableCell>
                   <TableCell className="capitalize">{t.modalidade}</TableCell>
                   <TableCell>
-                    <Button variant="ghost" size="icon" asChild>
+                    <Button variant="ghost" size="icon" aria-label="Editar treinamento" asChild>
                       <Link href={`/treinamentos/${t.id}`}><Pencil className="h-4 w-4" /></Link>
                     </Button>
                   </TableCell>
@@ -99,7 +99,9 @@ export default async function TreinamentosPage() {
               {(!treinamentos || treinamentos.length === 0) && (
                 <TableRow>
                   <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
-                    Nenhum treinamento cadastrado.
+                    {error
+                      ? <span className="text-destructive" role="alert">Não foi possível carregar os treinamentos. Recarregue a página.</span>
+                      : "Nenhum treinamento cadastrado."}
                   </TableCell>
                 </TableRow>
               )}

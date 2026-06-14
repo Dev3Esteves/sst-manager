@@ -15,7 +15,7 @@ export default async function PlanoEmergenciaPage() {
   if (r.status === "unauth") return <div className="container py-10 text-center text-muted-foreground">Sessão expirada.</div>
   if (r.status === "forbidden") return <div className="container py-10 text-center text-muted-foreground">Acesso restrito a Segurança/Campo.</div>
 
-  const { data: planos } = await r.ctx.supabase
+  const { data: planos, error } = await r.ctx.supabase
     .from("plano_emergencia")
     .select("id, titulo, cenario, ultimo_simulado, proximo_simulado, status, obras(nome)")
     .order("titulo")
@@ -63,7 +63,10 @@ export default async function PlanoEmergenciaPage() {
               {(!planos || planos.length === 0) && (
                 <TableRow>
                   <TableCell colSpan={6} className="text-center text-muted-foreground py-10">
-                    <Siren className="mx-auto h-10 w-10 opacity-30 mb-2" />Nenhum plano de emergência cadastrado.
+                    <Siren className="mx-auto h-10 w-10 opacity-30 mb-2" />
+                    {error ? (
+                      <span className="text-destructive" role="alert">Não foi possível carregar os planos de emergência. Recarregue a página.</span>
+                    ) : "Nenhum plano de emergência cadastrado."}
                   </TableCell>
                 </TableRow>
               )}

@@ -36,7 +36,8 @@ export default async function InspecoesPage({
   if (sp.ate) query = query.lte("data_inspecao", sp.ate)
   if (sp.busca) query = query.ilike("local", `%${sp.busca}%`)
 
-  const { data: inspecoes } = await query
+  const { data: inspecoes, error } = await query
+  const temFiltros = !!(sp.status || sp.de || sp.ate || sp.busca)
   const podeGerenciarTemplates = await getAuthWithRole(["admin", "tec_seguranca", "engenheiro_seg"])
 
   return (
@@ -114,8 +115,14 @@ export default async function InspecoesPage({
               {(!inspecoes || inspecoes.length === 0) && (
                 <TableRow>
                   <TableCell colSpan={6} className="text-center text-muted-foreground py-10">
-                    <ClipboardCheck className="mx-auto h-10 w-10 opacity-30 mb-2" />
-                    Nenhuma inspeção registrada ainda.
+                    {error ? (
+                      <span className="text-destructive" role="alert">Não foi possível carregar as inspeções. Recarregue a página.</span>
+                    ) : (
+                      <>
+                        <ClipboardCheck className="mx-auto h-10 w-10 opacity-30 mb-2" />
+                        {temFiltros ? "Nenhuma inspeção encontrada para os filtros." : "Nenhuma inspeção registrada ainda."}
+                      </>
+                    )}
                   </TableCell>
                 </TableRow>
               )}

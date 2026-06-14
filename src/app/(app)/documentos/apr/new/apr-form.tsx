@@ -148,9 +148,9 @@ export function AprForm({
         <CardHeader><CardTitle className="text-lg">1. Identificação</CardTitle></CardHeader>
         <CardContent className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2">
-            <Label>Empresa *</Label>
+            <Label htmlFor="empresa">Empresa *</Label>
             <Select value={empresaId} onValueChange={setEmpresaId}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger id="empresa"><SelectValue /></SelectTrigger>
               <SelectContent>
                 {empresas.map(e => <SelectItem key={e.id} value={e.id}>{e.razao_social}</SelectItem>)}
               </SelectContent>
@@ -248,7 +248,7 @@ export function AprForm({
                   <Input value={r.medida_controle} onChange={(e) => updateRisco(i, { medida_controle: e.target.value })} className="h-8" />
                 </div>
                 <div className="md:col-span-1 flex items-end">
-                  <Button type="button" variant="ghost" size="icon" onClick={() => removeRisco(i)} disabled={riscos.length === 1}>
+                  <Button type="button" variant="ghost" size="icon" aria-label="Remover risco" onClick={() => removeRisco(i)} disabled={riscos.length === 1}>
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>

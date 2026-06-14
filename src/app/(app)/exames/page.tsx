@@ -36,7 +36,8 @@ export default async function ExamesPage({
   if (sp.de) query = query.gte("data_vencimento", sp.de)
   if (sp.ate) query = query.lte("data_vencimento", sp.ate)
 
-  const { data: exames } = await query
+  const { data: exames, error } = await query
+  const temFiltros = !!(sp.tipo || sp.resultado || sp.de || sp.ate)
 
   return (
     <div className="container py-8 space-y-6">
@@ -147,7 +148,7 @@ export default async function ExamesPage({
                       <Badge variant={urgenciaBadgeVariant(urgencia)}>{urgenciaLabel(urgencia)}</Badge>
                     </TableCell>
                     <TableCell>
-                      <Button variant="ghost" size="icon" asChild>
+                      <Button variant="ghost" size="icon" asChild aria-label="Editar exame">
                         <Link href={`/exames/${e.id}`}><Pencil className="h-4 w-4" /></Link>
                       </Button>
                     </TableCell>
@@ -156,8 +157,14 @@ export default async function ExamesPage({
               })}
               {(!exames || exames.length === 0) && (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
-                    Nenhum exame registrado.
+                  <TableCell colSpan={7} className="text-center py-8">
+                    {error ? (
+                      <span className="text-destructive" role="alert">Não foi possível carregar os exames. Recarregue a página.</span>
+                    ) : temFiltros ? (
+                      <span className="text-muted-foreground">Nenhum exame encontrado para os filtros aplicados.</span>
+                    ) : (
+                      <span className="text-muted-foreground">Nenhum exame registrado.</span>
+                    )}
                   </TableCell>
                 </TableRow>
               )}

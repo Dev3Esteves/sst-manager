@@ -100,9 +100,9 @@ export function TemplateOcorrenciaForm({
         <CardHeader><CardTitle className="text-base">Identificação</CardTitle></CardHeader>
         <CardContent className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2">
-            <Label>Tipo *</Label>
+            <Label htmlFor="tpl-tipo">Tipo *</Label>
             <Select value={tipo} onValueChange={setTipo}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger id="tpl-tipo"><SelectValue /></SelectTrigger>
               <SelectContent>
                 {Object.entries(OCORRENCIA_TIPOS).map(([k, v]) => (
                   <SelectItem key={k} value={k}>{v}</SelectItem>
@@ -115,9 +115,9 @@ export function TemplateOcorrenciaForm({
             <Input id="tit" value={titulo} onChange={(e) => setTitulo(e.target.value)} placeholder="Ex: Quase acidente" />
           </div>
           <div className="space-y-2">
-            <Label>Gravidade sugerida</Label>
+            <Label htmlFor="tpl-gravidade">Gravidade sugerida</Label>
             <Select value={gravidade} onValueChange={setGravidade}>
-              <SelectTrigger><SelectValue placeholder="Nenhuma" /></SelectTrigger>
+              <SelectTrigger id="tpl-gravidade"><SelectValue placeholder="Nenhuma" /></SelectTrigger>
               <SelectContent>
                 {Object.entries(GRAVIDADE_LABEL).map(([k, v]) => (
                   <SelectItem key={k} value={k}>{v}</SelectItem>
@@ -164,7 +164,7 @@ export function TemplateOcorrenciaForm({
             <div key={i} className="flex items-center gap-2">
               <span className="text-xs text-muted-foreground w-5">{i + 1}.</span>
               <Input value={q} onChange={(e) => updateRoteiro(i, e.target.value)} placeholder={`Pergunta ${i + 1}`} />
-              <Button type="button" variant="ghost" size="icon" onClick={() => removeRoteiro(i)} className="text-destructive shrink-0">
+              <Button type="button" variant="ghost" size="icon" onClick={() => removeRoteiro(i)} className="text-destructive shrink-0" aria-label="Remover pergunta">
                 <Trash2 className="h-4 w-4" />
               </Button>
             </div>

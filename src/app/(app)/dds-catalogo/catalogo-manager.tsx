@@ -99,9 +99,9 @@ function MediadoresCard({ mediadores }: { mediadores: Mediador[] }) {
             </div>
           </div>
           <div className="space-y-1.5">
-            <Label className="text-xs">Tipo</Label>
+            <Label htmlFor="mediador-tipo" className="text-xs">Tipo</Label>
             <Select value={tipo} onValueChange={setTipo}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger id="mediador-tipo"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="interno">Interno</SelectItem>
                 <SelectItem value="externo">Externo</SelectItem>

@@ -194,7 +194,7 @@ export default async function EditGhePage({
                       )}
                     </TableCell>
                     <TableCell>
-                      <Button variant="ghost" size="icon" asChild>
+                      <Button variant="ghost" size="icon" asChild aria-label="Editar risco">
                         <Link href={`/pgr/${pgrId}/ghe/${gheId}/risco/${r.id}`}>
                           <Pencil className="h-3.5 w-3.5" />
                         </Link>
@@ -261,7 +261,7 @@ export default async function EditGhePage({
                       {e.epi_id ? "Sim" : "Livre"}
                     </TableCell>
                     <TableCell>
-                      <Button variant="ghost" size="icon" asChild>
+                      <Button variant="ghost" size="icon" asChild aria-label="Editar EPI">
                         <Link href={`/pgr/${pgrId}/ghe/${gheId}/epi/${e.id}`}>
                           <Pencil className="h-3.5 w-3.5" />
                         </Link>

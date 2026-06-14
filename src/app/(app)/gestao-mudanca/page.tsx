@@ -22,7 +22,7 @@ export default async function GestaoMudancaPage() {
   if (r.status === "unauth") return <div className="container py-10 text-center text-muted-foreground">Sessão expirada.</div>
   if (r.status === "forbidden") return <div className="container py-10 text-center text-muted-foreground">Acesso restrito a Segurança/Direção.</div>
 
-  const { data: mudancas } = await r.ctx.supabase
+  const { data: mudancas, error } = await r.ctx.supabase
     .from("gestao_mudanca")
     .select("id, numero_sequencial, titulo, tipo, carater, data_prevista, status")
     .order("numero_sequencial", { ascending: false })
@@ -69,7 +69,11 @@ export default async function GestaoMudancaPage() {
               {(!mudancas || mudancas.length === 0) && (
                 <TableRow>
                   <TableCell colSpan={7} className="text-center text-muted-foreground py-10">
-                    <Replace className="mx-auto h-10 w-10 opacity-30 mb-2" />Nenhuma mudança registrada.
+                    {error ? (
+                      <span className="text-destructive" role="alert">Não foi possível carregar as mudanças. Recarregue a página.</span>
+                    ) : (
+                      <><Replace className="mx-auto h-10 w-10 opacity-30 mb-2" />Nenhuma mudança registrada.</>
+                    )}
                   </TableCell>
                 </TableRow>
               )}

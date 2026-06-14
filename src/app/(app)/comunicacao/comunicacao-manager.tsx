@@ -50,9 +50,9 @@ export function ComunicacaoManager({ registros }: { registros: Registro[] }) {
               <Input type="date" value={data} onChange={(e) => setData(e.target.value)} />
             </div>
             <div className="space-y-1.5 sm:col-span-1">
-              <Label className="text-xs">Tipo</Label>
+              <Label htmlFor="comunicacao-tipo" className="text-xs">Tipo</Label>
               <Select value={tipo} onValueChange={setTipo}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectTrigger id="comunicacao-tipo"><SelectValue /></SelectTrigger>
                 <SelectContent>{Object.entries(COMUNICACAO_TIPOS).map(([k, v]) => <SelectItem key={k} value={k}>{v}</SelectItem>)}</SelectContent>
               </Select>
             </div>

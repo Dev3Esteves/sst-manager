@@ -23,7 +23,7 @@ export default async function ObjetivosPage() {
   if (r.status === "unauth") return <div className="container py-10 text-center text-muted-foreground">Sessão expirada.</div>
   if (r.status === "forbidden") return <div className="container py-10 text-center text-muted-foreground">Acesso restrito a Segurança/Direção.</div>
 
-  const { data: objetivos } = await r.ctx.supabase
+  const { data: objetivos, error } = await r.ctx.supabase
     .from("objetivo_sst")
     .select("id, titulo, indicador, meta, valor_atual, prazo, status")
     .order("created_at", { ascending: false })
@@ -68,7 +68,10 @@ export default async function ObjetivosPage() {
               {(!objetivos || objetivos.length === 0) && (
                 <TableRow>
                   <TableCell colSpan={6} className="text-center text-muted-foreground py-10">
-                    <Target className="mx-auto h-10 w-10 opacity-30 mb-2" />Nenhum objetivo cadastrado.
+                    <Target className="mx-auto h-10 w-10 opacity-30 mb-2" />
+                    {error ? (
+                      <span className="text-destructive" role="alert">Não foi possível carregar os objetivos. Recarregue a página.</span>
+                    ) : "Nenhum objetivo cadastrado."}
                   </TableCell>
                 </TableRow>
               )}

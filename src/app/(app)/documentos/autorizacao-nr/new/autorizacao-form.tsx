@@ -83,18 +83,18 @@ export function AutorizacaoNrForm({
         <CardHeader><CardTitle className="text-lg">1. Identificação</CardTitle></CardHeader>
         <CardContent className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2">
-            <Label>Empresa *</Label>
+            <Label htmlFor="empresa">Empresa *</Label>
             <Select value={empresaId} onValueChange={setEmpresaId}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger id="empresa"><SelectValue /></SelectTrigger>
               <SelectContent>
                 {empresas.map(e => <SelectItem key={e.id} value={e.id}>{e.razao_social}</SelectItem>)}
               </SelectContent>
             </Select>
           </div>
           <div className="space-y-2">
-            <Label>Colaborador *</Label>
+            <Label htmlFor="colaborador">Colaborador *</Label>
             <Select value={colabId} onValueChange={setColabId}>
-              <SelectTrigger><SelectValue placeholder="Selecione" /></SelectTrigger>
+              <SelectTrigger id="colaborador"><SelectValue placeholder="Selecione" /></SelectTrigger>
               <SelectContent>
                 {colaboradores.map(c => (
                   <SelectItem key={c.id} value={c.id}>

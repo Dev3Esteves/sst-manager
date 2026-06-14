@@ -129,9 +129,9 @@ export function OcorrenciaForm({
         <CardHeader><CardTitle className="text-lg">1. Classificação</CardTitle></CardHeader>
         <CardContent className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2">
-            <Label>Tipo *</Label>
+            <Label htmlFor="oc-tipo">Tipo *</Label>
             <Select value={tipo} onValueChange={setTipo}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger id="oc-tipo"><SelectValue /></SelectTrigger>
               <SelectContent>
                 {Object.entries(OCORRENCIA_TIPOS).map(([k, v]) => (
                   <SelectItem key={k} value={k}>{v}</SelectItem>
@@ -140,9 +140,9 @@ export function OcorrenciaForm({
             </Select>
           </div>
           <div className="space-y-2">
-            <Label>Gravidade</Label>
+            <Label htmlFor="oc-gravidade">Gravidade</Label>
             <Select value={gravidade} onValueChange={setGravidade}>
-              <SelectTrigger><SelectValue placeholder="Opcional" /></SelectTrigger>
+              <SelectTrigger id="oc-gravidade"><SelectValue placeholder="Opcional" /></SelectTrigger>
               <SelectContent>
                 {Object.entries(GRAVIDADE_LABEL).map(([k, v]) => (
                   <SelectItem key={k} value={k}>{v}</SelectItem>
@@ -151,18 +151,18 @@ export function OcorrenciaForm({
             </Select>
           </div>
           <div className="space-y-2">
-            <Label>Empresa *</Label>
+            <Label htmlFor="oc-empresa">Empresa *</Label>
             <Select value={empresaId} onValueChange={setEmpresaId}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger id="oc-empresa"><SelectValue /></SelectTrigger>
               <SelectContent>
                 {empresas.map(e => <SelectItem key={e.id} value={e.id}>{e.razao_social}</SelectItem>)}
               </SelectContent>
             </Select>
           </div>
           <div className="space-y-2">
-            <Label>Colaborador envolvido</Label>
+            <Label htmlFor="oc-colaborador">Colaborador envolvido</Label>
             <Select value={colabId} onValueChange={setColabId}>
-              <SelectTrigger><SelectValue placeholder="Sem envolvido identificado" /></SelectTrigger>
+              <SelectTrigger id="oc-colaborador"><SelectValue placeholder="Sem envolvido identificado" /></SelectTrigger>
               <SelectContent>
                 {colaboradores.map(c => <SelectItem key={c.id} value={c.id}>{c.nome_completo}</SelectItem>)}
               </SelectContent>
@@ -180,9 +180,9 @@ export function OcorrenciaForm({
           </div>
           {obraLocais.length > 0 && (
             <div className="space-y-2">
-              <Label>Obra / Local</Label>
+              <Label htmlFor="oc-obra-local">Obra / Local</Label>
               <Select value={obraLocalId || SEM_LOCAL} onValueChange={selecionarObraLocal}>
-                <SelectTrigger><SelectValue placeholder="Vincular a um local da obra" /></SelectTrigger>
+                <SelectTrigger id="oc-obra-local"><SelectValue placeholder="Vincular a um local da obra" /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value={SEM_LOCAL}>— Não vincular —</SelectItem>
                   {obraLocais.map((ol) => (

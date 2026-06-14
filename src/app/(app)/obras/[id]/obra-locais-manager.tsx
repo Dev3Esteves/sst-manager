@@ -41,9 +41,9 @@ export function ObraLocaisManager({ obraId, locais }: { obraId: string; locais: 
             <Input value={nome} onChange={(e) => setNome(e.target.value)} placeholder="Ex: Subestação, Galpão 2" />
           </div>
           <div className="space-y-1.5 w-32">
-            <Label className="text-xs">Tipo</Label>
+            <Label htmlFor="obra-local-tipo" className="text-xs">Tipo</Label>
             <Select value={tipo} onValueChange={setTipo}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger id="obra-local-tipo"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="interna">Interna</SelectItem>
                 <SelectItem value="externa">Externa</SelectItem>

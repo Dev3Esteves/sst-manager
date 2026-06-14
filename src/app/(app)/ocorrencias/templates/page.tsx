@@ -21,7 +21,7 @@ export default async function TemplatesOcorrenciaPage() {
     )
   }
 
-  const { data: templates } = await r.ctx.supabase
+  const { data: templates, error } = await r.ctx.supabase
     .from("templates_ocorrencia")
     .select("id, tipo, titulo, ativo, is_sistema")
     .order("titulo")
@@ -31,7 +31,7 @@ export default async function TemplatesOcorrenciaPage() {
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" asChild>
+            <Button variant="ghost" size="icon" asChild aria-label="Voltar para ocorrências">
               <Link href="/ocorrencias"><ArrowLeft className="h-4 w-4" /></Link>
             </Button>
             <h1 className="text-3xl font-bold tracking-tight">Templates de ocorrência</h1>
@@ -82,7 +82,11 @@ export default async function TemplatesOcorrenciaPage() {
                 <TableRow>
                   <TableCell colSpan={5} className="text-center text-muted-foreground py-10">
                     <FileText className="mx-auto h-10 w-10 opacity-30 mb-2" />
-                    Nenhum template cadastrado.
+                    {error ? (
+                      <span className="text-destructive" role="alert">Não foi possível carregar os templates. Recarregue a página.</span>
+                    ) : (
+                      "Nenhum template cadastrado."
+                    )}
                   </TableCell>
                 </TableRow>
               )}

@@ -88,16 +88,16 @@ export function PlanoForm({
             <Input id="tit" value={titulo} onChange={(e) => setTitulo(e.target.value)} />
           </div>
           <div className="space-y-2">
-            <Label>Tipo de cenário *</Label>
+            <Label htmlFor="cenario">Tipo de cenário *</Label>
             <Select value={cenario} onValueChange={setCenario}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger id="cenario"><SelectValue /></SelectTrigger>
               <SelectContent>{Object.entries(CENARIOS_EMERGENCIA).map(([k, v]) => <SelectItem key={k} value={k}>{v}</SelectItem>)}</SelectContent>
             </Select>
           </div>
           <div className="space-y-2">
-            <Label>Obra (opcional)</Label>
+            <Label htmlFor="obra">Obra (opcional)</Label>
             <Select value={obraId || SEM_OBRA} onValueChange={(v) => setObraId(v === SEM_OBRA ? "" : v)}>
-              <SelectTrigger><SelectValue placeholder="—" /></SelectTrigger>
+              <SelectTrigger id="obra"><SelectValue placeholder="—" /></SelectTrigger>
               <SelectContent>
                 <SelectItem value={SEM_OBRA}>— Nenhuma —</SelectItem>
                 {obras.map((o) => <SelectItem key={o.id} value={o.id}>{o.nome}</SelectItem>)}
@@ -105,9 +105,9 @@ export function PlanoForm({
             </Select>
           </div>
           <div className="space-y-2">
-            <Label>Status</Label>
+            <Label htmlFor="status">Status</Label>
             <Select value={status} onValueChange={setStatus}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger id="status"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="ativo">Ativo</SelectItem>
                 <SelectItem value="em_revisao">Em revisão</SelectItem>

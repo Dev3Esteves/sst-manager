@@ -12,7 +12,7 @@ const CATEGORIA_LABEL: Record<string, string> = {
 
 export default async function VencimentosPage() {
   const supabase = await createClient()
-  const { data: vencs } = await supabase
+  const { data: vencs, error } = await supabase
     .from("vw_vencimentos")
     .select("*")
     .order("dias_restantes", { ascending: true })
@@ -80,7 +80,9 @@ export default async function VencimentosPage() {
               {(!vencs || vencs.length === 0) && (
                 <TableRow>
                   <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
-                    Nenhum vencimento cadastrado ainda.
+                    {error ? (
+                      <span className="text-destructive" role="alert">Não foi possível carregar os vencimentos. Recarregue a página.</span>
+                    ) : "Nenhum vencimento cadastrado ainda."}
                   </TableCell>
                 </TableRow>
               )}

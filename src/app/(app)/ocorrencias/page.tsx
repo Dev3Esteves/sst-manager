@@ -49,7 +49,8 @@ export default async function OcorrenciasPage({
   if (sp.de) query = query.gte("data_ocorrencia", sp.de)
   if (sp.ate) query = query.lte("data_ocorrencia", sp.ate)
 
-  const { data: ocorrencias } = await query
+  const { data: ocorrencias, error } = await query
+  const temFiltros = Boolean(sp.tipo || sp.gravidade || sp.status || sp.de || sp.ate)
   const podeGerenciarTemplates = await getAuthWithRole(["admin", "tec_seguranca", "engenheiro_seg"])
 
   return (
@@ -159,7 +160,13 @@ export default async function OcorrenciasPage({
                 <TableRow>
                   <TableCell colSpan={8} className="text-center text-muted-foreground py-10">
                     <AlertTriangle className="mx-auto h-10 w-10 opacity-30 mb-2" />
-                    Nenhuma ocorrência registrada.
+                    {error ? (
+                      <span className="text-destructive" role="alert">Não foi possível carregar as ocorrências. Recarregue a página.</span>
+                    ) : temFiltros ? (
+                      "Nenhuma ocorrência encontrada para os filtros selecionados."
+                    ) : (
+                      "Nenhuma ocorrência registrada."
+                    )}
                   </TableCell>
                 </TableRow>
               )}

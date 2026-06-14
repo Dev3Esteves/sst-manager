@@ -137,9 +137,9 @@ export function InspecaoForm({
         <CardHeader><CardTitle className="text-base">Identificação</CardTitle></CardHeader>
         <CardContent className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2">
-            <Label>Empresa *</Label>
+            <Label htmlFor="empresa">Empresa *</Label>
             <Select value={empresaId} onValueChange={setEmpresaId}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger id="empresa"><SelectValue /></SelectTrigger>
               <SelectContent>
                 {empresas.map(e => <SelectItem key={e.id} value={e.id}>{e.razao_social}</SelectItem>)}
               </SelectContent>
@@ -147,9 +147,9 @@ export function InspecaoForm({
           </div>
           {obraLocais.length > 0 && (
             <div className="space-y-2">
-              <Label>Obra / Local</Label>
+              <Label htmlFor="obra-local">Obra / Local</Label>
               <Select value={obraLocalId || SEM_LOCAL} onValueChange={selecionarObraLocal}>
-                <SelectTrigger><SelectValue placeholder="Vincular a um local da obra" /></SelectTrigger>
+                <SelectTrigger id="obra-local"><SelectValue placeholder="Vincular a um local da obra" /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value={SEM_LOCAL}>— Não vincular —</SelectItem>
                   {obraLocais.map((ol) => (

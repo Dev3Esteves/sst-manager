@@ -22,7 +22,7 @@ function statusVariant(s: string): BadgeProps["variant"] {
 
 export default async function PsicossocialPage() {
   const supabase = await createClient()
-  const { data: campanhas } = await supabase
+  const { data: campanhas, error } = await supabase
     .from("psi_campanha")
     .select("id, titulo, status, versao_aplicada, data_inicio, pgr(numero_revisao, obras(nome))")
     .order("created_at", { ascending: false })
@@ -81,8 +81,14 @@ export default async function PsicossocialPage() {
               })}
               {(!campanhas || campanhas.length === 0) && (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
-                    Nenhuma campanha ainda. Crie uma sobre um PGR existente.
+                  <TableCell colSpan={5} className="text-center py-8">
+                    {error ? (
+                      <span className="text-destructive" role="alert">
+                        Não foi possível carregar as campanhas. Recarregue a página.
+                      </span>
+                    ) : (
+                      <span className="text-muted-foreground">Nenhuma campanha ainda. Crie uma sobre um PGR existente.</span>
+                    )}
                   </TableCell>
                 </TableRow>
               )}

@@ -45,7 +45,7 @@ const STATUS_BADGE: Record<NcStatus, "default" | "outline" | "secondary"> = {
 
 export default async function NaoConformidadesPage() {
   const supabase = await createClient()
-  const { data: ncs } = await supabase
+  const { data: ncs, error } = await supabase
     .from("nao_conformidades")
     .select(`
       id, numero_sequencial, titulo, origem, severidade, status, data_identificacao,
@@ -105,9 +105,15 @@ export default async function NaoConformidadesPage() {
         </CardHeader>
         <CardContent>
           {lista.length === 0 ? (
-            <p className="text-sm text-muted-foreground text-center py-8">
-              Nenhuma não-conformidade cadastrada. Clique em <strong>Nova NC</strong> para começar.
-            </p>
+            error ? (
+              <p className="text-sm text-center py-8 text-destructive" role="alert">
+                Não foi possível carregar as não-conformidades. Recarregue a página.
+              </p>
+            ) : (
+              <p className="text-sm text-muted-foreground text-center py-8">
+                Nenhuma não-conformidade cadastrada. Clique em <strong>Nova NC</strong> para começar.
+              </p>
+            )
           ) : (
             <Table>
               <TableHeader>

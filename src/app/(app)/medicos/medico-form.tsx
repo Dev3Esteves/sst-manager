@@ -129,9 +129,9 @@ export function MedicoForm({
             <Input id="esp" value={especialidade} onChange={(e) => setEspecialidade(e.target.value)} placeholder="Ex: Medicina do Trabalho" />
           </div>
           <div className="space-y-2">
-            <Label>Status</Label>
+            <Label htmlFor="status">Status</Label>
             <Select value={status} onValueChange={setStatus}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger id="status"><SelectValue /></SelectTrigger>
               <SelectContent>
                 {Object.entries(MEDICO_STATUS_LABEL).map(([k, v]) => (
                   <SelectItem key={k} value={k}>{v}</SelectItem>

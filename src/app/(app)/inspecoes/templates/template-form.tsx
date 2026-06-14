@@ -118,9 +118,9 @@ export function TemplateInspecaoForm({
             <Input id="cat" value={categoria} onChange={(e) => setCategoria(e.target.value)} placeholder="Ex: trabalho em altura" />
           </div>
           <div className="space-y-2">
-            <Label>Periodicidade</Label>
+            <Label htmlFor="periodicidade">Periodicidade</Label>
             <Select value={periodicidade} onValueChange={setPeriodicidade}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger id="periodicidade"><SelectValue /></SelectTrigger>
               <SelectContent>
                 {Object.entries(PERIODICIDADES).map(([k, v]) => (
                   <SelectItem key={k} value={k}>{v}</SelectItem>

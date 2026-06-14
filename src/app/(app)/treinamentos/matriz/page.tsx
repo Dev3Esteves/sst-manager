@@ -18,7 +18,7 @@ export default async function TreinamentoMatrizPage() {
   return (
     <div className="container py-8 space-y-6 max-w-3xl">
       <div className="flex items-center gap-2">
-        <Button variant="ghost" size="icon" asChild><Link href="/treinamentos"><ArrowLeft className="h-4 w-4" /></Link></Button>
+        <Button variant="ghost" size="icon" aria-label="Voltar" asChild><Link href="/treinamentos"><ArrowLeft className="h-4 w-4" /></Link></Button>
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Matriz Treinamento × Cargo</h1>
           <p className="text-muted-foreground">Defina os treinamentos obrigatórios de cada função.</p>

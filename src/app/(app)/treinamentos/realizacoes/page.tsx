@@ -9,7 +9,7 @@ import { Plus, Users, FileArchive, RectangleHorizontal, RectangleVertical } from
 
 export default async function RealizacoesPage() {
   const supabase = await createClient()
-  const { data: realizacoes } = await supabase
+  const { data: realizacoes, error } = await supabase
     .from("treinamentos_realizados")
     .select("id, data_realizacao, data_vencimento, instrutor, entidade, nota_avaliacao, colaboradores(nome_completo), treinamentos(titulo, nr_referencia)")
     .order("data_vencimento", { ascending: true, nullsFirst: false })
@@ -91,7 +91,9 @@ export default async function RealizacoesPage() {
               {(!realizacoes || realizacoes.length === 0) && (
                 <TableRow>
                   <TableCell colSpan={8} className="text-center text-muted-foreground py-8">
-                    Nenhuma realização registrada.
+                    {error
+                      ? <span className="text-destructive" role="alert">Não foi possível carregar as realizações. Recarregue a página.</span>
+                      : "Nenhuma realização registrada."}
                   </TableCell>
                 </TableRow>
               )}

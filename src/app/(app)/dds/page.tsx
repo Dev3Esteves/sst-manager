@@ -9,7 +9,7 @@ import { Plus, MessageSquare, Users } from "lucide-react"
 
 export default async function DDSPage() {
   const supabase = await createClient()
-  const { data: dds } = await supabase
+  const { data: dds, error } = await supabase
     .from("documentos_sst")
     .select("id, titulo, data_emissao, local_trabalho, conteudo, status, empresas(razao_social)")
     .eq("tipo", "dialogo_seguranca")
@@ -81,9 +81,17 @@ export default async function DDSPage() {
               })}
               {(!dds || dds.length === 0) && (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center text-muted-foreground py-10">
-                    <MessageSquare className="mx-auto h-10 w-10 opacity-30 mb-2" />
-                    Nenhum DDS registrado. Comece pelo primeiro diálogo da equipe.
+                  <TableCell colSpan={6} className="text-center py-10">
+                    {error ? (
+                      <span className="text-destructive" role="alert">
+                        Não foi possível carregar os DDS. Recarregue a página.
+                      </span>
+                    ) : (
+                      <span className="text-muted-foreground">
+                        <MessageSquare className="mx-auto h-10 w-10 opacity-30 mb-2" />
+                        Nenhum DDS registrado. Comece pelo primeiro diálogo da equipe.
+                      </span>
+                    )}
                   </TableCell>
                 </TableRow>
               )}

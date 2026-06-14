@@ -15,7 +15,7 @@ export default async function AuditoriasPage() {
   if (r.status === "unauth") return <div className="container py-10 text-center text-muted-foreground">Sessão expirada.</div>
   if (r.status === "forbidden") return <div className="container py-10 text-center text-muted-foreground">Acesso restrito a Segurança/Direção.</div>
 
-  const { data: auditorias } = await r.ctx.supabase
+  const { data: auditorias, error } = await r.ctx.supabase
     .from("auditoria")
     .select("id, numero_sequencial, titulo, auditor_nome, data_planejada, data_realizacao, status")
     .order("numero_sequencial", { ascending: false })
@@ -62,7 +62,11 @@ export default async function AuditoriasPage() {
               {(!auditorias || auditorias.length === 0) && (
                 <TableRow>
                   <TableCell colSpan={7} className="text-center text-muted-foreground py-10">
-                    <ClipboardCheck className="mx-auto h-10 w-10 opacity-30 mb-2" />Nenhuma auditoria registrada.
+                    {error ? (
+                      <span className="text-destructive" role="alert">Não foi possível carregar as auditorias. Recarregue a página.</span>
+                    ) : (
+                      <><ClipboardCheck className="mx-auto h-10 w-10 opacity-30 mb-2" />Nenhuma auditoria registrada.</>
+                    )}
                   </TableCell>
                 </TableRow>
               )}

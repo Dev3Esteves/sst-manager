@@ -37,7 +37,7 @@ function diasParaVencer(dataVencimento: string): number {
 
 export default async function PgrListPage() {
   const supabase = await createClient()
-  const { data: pgrs } = await supabase
+  const { data: pgrs, error } = await supabase
     .from("pgr")
     .select(`
       id, numero_revisao, descricao_revisao, data_emissao, data_vencimento, status,
@@ -92,7 +92,7 @@ export default async function PgrListPage() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-1">
-              {proximosVencer > 0 && <AlertTriangle className="h-3 w-3 text-yellow-500" />}
+              {proximosVencer > 0 && <AlertTriangle className="h-3 w-3 text-status-alerta" />}
               Vencendo em ≤ 60 dias
             </CardTitle>
           </CardHeader>
@@ -155,7 +155,7 @@ export default async function PgrListPage() {
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <Button variant="ghost" size="icon" asChild>
+                      <Button variant="ghost" size="icon" asChild aria-label="Ver detalhes do PGR">
                         <Link href={`/pgr/${p.id}`}>
                           <Eye className="h-4 w-4" />
                         </Link>
@@ -167,7 +167,15 @@ export default async function PgrListPage() {
               {rows.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
-                    Nenhum PGR cadastrado. Clique em <strong>Novo PGR</strong> para começar.
+                    {error ? (
+                      <span className="text-destructive" role="alert">
+                        Não foi possível carregar os PGRs. Recarregue a página.
+                      </span>
+                    ) : (
+                      <>
+                        Nenhum PGR cadastrado. Clique em <strong>Novo PGR</strong> para começar.
+                      </>
+                    )}
                   </TableCell>
                 </TableRow>
               )}

@@ -207,9 +207,9 @@ export function NovoUsuarioForm({
         </CardHeader>
         <CardContent className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2">
-            <Label>Perfil de acesso *</Label>
+            <Label htmlFor="perfil">Perfil de acesso *</Label>
             <Select value={perfilId} onValueChange={setPerfilId}>
-              <SelectTrigger><SelectValue placeholder="Selecione" /></SelectTrigger>
+              <SelectTrigger id="perfil"><SelectValue placeholder="Selecione" /></SelectTrigger>
               <SelectContent>
                 {perfis.map((p) => (
                   <SelectItem key={p.id} value={p.id}>
@@ -220,9 +220,9 @@ export function NovoUsuarioForm({
             </Select>
           </div>
           <div className="space-y-2">
-            <Label>Empresa principal *</Label>
+            <Label htmlFor="empresa-principal">Empresa principal *</Label>
             <Select value={empresaId} onValueChange={setEmpresaId}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger id="empresa-principal"><SelectValue /></SelectTrigger>
               <SelectContent>
                 {empresas.map((e) => <SelectItem key={e.id} value={e.id}>{e.razao_social}</SelectItem>)}
               </SelectContent>
@@ -251,9 +251,9 @@ export function NovoUsuarioForm({
             </div>
           )}
           <div className="space-y-2 md:col-span-2">
-            <Label>Colaborador vinculado (opcional)</Label>
+            <Label htmlFor="colaborador-vinculado">Colaborador vinculado (opcional)</Label>
             <Select value={colaboradorId || "__none__"} onValueChange={(v) => preencherDoColaborador(v === "__none__" ? "" : v)}>
-              <SelectTrigger><SelectValue placeholder="Sem vínculo" /></SelectTrigger>
+              <SelectTrigger id="colaborador-vinculado"><SelectValue placeholder="Sem vínculo" /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="__none__">(sem vínculo)</SelectItem>
                 {colaboradores.map((c) => (

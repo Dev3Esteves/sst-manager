@@ -103,11 +103,11 @@ export function RealizacaoForm({
           <input type="hidden" name="entidade_id" value={entidadeId} />
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label>Instrutor (cadastro)</Label>
+              <Label htmlFor="instrutor_cadastro">Instrutor (cadastro)</Label>
               <Link href="/instrutores/new" target="_blank" className="text-xs text-primary hover:underline">+ Cadastrar</Link>
             </div>
             <Select value={instrutorId} onValueChange={selecionarInstrutor}>
-              <SelectTrigger><SelectValue placeholder={instrutores.length ? "Selecione" : "Nenhum cadastrado"} /></SelectTrigger>
+              <SelectTrigger id="instrutor_cadastro"><SelectValue placeholder={instrutores.length ? "Selecione" : "Nenhum cadastrado"} /></SelectTrigger>
               <SelectContent>
                 {instrutores.map((i) => <SelectItem key={i.id} value={i.id}>{i.nome}</SelectItem>)}
               </SelectContent>
@@ -120,11 +120,11 @@ export function RealizacaoForm({
           </div>
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label>Entidade (cadastro)</Label>
+              <Label htmlFor="entidade_cadastro">Entidade (cadastro)</Label>
               <Link href="/entidades-treinamento/new" target="_blank" className="text-xs text-primary hover:underline">+ Cadastrar</Link>
             </div>
             <Select value={entidadeId} onValueChange={selecionarEntidade}>
-              <SelectTrigger><SelectValue placeholder={entidades.length ? "Selecione" : "Nenhuma cadastrada"} /></SelectTrigger>
+              <SelectTrigger id="entidade_cadastro"><SelectValue placeholder={entidades.length ? "Selecione" : "Nenhuma cadastrada"} /></SelectTrigger>
               <SelectContent>
                 {entidades.map((e) => <SelectItem key={e.id} value={e.id}>{e.nome}</SelectItem>)}
               </SelectContent>

@@ -52,9 +52,9 @@ export function TravaConfig({
         </p>
         <div className="grid gap-3 sm:grid-cols-3">
           <div className="space-y-1.5">
-            <Label className="text-xs">Status</Label>
+            <Label htmlFor="trava_status" className="text-xs">Status</Label>
             <Select value={ativa} onValueChange={setAtiva}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger id="trava_status"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="0">Inativa (sem bloqueio)</SelectItem>
                 <SelectItem value="1">Ativa (bloqueia)</SelectItem>
@@ -90,7 +90,7 @@ export function TravaConfig({
                   </Badge>
                   {i.motivo && <span className="text-xs text-muted-foreground ml-2">· {i.motivo}</span>}
                 </div>
-                <Button variant="ghost" size="icon" disabled={pending}
+                <Button variant="ghost" size="icon" aria-label="Remover isenção" disabled={pending}
                   onClick={() => startTransition(async () => { const r = await removerIsencao(i.id); if ("error" in r) toast.error(r.error) })}>
                   <Trash2 className="h-4 w-4 text-destructive" />
                 </Button>
@@ -128,18 +128,18 @@ function IsencaoForm({
   return (
     <div className="grid gap-2 sm:grid-cols-[1fr_1fr_1fr_auto] sm:items-end">
       <div className="space-y-1.5">
-        <Label className="text-xs">Usuário</Label>
+        <Label htmlFor="isencao_usuario" className="text-xs">Usuário</Label>
         <Select value={usuarioId} onValueChange={setUsuarioId}>
-          <SelectTrigger><SelectValue placeholder="Selecione" /></SelectTrigger>
+          <SelectTrigger id="isencao_usuario"><SelectValue placeholder="Selecione" /></SelectTrigger>
           <SelectContent>
             {usuarios.map((u) => <SelectItem key={u.id} value={u.id}>{u.email}</SelectItem>)}
           </SelectContent>
         </Select>
       </div>
       <div className="space-y-1.5">
-        <Label className="text-xs">Módulo</Label>
+        <Label htmlFor="isencao_modulo" className="text-xs">Módulo</Label>
         <Select value={moduloSlug} onValueChange={setModuloSlug}>
-          <SelectTrigger><SelectValue /></SelectTrigger>
+          <SelectTrigger id="isencao_modulo"><SelectValue /></SelectTrigger>
           <SelectContent>
             <SelectItem value="*">Todos os módulos</SelectItem>
             {modulos.map((m) => <SelectItem key={m.slug} value={m.slug}>{m.titulo}</SelectItem>)}

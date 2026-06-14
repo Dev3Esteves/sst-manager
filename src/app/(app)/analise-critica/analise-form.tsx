@@ -82,9 +82,9 @@ export function AnaliseForm({
             <Input id="per" value={periodo} onChange={(e) => setPeriodo(e.target.value)} placeholder="Ex: 2026 — 1º semestre" />
           </div>
           <div className="space-y-2">
-            <Label>Status</Label>
+            <Label htmlFor="ac-status">Status</Label>
             <Select value={status} onValueChange={setStatus}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger id="ac-status"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="agendada">Agendada</SelectItem>
                 <SelectItem value="realizada">Realizada</SelectItem>

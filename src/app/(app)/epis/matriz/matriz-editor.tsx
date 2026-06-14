@@ -71,9 +71,9 @@ export function MatrizEditor({
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2 max-w-md">
-          <Label>Cargo</Label>
+          <Label htmlFor="cargo">Cargo</Label>
           <Select value={cargoId} onValueChange={setCargoId}>
-            <SelectTrigger><SelectValue placeholder={cargos.length ? "Selecione" : "Nenhum cargo"} /></SelectTrigger>
+            <SelectTrigger id="cargo"><SelectValue placeholder={cargos.length ? "Selecione" : "Nenhum cargo"} /></SelectTrigger>
             <SelectContent>
               {cargos.map((c) => <SelectItem key={c.id} value={c.id}>{c.titulo}</SelectItem>)}
             </SelectContent>

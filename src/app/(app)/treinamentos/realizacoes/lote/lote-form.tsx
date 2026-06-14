@@ -80,9 +80,9 @@ export function LoteForm({
         <CardHeader><CardTitle className="text-base">Dados da realização</CardTitle></CardHeader>
         <CardContent className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2 md:col-span-2">
-            <Label>Treinamento *</Label>
+            <Label htmlFor="treinamento_id">Treinamento *</Label>
             <Select value={treinamentoId} onValueChange={setTreinamentoId}>
-              <SelectTrigger><SelectValue placeholder="Selecione" /></SelectTrigger>
+              <SelectTrigger id="treinamento_id"><SelectValue placeholder="Selecione" /></SelectTrigger>
               <SelectContent>
                 {treinamentos.map((t) => (
                   <SelectItem key={t.id} value={t.id}>{t.titulo}{t.nr_referencia ? ` — ${t.nr_referencia}` : ""}</SelectItem>
@@ -99,9 +99,9 @@ export function LoteForm({
             <Input id="local" value={local} onChange={(e) => setLocal(e.target.value)} />
           </div>
           <div className="space-y-2">
-            <Label>Instrutor</Label>
+            <Label htmlFor="instrutor_id">Instrutor</Label>
             <Select value={instrutorId} onValueChange={setInstrutorId}>
-              <SelectTrigger><SelectValue placeholder="—" /></SelectTrigger>
+              <SelectTrigger id="instrutor_id"><SelectValue placeholder="—" /></SelectTrigger>
               <SelectContent>
                 <SelectItem value={NENHUM}>—</SelectItem>
                 {instrutores.map((i) => <SelectItem key={i.id} value={i.id}>{i.nome}</SelectItem>)}
@@ -109,9 +109,9 @@ export function LoteForm({
             </Select>
           </div>
           <div className="space-y-2">
-            <Label>Entidade</Label>
+            <Label htmlFor="entidade_id">Entidade</Label>
             <Select value={entidadeId} onValueChange={setEntidadeId}>
-              <SelectTrigger><SelectValue placeholder="—" /></SelectTrigger>
+              <SelectTrigger id="entidade_id"><SelectValue placeholder="—" /></SelectTrigger>
               <SelectContent>
                 <SelectItem value={NENHUM}>—</SelectItem>
                 {entidades.map((e) => <SelectItem key={e.id} value={e.id}>{e.nome}</SelectItem>)}

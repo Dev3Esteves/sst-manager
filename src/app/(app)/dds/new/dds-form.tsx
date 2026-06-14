@@ -195,9 +195,9 @@ export function DDSForm({
         <CardHeader><CardTitle className="text-lg">1. Identificação</CardTitle></CardHeader>
         <CardContent className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2">
-            <Label>Empresa *</Label>
+            <Label htmlFor="empresa">Empresa *</Label>
             <Select value={empresaId} onValueChange={setEmpresaId}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger id="empresa"><SelectValue /></SelectTrigger>
               <SelectContent>
                 {empresas.map((e) => <SelectItem key={e.id} value={e.id}>{e.razao_social}</SelectItem>)}
               </SelectContent>
@@ -236,9 +236,9 @@ export function DDSForm({
           </div>
           {mediadores.length > 0 && (
             <div className="space-y-2 md:col-span-2">
-              <Label>Mediador cadastrado</Label>
+              <Label htmlFor="mediador-cadastrado">Mediador cadastrado</Label>
               <Select value={MEDIADOR_MANUAL} onValueChange={selecionarMediador}>
-                <SelectTrigger><SelectValue placeholder="Selecione para preencher" /></SelectTrigger>
+                <SelectTrigger id="mediador-cadastrado"><SelectValue placeholder="Selecione para preencher" /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value={MEDIADOR_MANUAL}>— Preencher manualmente —</SelectItem>
                   {mediadores.map((m) => (

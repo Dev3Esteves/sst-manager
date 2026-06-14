@@ -32,7 +32,7 @@ function statusVariant(s: string): BadgeProps["variant"] {
 
 export default async function DocumentosPage() {
   const supabase = await createClient()
-  const { data: docs } = await supabase
+  const { data: docs, error } = await supabase
     .from("documentos_sst")
     .select("id, tipo, titulo, numero_sequencial, data_emissao, data_validade, status, local_trabalho")
     .order("created_at", { ascending: false })
@@ -101,7 +101,11 @@ export default async function DocumentosPage() {
                 <TableRow>
                   <TableCell colSpan={7} className="text-center text-muted-foreground py-10">
                     <FileText className="mx-auto h-10 w-10 opacity-30 mb-2" />
-                    Nenhum documento emitido ainda. Comece criando uma APR ou Autorização NR.
+                    {error ? (
+                      <span className="text-destructive" role="alert">Não foi possível carregar os documentos. Recarregue a página.</span>
+                    ) : (
+                      "Nenhum documento emitido ainda. Comece criando uma APR ou Autorização NR."
+                    )}
                   </TableCell>
                 </TableRow>
               )}

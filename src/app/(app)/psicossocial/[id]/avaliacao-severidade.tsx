@@ -136,6 +136,7 @@ export function AvaliacaoSeveridade({ id, itens }: { id: string; itens: ItemSeve
                       <td className="p-2 text-center">{it.probabilidade ?? "—"} <span className="text-muted-foreground">({it.score})</span></td>
                       <td className="p-2 text-center">
                         <select className="rounded border bg-background px-1 py-0.5" value={st.s}
+                          aria-label={`Severidade — ${it.gheCodigo} / ${it.dimensao_nome}`}
                           onChange={(ev) => set(chave, "s", ev.target.value)}>
                           <option value="">—</option>
                           {SEVERIDADE.map((o) => <option key={o.v} value={o.v}>{o.l}</option>)}
@@ -143,6 +144,7 @@ export function AvaliacaoSeveridade({ id, itens }: { id: string; itens: ItemSeve
                       </td>
                       <td className="p-2 text-center">
                         <select className="rounded border bg-background px-1 py-0.5" value={st.e}
+                          aria-label={`Exposição — ${it.gheCodigo} / ${it.dimensao_nome}`}
                           onChange={(ev) => set(chave, "e", ev.target.value)}>
                           {EXPOSICAO.map((o) => <option key={String(o.v)} value={o.v}>{o.l}</option>)}
                         </select>

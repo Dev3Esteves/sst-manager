@@ -29,7 +29,7 @@ const GRUPO_BADGE: Record<EsocialGrupo, "default" | "outline" | "secondary" | "a
 
 export default async function EsocialCatalogPage() {
   const supabase = await createClient()
-  const { data: agentes } = await supabase
+  const { data: agentes, error } = await supabase
     .from("esocial_agente_nocivo")
     .select(
       "codigo, descricao, grupo, exige_aposentadoria_especial, limite_tolerancia, observacao, versao_leiaute, ativo",
@@ -93,10 +93,16 @@ export default async function EsocialCatalogPage() {
         </CardHeader>
         <CardContent>
           {lista.length === 0 ? (
-            <p className="text-sm text-muted-foreground text-center py-8">
-              Catálogo vazio. Execute{" "}
-              <code className="text-xs">node scripts/seed-esocial-tabela24.mjs</code>.
-            </p>
+            error ? (
+              <p className="text-sm text-destructive text-center py-8" role="alert">
+                Não foi possível carregar o catálogo de agentes nocivos. Recarregue a página.
+              </p>
+            ) : (
+              <p className="text-sm text-muted-foreground text-center py-8">
+                Catálogo vazio. Execute{" "}
+                <code className="text-xs">node scripts/seed-esocial-tabela24.mjs</code>.
+              </p>
+            )
           ) : (
             <Table>
               <TableHeader>

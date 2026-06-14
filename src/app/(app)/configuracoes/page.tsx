@@ -120,7 +120,7 @@ function SemEmpresaDona() {
   return (
     <Card>
       <CardContent className="flex items-center gap-3 py-8 text-muted-foreground">
-        <AlertTriangle className="h-5 w-5 text-amber-500" />
+        <AlertTriangle className="h-5 w-5 text-status-alerta" />
         <div>
           Nenhuma empresa dona do sistema cadastrada.{" "}
           <Link href="/empresas/new" className="text-primary underline">

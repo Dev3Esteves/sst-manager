@@ -20,7 +20,7 @@ export default async function RequisitosLegaisPage() {
   if (r.status === "unauth") return <div className="container py-10 text-center text-muted-foreground">Sessão expirada.</div>
   if (r.status === "forbidden") return <div className="container py-10 text-center text-muted-foreground">Acesso restrito a Segurança/Direção.</div>
 
-  const { data: reqs } = await r.ctx.supabase
+  const { data: reqs, error } = await r.ctx.supabase
     .from("requisito_legal")
     .select("id, tipo, referencia, titulo, atende, ativo")
     .order("referencia")
@@ -72,7 +72,10 @@ export default async function RequisitosLegaisPage() {
               {lista.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={5} className="text-center text-muted-foreground py-10">
-                    <Scale className="mx-auto h-10 w-10 opacity-30 mb-2" />Nenhum requisito legal cadastrado.
+                    <Scale className="mx-auto h-10 w-10 opacity-30 mb-2" />
+                    {error ? (
+                      <span className="text-destructive" role="alert">Não foi possível carregar os requisitos legais. Recarregue a página.</span>
+                    ) : "Nenhum requisito legal cadastrado."}
                   </TableCell>
                 </TableRow>
               )}

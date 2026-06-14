@@ -25,8 +25,8 @@ export function BrandLogo({
   className?: string
 }) {
   if (logoUrl) {
-    // eslint-disable-next-line @next/next/no-img-element
     return (
+      // eslint-disable-next-line @next/next/no-img-element
       <img
         src={logoUrl}
         alt={nome}

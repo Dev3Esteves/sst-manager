@@ -10,6 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { toast } from "sonner"
 import { Loader2, ArrowLeft, KeyRound, Power, PowerOff, Trash2, Copy } from "lucide-react"
+import { formatDataHora } from "@/lib/utils/data-brasilia"
 import { editarUsuario, resetarSenha, toggleAtivo, excluirUsuario } from "../actions"
 
 type Perfil = { id: string; nome: string; descricao: string | null }
@@ -173,7 +174,7 @@ export function EditarUsuarioForm({
         <CardContent className="grid gap-3 md:grid-cols-2 text-sm">
           <Row label="E-mail" value={authEmail} />
           <Row label="ID" value={<code className="text-[11px]">{usuarioId}</code>} />
-          <Row label="Último acesso" value={lastSignIn ? new Date(lastSignIn).toLocaleString("pt-BR") : "Nunca"} />
+          <Row label="Último acesso" value={lastSignIn ? formatDataHora(lastSignIn) : "Nunca"} />
           <Row label="Status" value={ativo ? <Badge variant="regular">Ativo</Badge> : <Badge variant="vencido">Inativo</Badge>} />
         </CardContent>
       </Card>

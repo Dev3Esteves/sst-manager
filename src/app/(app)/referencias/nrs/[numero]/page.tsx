@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ArrowLeft, ExternalLink, FileDown } from "lucide-react"
+import { formatDate } from "@/lib/utils/vencimento"
 
 type Portaria = { texto?: string } | string
 type Manual = { titulo: string; url: string }
@@ -60,7 +61,7 @@ export default async function NrDetailPage({ params }: { params: Promise<{ numer
             <h2 className="text-xl text-muted-foreground">{nr.titulo}</h2>
             {nr.data_atualizacao && (
               <p className="text-sm text-muted-foreground mt-1">
-                Atualizada em {new Date(nr.data_atualizacao).toLocaleDateString("pt-BR")}
+                Atualizada em {formatDate(nr.data_atualizacao)}
               </p>
             )}
           </div>

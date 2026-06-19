@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Plus, AlertCircle } from "lucide-react"
+import { formatDate } from "@/lib/utils/vencimento"
 import {
   NC_ORIGEM_LABEL,
   NC_SEVERIDADE_LABEL,
@@ -162,7 +163,7 @@ export default async function NaoConformidadesPage() {
                         </Badge>
                       </TableCell>
                       <TableCell className="text-xs text-muted-foreground">
-                        {new Date(nc.data_identificacao).toLocaleDateString("pt-BR")}
+                        {formatDate(nc.data_identificacao)}
                       </TableCell>
                     </TableRow>
                   )

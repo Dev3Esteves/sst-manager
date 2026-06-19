@@ -8,6 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Pagination, parsePageParam } from "@/components/pagination"
 import { Plus, Pencil, ShieldAlert, UserCog } from "lucide-react"
+import { formatDataHora } from "@/lib/utils/data-brasilia"
 
 const PER_PAGE = 25
 
@@ -137,7 +138,7 @@ export default async function UsuariosPage({
                     </TableCell>
                     <TableCell>{empresa?.razao_social ?? "—"}</TableCell>
                     <TableCell className="text-xs">
-                      {ultimoAcesso ? new Date(ultimoAcesso).toLocaleString("pt-BR") : "Nunca"}
+                      {ultimoAcesso ? formatDataHora(ultimoAcesso) : "Nunca"}
                     </TableCell>
                     <TableCell>
                       {u.ativo

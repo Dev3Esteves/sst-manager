@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { ExternalLink } from "lucide-react"
+import { formatDate } from "@/lib/utils/vencimento"
 
 export const metadata = { title: "Normas Regulamentadoras" }
 
@@ -77,7 +78,7 @@ export default async function NrCatalogPage() {
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
                     {nr.data_atualizacao
-                      ? new Date(nr.data_atualizacao).toLocaleDateString("pt-BR")
+                      ? formatDate(nr.data_atualizacao)
                       : "—"}
                   </TableCell>
                 </TableRow>

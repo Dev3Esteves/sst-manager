@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Plus, Eye, AlertTriangle } from "lucide-react"
 import { PGR_STATUS_LABEL, type PgrStatus } from "@/lib/validations/pgr"
+import { formatDate } from "@/lib/utils/vencimento"
 
 export const metadata = { title: "PGR — Programas de Gerenciamento de Riscos" }
 
@@ -141,10 +142,10 @@ export default async function PgrListPage() {
                       {String(p.numero_revisao).padStart(2, "0")}
                     </TableCell>
                     <TableCell className="text-sm">
-                      {new Date(p.data_emissao).toLocaleDateString("pt-BR")}
+                      {formatDate(p.data_emissao)}
                     </TableCell>
                     <TableCell className={`text-sm ${venceuOuPerto ? "text-status-alerta font-medium" : ""}`}>
-                      {new Date(p.data_vencimento).toLocaleDateString("pt-BR")}
+                      {formatDate(p.data_vencimento)}
                       {venceuOuPerto && dias >= 0 && (
                         <div className="text-xs">em {dias}d</div>
                       )}

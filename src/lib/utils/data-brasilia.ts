@@ -29,6 +29,26 @@ export function agoraBrasiliaData(): string {
   return new Date().toLocaleDateString("pt-BR", { timeZone: TZ })
 }
 
+/**
+ * Formata um timestamp ISO já gravado (TIMESTAMPTZ) p/ EXIBIÇÃO no fuso de
+ * Brasília: "18/06/2026 20:30". Use no lugar de `new Date(iso).toLocaleString()`,
+ * que no servidor (UTC) adianta ~3h. Para campos SÓ-data use formatDate() (slice).
+ */
+export function formatDataHora(iso: string | null | undefined): string {
+  if (!iso) return "—"
+  const d = new Date(iso)
+  if (Number.isNaN(d.getTime())) return "—"
+  return d.toLocaleString("pt-BR", {
+    timeZone: TZ,
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  })
+}
+
 /** Agora em Brasília no formato YYYY-MM-DDTHH:mm (para inputs `type="datetime-local"`). */
 export function agoraBrasiliaInput(): string {
   const partes = new Intl.DateTimeFormat("en-CA", {

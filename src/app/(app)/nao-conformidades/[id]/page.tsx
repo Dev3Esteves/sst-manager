@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ArrowLeft } from "lucide-react"
+import { formatDate } from "@/lib/utils/vencimento"
 import { NcForm } from "../nc-form"
 import {
   deleteNc,
@@ -178,7 +179,7 @@ export default async function NcDetailPage({ params }: { params: Promise<{ id: s
           <h1 className="text-2xl font-bold tracking-tight">{nc.titulo}</h1>
           <p className="text-sm text-muted-foreground mt-1">
             Identificada em{" "}
-            {new Date(nc.data_identificacao).toLocaleDateString("pt-BR")}
+            {formatDate(nc.data_identificacao)}
             {nc.identificado_por_nome ? ` por ${nc.identificado_por_nome}` : ""}
             {nc.ocorrencia_id && (
               <>

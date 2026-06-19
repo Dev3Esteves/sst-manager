@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Plus, Trash2, CheckCircle2, Loader2, ChevronDown, ChevronUp } from "lucide-react"
+import { formatDate } from "@/lib/utils/vencimento"
 import {
   AC_STATUS,
   AC_STATUS_LABEL,
@@ -122,7 +123,7 @@ export function AcoesEditor({
                           <span>{AC_TIPO_LABEL[ac.tipo]}</span>
                           <span>·</span>
                           <span>
-                            Prazo: {new Date(ac.data_prazo).toLocaleDateString("pt-BR")}
+                            Prazo: {formatDate(ac.data_prazo)}
                           </span>
                           {ac.responsavel_nome && (
                             <>

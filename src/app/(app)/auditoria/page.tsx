@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge, type BadgeProps } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { History, ShieldAlert } from "lucide-react"
+import { formatDataHora } from "@/lib/utils/data-brasilia"
 
 function acaoVariant(acao: string | null): BadgeProps["variant"] {
   switch (acao) {
@@ -92,7 +93,7 @@ export default async function AuditoriaPage() {
                 return (
                   <TableRow key={log.id}>
                     <TableCell className="text-xs whitespace-nowrap">
-                      {new Date(log.created_at).toLocaleString("pt-BR")}
+                      {formatDataHora(log.created_at)}
                     </TableCell>
                     <TableCell>
                       <Badge variant="outline">{log.tabela}</Badge>

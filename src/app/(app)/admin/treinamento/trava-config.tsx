@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Loader2, Lock, Unlock, Plus, Trash2, ShieldCheck } from "lucide-react"
 import { salvarTravaConfig, adicionarIsencao, removerIsencao } from "./actions"
+import { formatDataHora } from "@/lib/utils/data-brasilia"
 
 type Config = { trava_ativa: boolean; carencia_dias: number; data_ativacao: string | null }
 type Usuario = { id: string; email: string }
@@ -68,7 +69,7 @@ export function TravaConfig({
           <div className="space-y-1.5">
             <Label className="text-xs">Ativada em</Label>
             <div className="h-9 flex items-center text-sm text-muted-foreground">
-              {config.data_ativacao ? new Date(config.data_ativacao).toLocaleString("pt-BR") : "—"}
+              {formatDataHora(config.data_ativacao)}
             </div>
           </div>
         </div>

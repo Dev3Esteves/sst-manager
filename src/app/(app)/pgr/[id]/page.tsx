@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { ArrowLeft, Pencil, FileDown, Users, Plus } from "lucide-react"
+import { formatDate } from "@/lib/utils/vencimento"
 import {
   PGR_STATUS_LABEL,
   RISCO_CATEGORIA_LABEL,
@@ -196,8 +197,8 @@ export default async function PgrDetailPage({ params }: { params: Promise<{ id: 
               {obra.codigo ? ` (${obra.codigo})` : ""}
             </h2>
             <p className="text-sm text-muted-foreground mt-1">
-              Vigência: {new Date(pgr.data_emissao).toLocaleDateString("pt-BR")} →{" "}
-              {new Date(pgr.data_vencimento).toLocaleDateString("pt-BR")} ·{" "}
+              Vigência: {formatDate(pgr.data_emissao)} →{" "}
+              {formatDate(pgr.data_vencimento)} ·{" "}
               <span className="font-mono">{pgr.codigo_formulario}</span>
             </p>
             {pgr.descricao_revisao && (

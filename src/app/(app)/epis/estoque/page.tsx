@@ -8,7 +8,8 @@ import { PageHeader } from "@/components/page-header"
 import { Pagination, parsePageParam } from "@/components/pagination"
 import { ExportCsvButton } from "@/components/shared/export-csv-button"
 import { valorizacaoTotal, emRuptura } from "@/lib/estoque/calculos"
-import { Boxes, MapPin, ShoppingCart, ArrowLeftRight, History, ClipboardList, SlidersHorizontal, FileBarChart } from "lucide-react"
+import { Boxes } from "lucide-react"
+import { EstoqueNav } from "./estoque-nav"
 
 const PER_PAGE = 25
 
@@ -107,30 +108,7 @@ export default async function EstoqueSaldosPage({
         }
       />
 
-      {/* Navegação do módulo de estoque — quebra de linha em telas estreitas. */}
-      <nav className="flex flex-wrap gap-2">
-        <Button variant="outline" size="sm" asChild>
-          <Link href="/epis/estoque/locais"><MapPin className="h-4 w-4" />Locais</Link>
-        </Button>
-        <Button variant="outline" size="sm" asChild>
-          <Link href="/epis/estoque/compras"><ShoppingCart className="h-4 w-4" />Compras</Link>
-        </Button>
-        <Button variant="outline" size="sm" asChild>
-          <Link href="/epis/estoque/transferencias"><ArrowLeftRight className="h-4 w-4" />Transferências</Link>
-        </Button>
-        <Button variant="outline" size="sm" asChild>
-          <Link href="/epis/estoque/kardex"><History className="h-4 w-4" />Kardex</Link>
-        </Button>
-        <Button variant="outline" size="sm" asChild>
-          <Link href="/epis/estoque/inventario"><ClipboardList className="h-4 w-4" />Inventário</Link>
-        </Button>
-        <Button variant="outline" size="sm" asChild>
-          <Link href="/epis/estoque/parametros"><SlidersHorizontal className="h-4 w-4" />Parâmetros</Link>
-        </Button>
-        <Button variant="outline" size="sm" asChild>
-          <Link href="/epis/estoque/relatorios"><FileBarChart className="h-4 w-4" />Relatórios</Link>
-        </Button>
-      </nav>
+      <EstoqueNav atual="saldos" />
 
       <div className="grid gap-4 sm:grid-cols-2">
         <Card>

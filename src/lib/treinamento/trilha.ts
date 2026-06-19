@@ -184,6 +184,21 @@ export const TRILHA: ModuloTrilha[] = [
     manuais: ["contexto-sgsst", "politica-sst", "gestao-mudanca", "objetivos-sst", "requisitos-legais", "plano-emergencia", "auditorias-internas", "comunicacao-consulta", "analise-critica"],
     rotas: [{ label: "Contexto & Partes", href: "/contexto" }, { label: "Política de SST", href: "/politica" }, { label: "Análise Crítica", href: "/analise-critica" }],
   },
+  {
+    slug: "estoque-epis", ordem: 14, secao: "SST — Segurança",
+    titulo: "Estoque de EPIs",
+    objetivo: "Controlar o estoque de EPIs ponta a ponta: compra, baixa na entrega, transferência, inventário e os indicadores de reposição.",
+    topicos: [
+      "O estoque é por local: almoxarifado central e/ou um local por obra; cada EPI tem saldo e custo médio por local.",
+      "Compras dão ENTRADA (fornecedor + nota fiscal + custo) ao serem confirmadas; o custo médio é recalculado a cada entrada.",
+      "Entregar um EPI ao colaborador dá BAIXA automática no local da obra dele (ou no central) — o estoque nunca fica negativo.",
+      "Lote e validade do produto habilitam o consumo FEFO (vence primeiro, sai primeiro) e os alertas de validade.",
+      "Transferências movem saldo entre locais; o Inventário compara o contado com o saldo e gera ajustes.",
+      "Parâmetros (mín/máx, segurança, lead time) alimentam ponto de pedido, ruptura, giro/cobertura, curva ABC e valorização.",
+    ],
+    manuais: ["estoque-epis"],
+    rotas: [{ label: "Estoque de EPIs", href: "/epis/estoque" }],
+  },
 ]
 
 export const SECOES_TRILHA: SecaoTrilha[] = ["Ecossistema", "SST — Segurança"]

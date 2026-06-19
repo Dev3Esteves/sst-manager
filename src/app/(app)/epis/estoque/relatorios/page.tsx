@@ -1,6 +1,4 @@
-import Link from "next/link"
 import { createClient } from "@/lib/supabase/server"
-import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -9,7 +7,8 @@ import {
   curvaAbc, pontoPedido, consumoMedioDiario, coberturaDias, giroEstoque, emRuptura, valorizacaoTotal,
 } from "@/lib/estoque/calculos"
 import { classificarVencimento, urgenciaBadgeVariant, urgenciaLabel, formatDate } from "@/lib/utils/vencimento"
-import { FileBarChart, ArrowLeft, TrendingUp, AlertTriangle, CalendarClock, Boxes, RotateCw } from "lucide-react"
+import { FileBarChart, TrendingUp, AlertTriangle, CalendarClock, Boxes, RotateCw } from "lucide-react"
+import { EstoqueNav } from "../estoque-nav"
 
 const JANELA_DIAS = 180
 
@@ -142,12 +141,9 @@ export default async function EstoqueRelatoriosPage() {
         icon={<FileBarChart />}
         title="Relatórios de estoque"
         description={`Curva ABC, ruptura, validade (FEFO), valorização e giro — janela de consumo: últimos ${JANELA_DIAS} dias.`}
-        actions={
-          <Button variant="outline" asChild>
-            <Link href="/epis/estoque"><ArrowLeft className="h-4 w-4" />Voltar aos saldos</Link>
-          </Button>
-        }
       />
+
+      <EstoqueNav atual="relatorios" />
 
       {/* ===== Cards-resumo ===== */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

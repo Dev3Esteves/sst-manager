@@ -4,8 +4,9 @@ import { checkRole } from "@/lib/auth/guards"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { PageHeader } from "@/components/page-header"
-import { ClipboardList, ArrowLeft } from "lucide-react"
+import { ClipboardList } from "lucide-react"
 import { InventarioForm, type ItemSaldo } from "./inventario-form"
+import { EstoqueNav } from "../estoque-nav"
 
 const ROLES = ["admin", "tec_seguranca", "engenheiro_seg"] as const
 
@@ -70,12 +71,9 @@ export default async function InventarioPage({
         icon={<ClipboardList />}
         title="Inventário"
         description="Contagem física por local. Divergências geram ajustes de entrada/saída no kardex."
-        actions={
-          <Button variant="outline" asChild>
-            <Link href="/epis/estoque"><ArrowLeft className="h-4 w-4" />Voltar aos saldos</Link>
-          </Button>
-        }
       />
+
+      <EstoqueNav atual="inventario" />
 
       <Card>
         <CardHeader className="pb-3">

@@ -11,7 +11,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { formatDataHora } from "@/lib/utils/data-brasilia"
 import { TIPO_MOV_LABEL, type TipoMovimentacao } from "@/lib/estoque/tipos"
-import { History, ArrowLeft, Filter } from "lucide-react"
+import { History, Filter } from "lucide-react"
+import { EstoqueNav } from "../estoque-nav"
 
 const PER_PAGE = 50
 
@@ -82,12 +83,9 @@ export default async function KardexPage({
         icon={<History />}
         title="Kardex"
         description="Histórico de movimentações de estoque (entradas, saídas, transferências e ajustes)."
-        actions={
-          <Button variant="outline" asChild>
-            <Link href="/epis/estoque"><ArrowLeft className="h-4 w-4" />Voltar aos saldos</Link>
-          </Button>
-        }
       />
+
+      <EstoqueNav atual="kardex" />
 
       <Card>
         <CardHeader className="pb-3">

@@ -238,6 +238,35 @@ export const QUIZZES: Record<string, QuizPergunta[]> = {
       correta: 0,
     },
   ],
+  "estoque-epis": [
+    {
+      pergunta: "De onde vem a ENTRADA de estoque de um EPI?",
+      opcoes: [
+        "Da confirmação de uma compra (fornecedor + nota fiscal + custo)",
+        "Da entrega ao colaborador",
+        "Do cadastro do EPI no catálogo",
+      ],
+      correta: 0,
+    },
+    {
+      pergunta: "O que acontece no estoque ao ENTREGAR um EPI a um colaborador?",
+      opcoes: [
+        "Nada — a entrega não afeta o estoque",
+        "Dá baixa automática (saída) no local da obra dele",
+        "Aumenta o saldo do local",
+      ],
+      correta: 1,
+    },
+    {
+      pergunta: "Qual método de custo o estoque usa para valorizar saldo e saídas?",
+      opcoes: [
+        "Custo médio ponderado (recalculado a cada compra)",
+        "Sempre o preço da primeira compra",
+        "Não controla custo",
+      ],
+      correta: 0,
+    },
+  ],
 }
 
 export function getQuiz(slug: string): QuizPergunta[] {

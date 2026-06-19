@@ -6,6 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Pagination, parsePageParam } from "@/components/pagination"
 import { Plus } from "lucide-react"
+import { EstoqueNav } from "../estoque-nav"
 
 const PER_PAGE = 25
 
@@ -62,6 +63,8 @@ export default async function TransferenciasPage({
           </Link>
         </Button>
       </div>
+
+      <EstoqueNav atual="transferencias" />
 
       <Card>
         <CardHeader>

@@ -1,10 +1,9 @@
-import Link from "next/link"
 import { checkRole } from "@/lib/auth/guards"
-import { Button } from "@/components/ui/button"
 import { PageHeader } from "@/components/page-header"
-import { MapPin, ArrowLeft } from "lucide-react"
+import { MapPin } from "lucide-react"
 import { criarLocal, atualizarLocal, inativarLocal } from "./actions"
 import { LocaisClient } from "./locais-client"
+import { EstoqueNav } from "../estoque-nav"
 
 type ObraRel = { nome: string }
 
@@ -41,12 +40,8 @@ export default async function EstoqueLocaisPage() {
         icon={<MapPin />}
         title="Locais de estoque"
         description="Centrais (almoxarifado) e locais de obra onde os EPIs ficam estocados."
-        actions={
-          <Button variant="outline" asChild>
-            <Link href="/epis/estoque"><ArrowLeft className="h-4 w-4" />Voltar ao estoque</Link>
-          </Button>
-        }
       />
+      <EstoqueNav atual="locais" />
       <LocaisClient
         locais={locaisMapped}
         obras={obras ?? []}

@@ -19,6 +19,7 @@ const ROTA_MODULO: Record<string, string> = {
   "/obras": "cadastros-base",
   "/cargos": "cadastros-base",
   "/colaboradores": "cadastros-base",
+  "/epis/estoque": "estoque-epis",
   "/epis": "epis-nr06",
   "/treinamentos": "treinamentos",
   "/matriz-treinamentos": "treinamentos",

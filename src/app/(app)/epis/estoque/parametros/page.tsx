@@ -6,9 +6,10 @@ import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { PageHeader } from "@/components/page-header"
-import { SlidersHorizontal, ArrowLeft, Pencil } from "lucide-react"
+import { SlidersHorizontal, Pencil } from "lucide-react"
 import { ParametroForm, type ParametroExistente } from "./parametro-form"
 import { ExcluirParametroButton } from "./excluir-parametro-button"
+import { EstoqueNav } from "../estoque-nav"
 
 const ROLES = ["admin", "tec_seguranca", "engenheiro_seg"] as const
 
@@ -76,12 +77,9 @@ export default async function ParametrosPage({
         icon={<SlidersHorizontal />}
         title="Parâmetros de estoque"
         description="Defina mínimo, máximo, segurança e lead time por EPI (e opcionalmente por local)."
-        actions={
-          <Button variant="outline" asChild>
-            <Link href="/epis/estoque"><ArrowLeft className="h-4 w-4" />Voltar aos saldos</Link>
-          </Button>
-        }
       />
+
+      <EstoqueNav atual="parametros" />
 
       <ParametroForm key={editId ?? "novo"} epis={epis ?? []} locais={locais ?? []} inicial={inicial} />
 

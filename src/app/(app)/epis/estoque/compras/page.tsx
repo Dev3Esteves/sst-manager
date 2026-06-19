@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Pagination, parsePageParam } from "@/components/pagination"
 import { Plus } from "lucide-react"
 import { STATUS_COMPRA_LABEL, type StatusCompra } from "@/lib/estoque/tipos"
+import { EstoqueNav } from "../estoque-nav"
 
 const PER_PAGE = 25
 const moeda = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" })
@@ -63,6 +64,8 @@ export default async function ComprasPage({
           </Link>
         </Button>
       </div>
+
+      <EstoqueNav atual="compras" />
 
       <Card>
         <CardHeader>

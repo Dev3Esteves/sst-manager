@@ -231,7 +231,7 @@ async function main() {
       razao_social: "Empresa Demo Ltda",
       nome_fantasia: "Empresa Demo",
       cnpj: "12.345.678/0001-90",
-      tipo: "propria",
+      propria: true,
       ativo: true,
     }).select().single()
     empresas.push(data)
@@ -245,7 +245,7 @@ async function main() {
   for (const c of contratantes) {
     const cnpj = gerarCnpj()
     const { data, error } = await supabase.from("empresas").insert({
-      razao_social: c.razao, nome_fantasia: c.fantasia, cnpj, tipo: c.tipo, ativo: true,
+      razao_social: c.razao, nome_fantasia: c.fantasia, cnpj, propria: false, ativo: true,
     }).select().single()
     if (error) {
       console.log(`  ✗ ${c.razao}: ${error.message}`)

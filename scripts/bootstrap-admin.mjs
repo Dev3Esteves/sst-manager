@@ -82,8 +82,6 @@ if (empresaExist) {
       nome_fantasia: 'Empresa própria',
       cnpj: '00.000.000/0001-00',
       propria: true,
-      tipo: 'propria',      // compat com sinal legado
-      dona_sistema: true,   // compat com sinal legado
       ativo: true,
     })
     .select('id')

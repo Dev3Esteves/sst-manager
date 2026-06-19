@@ -54,7 +54,7 @@ async function garantirDona() {
   const { data: donas } = await supabase
     .from("empresas")
     .select("id")
-    .eq("dona_sistema", true)
+    .eq("propria", true)
     .limit(1)
 
   if (donas && donas.length > 0) return
@@ -72,20 +72,20 @@ async function garantirDona() {
   }
 
   const emp = primeira[0]
-  await supabase.from("empresas").update({ dona_sistema: true }).eq("id", emp.id)
-  console.log(`→ ${emp.razao_social} promovida a dona do sistema.`)
+  await supabase.from("empresas").update({ propria: true }).eq("id", emp.id)
+  console.log(`→ ${emp.razao_social} promovida a empresa própria.`)
 }
 
 async function seedObras() {
   const { data: donas } = await supabase
     .from("empresas")
     .select("id, razao_social")
-    .eq("dona_sistema", true)
+    .eq("propria", true)
 
   const { data: contratantes } = await supabase
     .from("empresas")
     .select("id, razao_social")
-    .eq("tipo", "contratante")
+    .eq("propria", false)
 
   let total = 0
   for (const dona of donas ?? []) {

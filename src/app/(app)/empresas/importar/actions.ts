@@ -18,7 +18,6 @@ export async function importarEmpresas(rows: z.infer<typeof empresaImportZod>[])
       razao_social: r.razao_social,
       nome_fantasia: r.nome_fantasia || null,
       cnpj: `${cnpjDigits.slice(0, 2)}.${cnpjDigits.slice(2, 5)}.${cnpjDigits.slice(5, 8)}/${cnpjDigits.slice(8, 12)}-${cnpjDigits.slice(12)}`,
-      tipo: r.tipo,
       propria: r.tipo === "propria",
       inscricao_estadual: r.inscricao_estadual || null,
       ativo: true,

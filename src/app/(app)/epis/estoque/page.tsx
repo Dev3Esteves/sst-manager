@@ -79,56 +79,58 @@ export default async function EstoqueSaldosPage({
         title="Estoque de EPIs"
         description="Saldos por local, custo médio e valorização do estoque."
         actions={
-          <>
-            <ExportCsvButton
-              data={todos.map((s) => {
-                const epi = one<EpiRel>(s.epi)
-                const local = one<LocalRel>(s.local)
-                return {
-                  epi: epi?.descricao ?? "",
-                  ca: epi?.ca ?? "",
-                  local: local?.nome ?? "",
-                  quantidade: s.quantidade,
-                  unidade: epi?.unidade ?? "",
-                  custo_medio: Number(s.custo_medio ?? 0),
-                  custo_total: Number(s.custo_total ?? 0),
-                }
-              })}
-              columns={[
-                { key: "epi", label: "EPI" },
-                { key: "ca", label: "CA" },
-                { key: "local", label: "Local" },
-                { key: "quantidade", label: "Qtd" },
-                { key: "unidade", label: "Unidade" },
-                { key: "custo_medio", label: "Custo médio" },
-                { key: "custo_total", label: "Custo total" },
-              ]}
-              filename="estoque-saldos"
-            />
-            <Button variant="outline" asChild>
-              <Link href="/epis/estoque/locais"><MapPin className="h-4 w-4" />Locais</Link>
-            </Button>
-            <Button variant="outline" asChild>
-              <Link href="/epis/estoque/compras"><ShoppingCart className="h-4 w-4" />Compras</Link>
-            </Button>
-            <Button variant="outline" asChild>
-              <Link href="/epis/estoque/transferencias"><ArrowLeftRight className="h-4 w-4" />Transferências</Link>
-            </Button>
-            <Button variant="outline" asChild>
-              <Link href="/epis/estoque/kardex"><History className="h-4 w-4" />Kardex</Link>
-            </Button>
-            <Button variant="outline" asChild>
-              <Link href="/epis/estoque/inventario"><ClipboardList className="h-4 w-4" />Inventário</Link>
-            </Button>
-            <Button variant="outline" asChild>
-              <Link href="/epis/estoque/parametros"><SlidersHorizontal className="h-4 w-4" />Parâmetros</Link>
-            </Button>
-            <Button variant="outline" asChild>
-              <Link href="/epis/estoque/relatorios"><FileBarChart className="h-4 w-4" />Relatórios</Link>
-            </Button>
-          </>
+          <ExportCsvButton
+            data={todos.map((s) => {
+              const epi = one<EpiRel>(s.epi)
+              const local = one<LocalRel>(s.local)
+              return {
+                epi: epi?.descricao ?? "",
+                ca: epi?.ca ?? "",
+                local: local?.nome ?? "",
+                quantidade: s.quantidade,
+                unidade: epi?.unidade ?? "",
+                custo_medio: Number(s.custo_medio ?? 0),
+                custo_total: Number(s.custo_total ?? 0),
+              }
+            })}
+            columns={[
+              { key: "epi", label: "EPI" },
+              { key: "ca", label: "CA" },
+              { key: "local", label: "Local" },
+              { key: "quantidade", label: "Qtd" },
+              { key: "unidade", label: "Unidade" },
+              { key: "custo_medio", label: "Custo médio" },
+              { key: "custo_total", label: "Custo total" },
+            ]}
+            filename="estoque-saldos"
+          />
         }
       />
+
+      {/* Navegação do módulo de estoque — quebra de linha em telas estreitas. */}
+      <nav className="flex flex-wrap gap-2">
+        <Button variant="outline" size="sm" asChild>
+          <Link href="/epis/estoque/locais"><MapPin className="h-4 w-4" />Locais</Link>
+        </Button>
+        <Button variant="outline" size="sm" asChild>
+          <Link href="/epis/estoque/compras"><ShoppingCart className="h-4 w-4" />Compras</Link>
+        </Button>
+        <Button variant="outline" size="sm" asChild>
+          <Link href="/epis/estoque/transferencias"><ArrowLeftRight className="h-4 w-4" />Transferências</Link>
+        </Button>
+        <Button variant="outline" size="sm" asChild>
+          <Link href="/epis/estoque/kardex"><History className="h-4 w-4" />Kardex</Link>
+        </Button>
+        <Button variant="outline" size="sm" asChild>
+          <Link href="/epis/estoque/inventario"><ClipboardList className="h-4 w-4" />Inventário</Link>
+        </Button>
+        <Button variant="outline" size="sm" asChild>
+          <Link href="/epis/estoque/parametros"><SlidersHorizontal className="h-4 w-4" />Parâmetros</Link>
+        </Button>
+        <Button variant="outline" size="sm" asChild>
+          <Link href="/epis/estoque/relatorios"><FileBarChart className="h-4 w-4" />Relatórios</Link>
+        </Button>
+      </nav>
 
       <div className="grid gap-4 sm:grid-cols-2">
         <Card>

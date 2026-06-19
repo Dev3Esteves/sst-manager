@@ -23,17 +23,17 @@ export function PageHeader({
   icon?: ReactNode
 }) {
   return (
-    <div className="flex items-start justify-between gap-4 flex-wrap">
-      <div className="min-w-0 flex-1">
+    <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+      <div className="min-w-0 sm:flex-1">
         <h1 className="text-2xl md:text-3xl font-bold tracking-tight flex items-center gap-2">
           {icon && <span className="shrink-0 [&>svg]:h-6 [&>svg]:w-6 md:[&>svg]:h-7 md:[&>svg]:w-7">{icon}</span>}
-          {title}
+          <span className="min-w-0">{title}</span>
         </h1>
         {description && (
           <p className="text-sm md:text-base text-muted-foreground mt-1">{description}</p>
         )}
       </div>
-      {actions && <div className="flex gap-2 flex-wrap shrink-0">{actions}</div>}
+      {actions && <div className="flex gap-2 flex-wrap sm:justify-end sm:shrink-0">{actions}</div>}
     </div>
   )
 }

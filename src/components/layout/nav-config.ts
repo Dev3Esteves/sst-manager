@@ -10,6 +10,7 @@ import {
   HardDrive, ListTodo, BookMarked, ShieldCheck, Brain, BookOpen,
   Stethoscope, Hospital, School, UserCheck, Gauge, BadgeCheck, ScrollText,
   Replace, Network, Landmark, Scale, Target, Siren, SearchCheck, Megaphone,
+  Boxes,
   type LucideIcon,
 } from "lucide-react"
 
@@ -31,6 +32,7 @@ export const NAV_SECTIONS: NavSection[] = [
       { href: "/cargos", label: "Cargos", icon: Users },
       { href: "/colaboradores", label: "Colaboradores", icon: Users },
       { href: "/epis", label: "EPIs", icon: HardHat },
+      { href: "/epis/estoque", label: "Estoque de EPIs", icon: Boxes },
       { href: "/treinamentos", label: "Treinamentos", icon: GraduationCap },
       { href: "/instrutores", label: "Instrutores", icon: UserCheck },
       { href: "/entidades-treinamento", label: "Entidades", icon: School },

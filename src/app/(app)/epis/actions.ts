@@ -12,6 +12,7 @@ function parseForm(formData: FormData) {
     ca_validade: (formData.get("ca_validade") as string) || null,
     fabricante: (formData.get("fabricante") as string) || null,
     tipo: (formData.get("tipo") as string) || null,
+    unidade: (formData.get("unidade") as string) || "un",
   }
 }
 
@@ -39,6 +40,12 @@ export async function updateEpi(id: string, formData: FormData) {
 
 export async function inativarEpi(id: string) {
   const supabase = await createClient()
+  // Guarda: não inativar EPI com saldo em estoque (zere/transfira antes).
+  const { data: comSaldo } = await supabase
+    .from("estoque_saldo").select("id").eq("epi_id", id).gt("quantidade", 0).limit(1)
+  if (comSaldo && comSaldo.length > 0) {
+    return { error: { _form: ["Não é possível inativar: há saldo em estoque deste EPI. Zere ou transfira o estoque antes."] } }
+  }
   const { error } = await supabase.from("epis").update({ ativo: false }).eq("id", id)
   if (error) return { error: { _form: [error.message] } }
   revalidatePath("/epis")

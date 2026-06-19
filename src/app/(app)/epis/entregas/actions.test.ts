@@ -47,14 +47,13 @@ beforeEach(() => {
 })
 
 describe("createEntrega", () => {
-  it("caso nominal sem assinatura: insere com assinatura_url null e redireciona", async () => {
+  it("caso nominal sem assinatura: chama RPC entrega_com_saida (baixa de estoque) e redireciona", async () => {
     await expect(createEntrega(payloadValido)).rejects.toThrow("NEXT_REDIRECT:/epis/entregas")
-    expect(state.calls.table).toBe("epi_entregas")
-    expect(state.calls.op).toBe("insert")
-    const payload = state.calls.payload as Record<string, unknown>
-    expect(payload.colaborador_id).toBe(payloadValido.colaborador_id)
-    expect(payload.quantidade).toBe(2)
-    expect(payload.assinatura_url).toBeNull()
+    expect(state.calls.rpc?.fn).toBe("entrega_com_saida")
+    const args = state.calls.rpc?.args as { p_payload: Record<string, unknown> }
+    expect(args.p_payload.colaborador_id).toBe(payloadValido.colaborador_id)
+    expect(args.p_payload.quantidade).toBe(2)
+    expect(args.p_payload.assinatura_url).toBeNull()
     expect(state.calls.uploads).toHaveLength(0)
   })
 
@@ -66,8 +65,8 @@ describe("createEntrega", () => {
     await expect(createEntrega(comAssinatura)).rejects.toThrow("NEXT_REDIRECT")
     expect(state.calls.uploads).toHaveLength(1)
     expect(state.calls.uploads[0]).toMatch(/^epi-00000000-0000-4000-8000-000000000001\/\d+\.png$/)
-    const payload = state.calls.payload as Record<string, unknown>
-    expect(payload.assinatura_url).toBe(state.calls.uploads[0])
+    const args = state.calls.rpc?.args as { p_payload: Record<string, unknown> }
+    expect(args.p_payload.assinatura_url).toBe(state.calls.uploads[0])
   })
 
   it("falha no upload da assinatura não impede a entrega (assinatura_url fica null)", async () => {
@@ -77,8 +76,8 @@ describe("createEntrega", () => {
       assinatura_data_url: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUg==",
     }
     await expect(createEntrega(comAssinatura)).rejects.toThrow("NEXT_REDIRECT")
-    const payload = state.calls.payload as Record<string, unknown>
-    expect(payload.assinatura_url).toBeNull()
+    const args = state.calls.rpc?.args as { p_payload: Record<string, unknown> }
+    expect(args.p_payload.assinatura_url).toBeNull()
   })
 
   it("validação: motivo inválido retorna { error } sem tocar o banco", async () => {

@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Loader2 } from "lucide-react"
-import { TIPOS_EPI } from "@/lib/validations/epi"
+import { TIPOS_EPI, UNIDADES_EPI } from "@/lib/validations/epi"
 
 type Epi = {
   id?: string
@@ -17,6 +17,7 @@ type Epi = {
   ca_validade?: string | null
   fabricante?: string | null
   tipo?: string | null
+  unidade?: string | null
 }
 type FormErrors = Record<string, string[] | undefined> & { _form?: string[] }
 
@@ -29,9 +30,11 @@ export function EpiForm({
   const [errors, setErrors] = useState<FormErrors>({})
   const [pending, startTransition] = useTransition()
   const [tipo, setTipo] = useState(epi?.tipo || "")
+  const [unidade, setUnidade] = useState(epi?.unidade || "un")
 
   async function handleSubmit(formData: FormData) {
     if (tipo) formData.set("tipo", tipo)
+    formData.set("unidade", unidade)
     startTransition(async () => {
       const result = await action(formData)
       if (result?.error) setErrors(result.error)
@@ -69,6 +72,17 @@ export function EpiForm({
               <SelectContent>
                 {TIPOS_EPI.map(t => (
                   <SelectItem key={t} value={t} className="capitalize">{t.replace("_", " ")}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="unidade">Unidade</Label>
+            <Select value={unidade} onValueChange={setUnidade}>
+              <SelectTrigger id="unidade"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                {UNIDADES_EPI.map(u => (
+                  <SelectItem key={u} value={u}>{u}</SelectItem>
                 ))}
               </SelectContent>
             </Select>

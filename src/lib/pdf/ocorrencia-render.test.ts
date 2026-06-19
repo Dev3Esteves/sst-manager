@@ -18,7 +18,7 @@ const base: OcorrenciaPdfData = {
   agente_causador: "Prego exposto",
   dias_afastamento: 0,
   status: "investigando",
-  empresa_razao_social: "Sistenge Construções e Comércio Ltda",
+  empresa_razao_social: "Construtora Exemplo Ltda",
   empresa_cnpj: "49329618000199",
   colaborador_nome: "Pedro Lucas Nascimento Castro",
   investigacao: null,

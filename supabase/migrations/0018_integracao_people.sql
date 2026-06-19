@@ -1,5 +1,5 @@
 -- ============================================================================
--- MIGRATION 0018 — Integração com o "Sistenge People"
+-- MIGRATION 0018 — Integração com RH externo ("People") — removida na migration 0057
 -- ============================================================================
 --
 -- O People passa a ser a FONTE DA VERDADE de cargos, colaboradores e exames.
@@ -56,7 +56,7 @@ CREATE INDEX IF NOT EXISTS idx_integr_evento_recebido ON integr_evento (recebido
 ALTER TABLE integr_evento ENABLE ROW LEVEL SECURITY;
 
 COMMENT ON TABLE integr_evento IS
-  'Log/idempotência dos eventos recebidos do Sistenge People via webhook. '
+  'Log/idempotência dos eventos recebidos do RH externo via webhook. '
   'Acesso somente via service role.';
 COMMENT ON COLUMN cargos.origem IS
-  'local = cadastrado no SST; people = sincronizado do Sistenge People (read-only na UI).';
+  'local = cadastrado no SST; people = sincronizado de RH externo (read-only na UI).';

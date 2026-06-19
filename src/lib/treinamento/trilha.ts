@@ -1,11 +1,11 @@
 /**
  * Trilha de treinamento do sistema (in-app, desbloqueio sequencial).
  * Cada módulo só abre após a conclusão do anterior (progresso por usuário em
- * `treinamento_sistema_progresso`). Cobre o ecossistema (multiempresa +
- * integração), o SST (Segurança) e uma visão do People (RH).
+ * `treinamento_sistema_progresso`). Cobre o uso do SST Manager: do ecossistema
+ * multiempresa aos módulos de Segurança e Saúde no Trabalho.
  */
 
-export type SecaoTrilha = "Ecossistema" | "SST — Segurança" | "People — RH"
+export type SecaoTrilha = "Ecossistema" | "SST — Segurança"
 
 export type ModuloTrilha = {
   slug: string
@@ -18,8 +18,6 @@ export type ModuloTrilha = {
   manuais?: string[]
   /** Atalhos para abrir telas do app. */
   rotas?: { label: string; href: string }[]
-  /** Módulo que trata do outro app (People) — conteúdo de visão geral. */
-  externo?: boolean
 }
 
 export const TRILHA: ModuloTrilha[] = [
@@ -27,10 +25,9 @@ export const TRILHA: ModuloTrilha[] = [
   {
     slug: "boas-vindas", ordem: 1, secao: "Ecossistema",
     titulo: "Boas-vindas e visão geral",
-    objetivo: "Entender o que é o ecossistema integrado (People + SST) e como esta trilha funciona.",
+    objetivo: "Conhecer o SST Manager e como esta trilha de treinamento funciona.",
     topicos: [
-      "O SST Manager cuida da Segurança e Saúde no Trabalho; o People (RH) cuida do RH.",
-      "Os dois sistemas conversam: o People envia colaboradores/cargos e consome ASO/EPI/Psicossocial do SST.",
+      "O SST Manager cuida da Segurança e Saúde no Trabalho (SST).",
       "Esta trilha é sequencial: cada módulo abre após você concluir o anterior.",
       "Ao final de cada módulo, clique em 'Marcar como concluído' para liberar o próximo.",
     ],
@@ -48,22 +45,10 @@ export const TRILHA: ModuloTrilha[] = [
     manuais: ["empresas"],
     rotas: [{ label: "Empresas", href: "/empresas" }],
   },
-  {
-    slug: "integracao-people-sst", ordem: 3, secao: "Ecossistema",
-    titulo: "Integração People ↔ SST",
-    objetivo: "Compreender o fluxo de dados entre os dois sistemas.",
-    topicos: [
-      "People → SST: colaboradores e cargos chegam por webhook (o SST é a base operacional de Segurança).",
-      "SST → People: o People lê ASO, EPI e resultados psicossociais por API (o SST é a fonte).",
-      "Obras: o SST é o dono; o People concilia seus centros de responsabilidade pelo código da obra.",
-      "Evite duplicar cadastros: cada dado tem um sistema 'dono'.",
-    ],
-    manuais: ["obras-locais"],
-  },
 
   // ───────────────────────── SST — Segurança ─────────────────────────
   {
-    slug: "cadastros-base", ordem: 4, secao: "SST — Segurança",
+    slug: "cadastros-base", ordem: 3, secao: "SST — Segurança",
     titulo: "Cadastros base: obras, cargos e colaboradores",
     objetivo: "Montar a fundação: onde se trabalha, em que função e quem.",
     topicos: [
@@ -76,7 +61,7 @@ export const TRILHA: ModuloTrilha[] = [
     rotas: [{ label: "Obras", href: "/obras" }, { label: "Colaboradores", href: "/colaboradores" }],
   },
   {
-    slug: "medicos-clinicas", ordem: 5, secao: "SST — Segurança",
+    slug: "medicos-clinicas", ordem: 4, secao: "SST — Segurança",
     titulo: "Médicos e clínicas",
     objetivo: "Padronizar os responsáveis e locais dos exames ocupacionais.",
     topicos: [
@@ -88,7 +73,7 @@ export const TRILHA: ModuloTrilha[] = [
     rotas: [{ label: "Médicos", href: "/medicos" }, { label: "Clínicas", href: "/clinicas" }],
   },
   {
-    slug: "exames-aso", ordem: 6, secao: "SST — Segurança",
+    slug: "exames-aso", ordem: 5, secao: "SST — Segurança",
     titulo: "Exames médicos (ASO / PCMSO)",
     objetivo: "Registrar e acompanhar a aptidão ocupacional.",
     topicos: [
@@ -99,7 +84,7 @@ export const TRILHA: ModuloTrilha[] = [
     rotas: [{ label: "Exames", href: "/exames" }],
   },
   {
-    slug: "epis-nr06", ordem: 7, secao: "SST — Segurança",
+    slug: "epis-nr06", ordem: 6, secao: "SST — Segurança",
     titulo: "EPIs e matriz EPI × Cargo (NR-06)",
     objetivo: "Definir EPIs obrigatórios por função e controlar entrega/devolução.",
     topicos: [
@@ -112,7 +97,7 @@ export const TRILHA: ModuloTrilha[] = [
     rotas: [{ label: "EPIs", href: "/epis" }, { label: "Matriz EPI×Cargo", href: "/epis/matriz" }],
   },
   {
-    slug: "treinamentos", ordem: 8, secao: "SST — Segurança",
+    slug: "treinamentos", ordem: 7, secao: "SST — Segurança",
     titulo: "Treinamentos: catálogo, matriz e lote",
     objetivo: "Planejar treinamentos obrigatórios e registrar em escala.",
     topicos: [
@@ -125,7 +110,7 @@ export const TRILHA: ModuloTrilha[] = [
     rotas: [{ label: "Treinamentos", href: "/treinamentos" }, { label: "Matriz por cargo", href: "/treinamentos/matriz" }],
   },
   {
-    slug: "pgr-gro", ordem: 9, secao: "SST — Segurança",
+    slug: "pgr-gro", ordem: 8, secao: "SST — Segurança",
     titulo: "PGR e Painel GRO (NR-01 / PDCA)",
     objetivo: "Gerenciar riscos: do inventário ao acompanhamento PDCA.",
     topicos: [
@@ -137,7 +122,7 @@ export const TRILHA: ModuloTrilha[] = [
     rotas: [{ label: "PGR", href: "/pgr" }, { label: "Painel GRO", href: "/gro" }],
   },
   {
-    slug: "psicossocial-sst", ordem: 10, secao: "SST — Segurança",
+    slug: "psicossocial-sst", ordem: 9, secao: "SST — Segurança",
     titulo: "Riscos psicossociais (NR-01)",
     objetivo: "Aplicar e ler campanhas psicossociais integradas ao PGR, escolhendo o instrumento certo e avaliando a severidade.",
     topicos: [
@@ -150,7 +135,7 @@ export const TRILHA: ModuloTrilha[] = [
     rotas: [{ label: "Psicossocial", href: "/psicossocial" }],
   },
   {
-    slug: "ocorrencias-nc", ordem: 11, secao: "SST — Segurança",
+    slug: "ocorrencias-nc", ordem: 10, secao: "SST — Segurança",
     titulo: "Ocorrências e não-conformidades",
     objetivo: "Registrar eventos e tratar causas com ações corretivas.",
     topicos: [
@@ -162,7 +147,7 @@ export const TRILHA: ModuloTrilha[] = [
     rotas: [{ label: "Ocorrências", href: "/ocorrencias" }, { label: "Não-Conformidades", href: "/nao-conformidades" }],
   },
   {
-    slug: "inspecoes-dds", ordem: 12, secao: "SST — Segurança",
+    slug: "inspecoes-dds", ordem: 11, secao: "SST — Segurança",
     titulo: "Inspeções e DDS",
     objetivo: "Auditar campo e registrar diálogos de segurança.",
     topicos: [
@@ -174,7 +159,7 @@ export const TRILHA: ModuloTrilha[] = [
     rotas: [{ label: "Inspeções", href: "/inspecoes" }, { label: "DDS", href: "/dds" }],
   },
   {
-    slug: "documentos-iso", ordem: 13, secao: "SST — Segurança",
+    slug: "documentos-iso", ordem: 12, secao: "SST — Segurança",
     titulo: "Documentos, referências e ISO 45001",
     objetivo: "Emitir documentos e avaliar a aderência normativa.",
     topicos: [
@@ -186,7 +171,7 @@ export const TRILHA: ModuloTrilha[] = [
   },
 
   {
-    slug: "governanca-sgsst", ordem: 14, secao: "SST — Segurança",
+    slug: "governanca-sgsst", ordem: 13, secao: "SST — Segurança",
     titulo: "Governança do SGSST (ISO 45001)",
     objetivo: "Operar a camada de gestão do sistema de SST exigida pela ISO 45001: contexto, política, mudança, objetivos, auditoria e análise crítica.",
     topicos: [
@@ -199,32 +184,9 @@ export const TRILHA: ModuloTrilha[] = [
     manuais: ["contexto-sgsst", "politica-sst", "gestao-mudanca", "objetivos-sst", "requisitos-legais", "plano-emergencia", "auditorias-internas", "comunicacao-consulta", "analise-critica"],
     rotas: [{ label: "Contexto & Partes", href: "/contexto" }, { label: "Política de SST", href: "/politica" }, { label: "Análise Crítica", href: "/analise-critica" }],
   },
-
-  // ───────────────────────── People — RH ─────────────────────────
-  {
-    slug: "people-visao-geral", ordem: 15, secao: "People — RH", externo: true,
-    titulo: "People (RH) — visão geral",
-    objetivo: "Saber o que é tratado no People e como ele se conecta ao SST.",
-    topicos: [
-      "O People é o sistema de RH: colaboradores, cargos, centros de responsabilidade e documentos de pessoal.",
-      "Multiempresa e empresa ativa funcionam como no SST.",
-      "Os dados de pessoal cadastrados no People alimentam o SST.",
-      "Acesse o People no seu endereço próprio (app separado).",
-    ],
-  },
-  {
-    slug: "people-psicossocial", ordem: 16, secao: "People — RH", externo: true,
-    titulo: "Psicossocial no People (RH)",
-    objetivo: "Consultar resultados psicossociais e conduzir o plano de ação no RH.",
-    topicos: [
-      "O People lê os resultados psicossociais do SST (somente leitura, respeitando o anonimato).",
-      "O RH/diretoria acompanha e registra o plano de ação no People.",
-      "Fechando esta trilha, você entendeu o ciclo completo: identificar no SST, agir no RH.",
-    ],
-  },
 ]
 
-export const SECOES_TRILHA: SecaoTrilha[] = ["Ecossistema", "SST — Segurança", "People — RH"]
+export const SECOES_TRILHA: SecaoTrilha[] = ["Ecossistema", "SST — Segurança"]
 
 export function getModulo(slug: string): ModuloTrilha | undefined {
   return TRILHA.find((m) => m.slug === slug)

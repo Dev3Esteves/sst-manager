@@ -1,7 +1,7 @@
 -- ============================================================================
 -- MIGRATION 0020 — MULTI-EMPRESA POR USUÁRIO + EMPRESA ATIVA
--- Permite que um usuário (ex.: operador do grupo Sistenge) opere mais de uma
--- empresa (Sistenge, Paseli) e alterne a "empresa ativa". Toda a navegação e o
+-- Permite que um usuário (ex.: operador de um grupo) opere mais de uma
+-- empresa do grupo e alterne a "empresa ativa". Toda a navegação e o
 -- RLS passam a respeitar a empresa ativa porque user_empresa_id() — usada por
 -- todas as policies — passa a retornar a empresa ativa do usuário.
 -- ============================================================================

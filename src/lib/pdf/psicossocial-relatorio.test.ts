@@ -3,7 +3,7 @@ import { renderToBuffer } from "@react-pdf/renderer"
 import { renderPsicossocialRelatorioPdf, type RelatorioPsiData } from "./psicossocial-relatorio"
 
 const base: RelatorioPsiData = {
-  empresaRazaoSocial: "SISTENGE Engenharia",
+  empresaRazaoSocial: "Empresa Exemplo Engenharia",
   empresaCnpj: "00.000.000/0001-00",
   obraNome: "Obra Teste",
   pgrRevisao: 0,

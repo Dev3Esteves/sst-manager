@@ -151,9 +151,6 @@ export const manuaisCadastros: Manual[] = [
           { campo: "Empresa / Cargo / Obra", descricao: "Vínculos que definem riscos, EPIs e onde ele atua." },
         ] },
       ] },
-      { titulo: "Atenção (integração futura)", blocos: [
-        { tipo: "atencao", texto: "Em breve, cargos, colaboradores e exames passarão a ser sincronizados a partir do People (RH) (fonte da verdade). Quando isso entrar, esses cadastros ficarão somente-leitura aqui." },
-      ] },
     ],
   },
   {

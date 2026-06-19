@@ -22,9 +22,9 @@ export const QUIZZES: Record<string, QuizPergunta[]> = {
       correta: 1,
     },
     {
-      pergunta: "Quem cuida da Segurança e Saúde no Trabalho no ecossistema integrado?",
-      opcoes: ["O People (RH)", "O SST Manager", "Nenhum dos dois"],
-      correta: 1,
+      pergunta: "O que o SST Manager gerencia?",
+      opcoes: ["Segurança e Saúde no Trabalho", "Folha de pagamento", "Estoque de materiais"],
+      correta: 0,
     },
   ],
   "multiempresa": [
@@ -40,18 +40,6 @@ export const QUIZZES: Record<string, QuizPergunta[]> = {
     {
       pergunta: "Um usuário consegue ver os dados de empresas às quais não foi vinculado?",
       opcoes: ["Sim, vê todas", "Não — os dados são isolados por empresa (RLS)", "Só se for engenheiro"],
-      correta: 1,
-    },
-  ],
-  "integracao-people-sst": [
-    {
-      pergunta: "No fluxo de integração, de onde vêm os colaboradores e cargos?",
-      opcoes: ["Do SST para o People", "Do People para o SST (via webhook)", "São digitados duas vezes"],
-      correta: 1,
-    },
-    {
-      pergunta: "Quem é o 'dono' do cadastro de obras?",
-      opcoes: ["O People", "O SST (o People concilia pelo código da obra)", "Nenhum — cada um tem o seu"],
       correta: 1,
     },
   ],
@@ -247,38 +235,6 @@ export const QUIZZES: Record<string, QuizPergunta[]> = {
         "Apenas listar usuários.",
         "Gerar certificados.",
       ],
-      correta: 0,
-    },
-  ],
-  "people-visao-geral": [
-    {
-      pergunta: "O que é tratado no People (RH)?",
-      opcoes: [
-        "RH: colaboradores, cargos, centros de responsabilidade e documentos de pessoal.",
-        "Apenas inspeções de segurança.",
-        "Somente o PGR.",
-      ],
-      correta: 0,
-    },
-    {
-      pergunta: "Os dados de pessoal cadastrados no People servem para quê?",
-      opcoes: ["Nada além do RH", "Alimentam o SST", "São descartados"],
-      correta: 1,
-    },
-  ],
-  "people-psicossocial": [
-    {
-      pergunta: "Como o People usa os resultados psicossociais do SST?",
-      opcoes: [
-        "Somente leitura, respeitando o anonimato.",
-        "Editando os resultados livremente.",
-        "Não tem acesso a eles.",
-      ],
-      correta: 0,
-    },
-    {
-      pergunta: "Onde o RH/diretoria registra o plano de ação psicossocial?",
-      opcoes: ["No People", "No extrato bancário", "Em nenhum lugar"],
       correta: 0,
     },
   ],

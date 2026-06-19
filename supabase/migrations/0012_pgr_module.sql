@@ -2,8 +2,7 @@
 -- MIGRATION 0012 — MÓDULO PGR (Programa de Gerenciamento de Riscos)
 -- Base regulatória: NR-1 (Portaria SEPRT 6.730/2020 + MTP 423/2021 + MTE 1.419/2024
 -- — incluindo riscos psicossociais com prazo 25/05/2026).
--- Base de design: estrutura real dos PGRs SISTENGE (FO-121-00),
--- vide docs/research/pgr-sistenge-anatomia.md.
+-- Base de design: estrutura real de PGRs do setor (formulário FO-121-00).
 --
 -- Estrutura: pgr → pgr_ghe → {pgr_ghe_cargo, pgr_risco, pgr_epi_ghe}
 --                 → {pgr_acao, pgr_medida_controle}
@@ -60,7 +59,7 @@ CREATE TABLE pgr (
   data_inicio_obra_snapshot   DATE,
 
   -- Metadados de geração
-  codigo_formulario           TEXT NOT NULL DEFAULT 'FO-121-00',    -- código SGI SISTENGE
+  codigo_formulario           TEXT NOT NULL DEFAULT 'FO-121-00',    -- código do formulário SGI
   arquivo_pdf_url             TEXT,                                 -- após geração e selagem
   arquivo_pdf_hash            TEXT,                                 -- SHA-256 do PDF selado
 
@@ -134,7 +133,7 @@ CREATE INDEX idx_pgr_ghe_cargo_id ON pgr_ghe_cargo(cargo_id) WHERE cargo_id IS N
 
 -- ----------------------------------------------------------------------------
 -- 4. PGR_RISCO — Inventário de Riscos (Anexo III)
---    Uma linha por par (GHE, agente). 12 colunas do template SISTENGE.
+--    Uma linha por par (GHE, agente). 12 colunas do template.
 -- ----------------------------------------------------------------------------
 CREATE TABLE pgr_risco (
   id                          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -200,7 +199,7 @@ CREATE TABLE pgr_acao (
 );
 
 COMMENT ON TABLE pgr_acao IS
-  '5W1H — Plano de Ação do PGR (SISTENGE não usa "QUANTO"/custo). '
+  '5W1H — Plano de Ação do PGR. '
   'Aparece no Anexo I (Cronograma Anual de Atividades) com 17 itens típicos.';
 
 CREATE INDEX idx_pgr_acao_pgr ON pgr_acao(pgr_id);

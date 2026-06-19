@@ -33,7 +33,7 @@ const data: CertificadoData = {
   cidade: "São Paulo",
   instrutor_nome: "Fernanda Emiliano Cavalcante",
   instrutor_cargo: "Instrutor responsável",
-  empresa_razao_social: "Sistenge Construções e Comércio Ltda",
+  empresa_razao_social: "Construtora Exemplo Ltda",
   empresa_cnpj: "49.329.618/0001-99",
   validacao_url: "https://sst-manager-mu.vercel.app/treinamentos/realizacoes/abc",
 }

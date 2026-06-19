@@ -1,7 +1,7 @@
 -- ============================================================================
 -- MIGRATION 0014 — NÃO-CONFORMIDADES (NC) + AÇÕES CORRETIVAS (AC)
 -- Base regulatória: ISO 45001 cl. 10.2 (Incidente, NC, Ação Corretiva).
--- Também atende NR-1 (PGR) e PDCA do SGI SISTENGE.
+-- Também atende NR-1 (PGR) e o PDCA do SGI.
 --
 -- Promove a análise de causa raiz do JSONB legado em `ocorrencias.investigacao`
 -- para tabelas relacionais formais com auditabilidade. Mantém compat: a coluna

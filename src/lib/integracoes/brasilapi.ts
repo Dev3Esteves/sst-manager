@@ -1,6 +1,5 @@
 // Cliente BrasilAPI — consulta de CNPJ e CEP para auto-preencher cadastros.
 // Wrapper server-side com timeout e graceful degradation (não lança).
-// Portado do People (RH) (lib/contratos-pj/brasilapi.ts).
 
 const TIMEOUT_MS = 10_000
 

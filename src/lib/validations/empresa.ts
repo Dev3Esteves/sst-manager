@@ -30,14 +30,14 @@ export const empresaSchema = z.object({
   telefones: telefonesEmpresaSchema,
   tipo: z.enum(["propria", "contratante", "terceira"]),
   /**
-   * Dona do sistema (multi-tenant). Se true, a empresa hospeda seus próprios
-   * colaboradores/documentos/etc. e pode ter prestadoras/contratantes
-   * vinculadas via `empresa_mae_id`. Implicado por `tipo = 'propria'`.
+   * Empresa própria: contexto operacional que a Organização opera (tenant
+   * switchável). Se false, é um parceiro gerenciado (cliente, prestadora...).
+   * Implicado por `tipo = 'propria'`.
    */
-  dona_sistema: z.boolean().default(false),
+  propria: z.boolean().default(false),
   /**
-   * Quando esta empresa é prestadora ou contratante de uma empresa dona,
-   * aponta para a dona responsável. Null quando ela própria é dona ou
+   * Quando esta empresa é parceira (prestadora/cliente) de uma empresa própria,
+   * aponta para a própria responsável. Null quando ela mesma é própria ou
    * quando o vínculo ainda não foi mapeado.
    */
   empresa_mae_id: z.string().uuid().optional().nullable(),
@@ -47,8 +47,8 @@ export const empresaSchema = z.object({
 export type EmpresaInput = z.infer<typeof empresaSchema>
 
 export const TIPO_EMPRESA_LABEL: Record<string, string> = {
-  propria: "Dona do sistema",
-  contratante: "Contratante",
+  propria: "Empresa própria",
+  contratante: "Cliente",
   terceira: "Prestadora",
 }
 
@@ -57,14 +57,14 @@ export const TIPO_EMPRESA_LABEL: Record<string, string> = {
 // 1:N + bloco fiscal. Usado pelo formulário/actions a partir da Fase 2.
 // ============================================================================
 
-export const PAPEL_VALUES = ["dona", "cliente", "prestadora", "fornecedor", "transportadora", "parceira"] as const
+export const PAPEL_VALUES = ["propria", "cliente", "prestadora", "fornecedor", "transportadora", "parceira"] as const
 export const ENDERECO_TIPO_VALUES = ["sede", "filial", "cobranca", "obra", "entrega"] as const
 export const CONTATO_TIPO_VALUES = ["telefone", "celular", "email", "pessoa"] as const
 export const REGIME_TRIBUTARIO_VALUES = ["simples", "lucro_presumido", "lucro_real", "mei", "isento"] as const
 export const SITUACAO_CADASTRAL_VALUES = ["ativa", "suspensa", "inapta", "baixada", "nula"] as const
 
 export const PAPEL_LABEL: Record<(typeof PAPEL_VALUES)[number], string> = {
-  dona: "Dona do sistema",
+  propria: "Empresa própria",
   cliente: "Cliente / Contratante",
   prestadora: "Prestadora",
   fornecedor: "Fornecedor",
@@ -121,7 +121,7 @@ export const empresaFormSchema = z
     nome_fantasia: nstr,
     cnpj: cnpjSchema,
     inscricao_estadual: nstr,
-    dona_sistema: z.boolean().default(false),
+    propria: z.boolean().default(false),
     ativo: z.boolean().default(true),
     /** Vínculo de grupo (mantém empresa_mae_id por compatibilidade). */
     empresa_mae_id: z.string().uuid().optional().nullable(),
@@ -131,7 +131,7 @@ export const empresaFormSchema = z
     fiscal: empresaFiscalSchema.optional().nullable(),
   })
   .superRefine((data, ctx) => {
-    // (Donas do sistema têm empresa_mae_id forçado a null no servidor/RPC.)
+    // (Empresas próprias têm empresa_mae_id forçado a null no servidor/RPC.)
     const endPrincipais = data.enderecos.filter((e) => e.principal).length
     if (data.enderecos.length > 0 && endPrincipais > 1) {
       ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["enderecos"], message: "Marque apenas um endereço como principal." })
@@ -147,9 +147,9 @@ export type EmpresaEnderecoInput = z.infer<typeof empresaEnderecoSchema>
 export type EmpresaContatoInput = z.infer<typeof empresaContatoSchema>
 export type EmpresaFiscalInput = z.infer<typeof empresaFiscalSchema>
 
-/** Deriva o `tipo` legado (dupla-escrita) a partir dos papéis/dona_sistema. */
-export function derivarTipoLegado(papeis: string[], donaSistema: boolean): "propria" | "contratante" | "terceira" {
-  if (donaSistema || papeis.includes("dona")) return "propria"
+/** Deriva o `tipo` legado (dupla-escrita) a partir dos papéis / flag própria. */
+export function derivarTipoLegado(papeis: string[], propria: boolean): "propria" | "contratante" | "terceira" {
+  if (propria || papeis.includes("propria") || papeis.includes("dona")) return "propria"
   if (papeis.includes("cliente")) return "contratante"
   return "terceira"
 }

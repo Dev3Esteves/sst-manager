@@ -7,7 +7,7 @@
  * cobrir os caminhos: sucesso (chega ao redirect), validação Zod (retorna
  * fieldErrors sem chamar a RPC) e erro de banco.
  *
- * Nota: a regra "dona não tem empresa_mãe" e a atomicidade são responsabilidade
+ * Nota: a regra "própria não tem empresa_mãe" e a atomicidade são responsabilidade
  * da RPC (validadas no nível do banco), não da action.
  */
 import { describe, it, expect, vi, beforeEach } from "vitest"
@@ -42,9 +42,9 @@ const CNPJ_VALIDO = "11222333000181"
 const payloadValido = {
   razao_social: "Acme Engenharia Ltda",
   cnpj: CNPJ_VALIDO,
-  dona_sistema: true,
+  propria: true,
   ativo: true,
-  papeis: ["dona"],
+  papeis: ["propria"],
 }
 
 /** Monta um FormData com o payload JSON (campo `payload`), como o form faz. */
@@ -67,16 +67,16 @@ describe("createEmpresa", () => {
     expect(args.p_id).toBeNull()
     expect(args.p_payload.razao_social).toBe("Acme Engenharia Ltda")
     expect(args.p_payload.cnpj).toBe(CNPJ_VALIDO)
-    expect(args.p_payload.dona_sistema).toBe(true)
-    expect(args.p_payload.papeis).toEqual(["dona"])
+    expect(args.p_payload.propria).toBe(true)
+    expect(args.p_payload.papeis).toEqual(["propria"])
   })
 
-  it("encaminha o payload (incl. dona_sistema) para a RPC", async () => {
+  it("encaminha o payload (incl. propria) para a RPC", async () => {
     state.result = { data: "emp-1", error: null }
     const form = fdPayload({ empresa_mae_id: "00000000-0000-4000-8000-000000000099" })
     await expect(createEmpresa(form)).rejects.toThrow("NEXT_REDIRECT")
     const args = state.calls.rpc?.args as { p_payload: Record<string, unknown> }
-    expect(args.p_payload.dona_sistema).toBe(true)
+    expect(args.p_payload.propria).toBe(true)
   })
 
   it("validação: razão social curta retorna fieldErrors e não chama a RPC", async () => {

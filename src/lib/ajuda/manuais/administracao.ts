@@ -78,12 +78,11 @@ export const manuaisAdministracao: Manual[] = [
     categoria: "Administração",
     rota: "/configuracoes",
     perfis: ["Administrador"],
-    resumo: "Ajustes da organização: dados da empresa-dona, sua conta (senha), aparência (tema) e o template padrão de certificado.",
+    resumo: "Ajustes da conta: sua senha, aparência (tema) e o template padrão de certificado. A marca da Organização fica em Minha Organização.",
     secoes: [
       { titulo: "Para que serve", blocos: [
-        { tipo: "paragrafo", texto: "Centraliza as preferências: editar a empresa-dona, trocar sua senha, escolher o tema e padronizar o texto dos certificados de treinamento." },
+        { tipo: "paragrafo", texto: "Centraliza as preferências: trocar sua senha, escolher o tema e padronizar o texto dos certificados de treinamento. A identidade da Organização (nome/logo) é configurada em Minha Organização." },
         { tipo: "campos", itens: [
-          { campo: "Empresa", descricao: "Dados/logo da empresa dona (admin)." },
           { campo: "Minha conta", descricao: "Troca da sua própria senha." },
           { campo: "Aparência", descricao: "Tema claro/escuro/sistema (salvo no navegador)." },
           { campo: "Certificado", descricao: "Template padrão do texto do certificado, com variáveis {{...}}." },
@@ -91,6 +90,32 @@ export const manuaisAdministracao: Manual[] = [
       ] },
       { titulo: "Padrões de escrita — template de certificado", blocos: [
         { tipo: "dica", texto: "Use as variáveis disponíveis ({{aluno_nome}}, {{curso_titulo}}, {{carga_horaria}}, etc.). Deixe em branco para usar o texto padrão do sistema. Um treinamento com texto próprio sempre tem precedência sobre o template da empresa." },
+      ] },
+    ],
+  },
+  {
+    slug: "organizacao",
+    titulo: "Minha Organização",
+    modulo: "Organização",
+    categoria: "Administração",
+    rota: "/organizacao",
+    perfis: ["Administrador"],
+    resumo: "Identidade da Organização (a conta/marca): nome, nome fantasia e logo, além do modelo padrão de certificado. Aparece na interface e nos documentos emitidos.",
+    secoes: [
+      { titulo: "Para que serve", blocos: [
+        { tipo: "paragrafo", texto: "A Organização é a sua conta no sistema (a marca). Aqui você define o nome, o nome fantasia e o logo que aparecem na interface e no cabeçalho dos documentos, e ajusta o modelo padrão de certificado. Não confunda com o cadastro de Empresas: as empresas próprias e parceiros vivem em Empresas; aqui é só a identidade da conta." },
+        { tipo: "campos", itens: [
+          { campo: "Marca", descricao: "Nome, nome fantasia e logo da Organização — usados na identidade do sistema e nos documentos." },
+          { campo: "Certificado padrão", descricao: "Modelo de texto do certificado de treinamento, com variáveis {{...}}." },
+        ] },
+      ] },
+      { titulo: "Passo a passo", blocos: [
+        { tipo: "passos", itens: [
+          "Acesse Minha Organização.",
+          "Na aba Marca, ajuste o nome e o nome fantasia e envie o logo (PNG/JPG/WebP).",
+          "Salve a marca.",
+          "Na aba Certificado padrão, ajuste o modelo de texto do certificado, se desejar.",
+        ] },
       ] },
     ],
   },

@@ -11,7 +11,7 @@ export const UFS = [
  * colaboradores em campo.
  */
 export const obraSchema = z.object({
-  empresa_id: z.string().uuid("Empresa dona obrigatória"),
+  empresa_id: z.string().uuid("Empresa própria obrigatória"),
   contratante_id: z.string().uuid().optional().nullable(),
   nome: z.string().min(2, "Mínimo 2 caracteres"),
   codigo: z.string().optional().nullable(),

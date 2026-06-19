@@ -9,12 +9,12 @@ import { ObraEquipeManager } from "./obra-equipe-manager"
 export default async function EditObraPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const supabase = await createClient()
-  const [{ data: obra }, { data: donas }, { data: contratantes }, { data: locais }] = await Promise.all([
+  const [{ data: obra }, { data: proprias }, { data: contratantes }, { data: locais }] = await Promise.all([
     supabase.from("obras").select("*").eq("id", id).single(),
     supabase
       .from("empresas")
       .select("id, razao_social")
-      .eq("dona_sistema", true)
+      .eq("propria", true)
       .eq("ativo", true)
       .order("razao_social"),
     supabase
@@ -40,7 +40,7 @@ export default async function EditObraPage({ params }: { params: Promise<{ id: s
       </div>
       <ObraForm
         obra={obra}
-        donas={donas ?? []}
+        proprias={proprias ?? []}
         contratantes={contratantes ?? []}
         action={updateObra.bind(null, id)}
       />

@@ -10,7 +10,7 @@ export default async function LoginPage() {
         <div className="flex flex-col items-center gap-4 text-center">
           <BrandLogo logoUrl={marca.logoUrl} nome={marca.nome} variant="full" height={56} className="max-w-[280px]" />
           <div className="space-y-1">
-            <h1 className="text-xl font-semibold tracking-tight">SST Manager</h1>
+            <h1 className="text-xl font-semibold tracking-tight">{marca.nome}</h1>
             <p className="text-sm text-muted-foreground">
               Sistema de Gestão de Segurança e Saúde do Trabalho
             </p>

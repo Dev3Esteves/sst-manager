@@ -29,7 +29,21 @@ async function sincronizarEmpresasDoUsuario(
   empresaPrincipal: string,
   empresasAdicionais: string[],
 ): Promise<{ error?: string }> {
-  const alvo = Array.from(new Set([empresaPrincipal, ...empresasAdicionais]))
+  const candidatos = Array.from(new Set([empresaPrincipal, ...empresasAdicionais]))
+
+  // Só empresas próprias podem virar vínculo operável (o trigger do banco
+  // rejeitaria não-próprias). Filtra antes de inserir.
+  const { data: proprias, error: propErr } = await admin
+    .from("empresas")
+    .select("id")
+    .in("id", candidatos)
+    .eq("propria", true)
+  if (propErr) return { error: propErr.message }
+  const propriasIds = new Set((proprias ?? []).map((e) => (e as { id: string }).id))
+  const alvo = candidatos.filter((id) => propriasIds.has(id))
+  if (!alvo.includes(empresaPrincipal)) {
+    return { error: "A empresa principal precisa ser uma empresa própria." }
+  }
 
   // Remove vínculos que não estão mais no conjunto
   const { error: delErr } = await admin

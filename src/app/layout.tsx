@@ -11,15 +11,13 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
 
 export async function generateMetadata(): Promise<Metadata> {
   const marca = await getMarca()
-  const title =
-    marca.nome && marca.nome !== "SST Manager" ? `SST Manager — ${marca.nome}` : "SST Manager"
   return {
-    title,
+    title: marca.nome,
     description: "Sistema de Gestão de Segurança e Saúde do Trabalho",
     manifest: "/manifest.json",
     appleWebApp: {
       capable: true,
-      title: "SST Manager",
+      title: marca.nome,
       statusBarStyle: "default",
     },
     icons: {

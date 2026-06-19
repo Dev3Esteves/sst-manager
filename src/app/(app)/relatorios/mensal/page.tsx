@@ -1,5 +1,7 @@
 import Link from "next/link"
 import { createClient } from "@/lib/supabase/server"
+import { getEmpresasDoUsuario } from "@/lib/auth/empresa-context"
+import { getOrganizacao } from "@/lib/branding/marca"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge, type BadgeProps } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -27,10 +29,19 @@ export default async function RelatorioMensalPage({
 
   const supabase = await createClient()
 
-  // Empresas (para pegar logo e razão social da própria)
-  const { data: empresas } = await supabase
-    .from("empresas").select("razao_social, cnpj, logo_url").eq("tipo", "propria").limit(1)
-  const empresaPropria = empresas?.[0]
+  // Cabeçalho: empresa própria ATIVA do usuário (contexto de empresa ativa),
+  // com fallback de logo na Organização.
+  const { ativaId } = await getEmpresasDoUsuario()
+  const { data: empresaAtiva } = ativaId
+    ? await supabase
+        .from("empresas")
+        .select("razao_social, cnpj, logo_url")
+        .eq("id", ativaId)
+        .maybeSingle()
+    : { data: null }
+  const empresaPropria = empresaAtiva ?? undefined
+  const org = await getOrganizacao()
+  const logoUrl = empresaPropria?.logo_url ?? org?.logoUrl ?? null
 
   // ============ Consultas do mês atual ============
   const [
@@ -173,10 +184,16 @@ export default async function RelatorioMensalPage({
 
       {/* Header impressão: só aparece no print */}
       <div className="hidden print:flex print:items-center print:justify-between print:border-b print:pb-4 print:mb-4">
-        <div>
-          <div className="font-bold text-lg">{empresaPropria?.razao_social ?? "Sua Empresa"}</div>
-          <div className="text-xs text-muted-foreground">
-            {empresaPropria?.cnpj ? `CNPJ ${empresaPropria.cnpj}` : ""}
+        <div className="flex items-center gap-3">
+          {logoUrl && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={logoUrl} alt="" className="h-10 max-w-[160px] object-contain" />
+          )}
+          <div>
+            <div className="font-bold text-lg">{empresaPropria?.razao_social ?? "Sua Empresa"}</div>
+            <div className="text-xs text-muted-foreground">
+              {empresaPropria?.cnpj ? `CNPJ ${empresaPropria.cnpj}` : ""}
+            </div>
           </div>
         </div>
         <div className="text-right text-xs text-muted-foreground">

@@ -35,16 +35,16 @@ type EmpresaOpcao = { id: string; razao_social: string }
 type FormErrors = Record<string, string[] | undefined> & { _form?: string[] }
 
 export function ObraForm({
-  obra, donas, contratantes, action,
+  obra, proprias, contratantes, action,
 }: {
   obra?: Obra
-  donas: EmpresaOpcao[]
+  proprias: EmpresaOpcao[]
   contratantes: EmpresaOpcao[]
   action: (formData: FormData) => Promise<{ error?: FormErrors } | void>
 }) {
   const [errors, setErrors] = useState<FormErrors>({})
   const [pending, startTransition] = useTransition()
-  const [empresaId, setEmpresaId] = useState(obra?.empresa_id || donas[0]?.id || "")
+  const [empresaId, setEmpresaId] = useState(obra?.empresa_id || proprias[0]?.id || "")
   const [contratanteId, setContratanteId] = useState(obra?.contratante_id || "")
   const [uf, setUf] = useState(obra?.uf || "")
   const [empreitada, setEmpreitada] = useState(obra?.empreitada || "")
@@ -133,14 +133,14 @@ export function ObraForm({
             {errors.nome && <p id="nome-error" role="alert" className="text-xs text-destructive">{errors.nome[0]}</p>}
           </div>
           <div className="space-y-2">
-            <Label htmlFor="empresa_id">Empresa dona *</Label>
+            <Label htmlFor="empresa_id">Empresa própria *</Label>
             <Select value={empresaId} onValueChange={setEmpresaId}>
               <SelectTrigger id="empresa_id" aria-invalid={!!errors.empresa_id}
                 aria-describedby={errors.empresa_id ? "empresa_id-error" : undefined}>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {donas.map((e) => (
+                {proprias.map((e) => (
                   <SelectItem key={e.id} value={e.id}>{e.razao_social}</SelectItem>
                 ))}
               </SelectContent>

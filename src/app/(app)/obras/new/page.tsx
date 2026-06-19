@@ -4,11 +4,11 @@ import { createObra } from "../actions"
 
 export default async function NewObraPage() {
   const supabase = await createClient()
-  const [{ data: donas }, { data: contratantes }] = await Promise.all([
+  const [{ data: proprias }, { data: contratantes }] = await Promise.all([
     supabase
       .from("empresas")
       .select("id, razao_social")
-      .eq("dona_sistema", true)
+      .eq("propria", true)
       .eq("ativo", true)
       .order("razao_social"),
     supabase
@@ -22,7 +22,7 @@ export default async function NewObraPage() {
   return (
     <div className="container py-8 max-w-3xl">
       <ObraForm
-        donas={donas ?? []}
+        proprias={proprias ?? []}
         contratantes={contratantes ?? []}
         action={createObra}
       />

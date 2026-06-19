@@ -7,14 +7,16 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Loader2, FileSignature, RotateCcw } from "lucide-react"
 import { TEXTO_CERTIFICADO_PADRAO, VARIAVEIS_DISPONIVEIS } from "@/lib/pdf/certificado-texto"
-import { salvarTemplateCertificado } from "./actions"
+
+type SalvarResult = { ok: true } | { error: Record<string, string[] | undefined> & { _form?: string[] } }
 
 export function TemplateCertificadoForm({
-  empresaId,
   templateAtual,
+  onSalvar,
 }: {
-  empresaId: string
   templateAtual: string | null
+  /** Server action (já vinculada ao alvo) que grava o template. */
+  onSalvar: (formData: FormData) => Promise<SalvarResult>
 }) {
   const [texto, setTexto] = useState(templateAtual ?? "")
   const [erro, setErro] = useState<string | null>(null)
@@ -27,7 +29,7 @@ export function TemplateCertificadoForm({
     const formData = new FormData()
     formData.set("template_certificado", texto)
     startTransition(async () => {
-      const result = await salvarTemplateCertificado(empresaId, formData)
+      const result = await onSalvar(formData)
       if ("error" in result) {
         const msg = result.error._form?.[0] ?? result.error.template_certificado?.[0] ?? "Erro ao salvar"
         setErro(msg)

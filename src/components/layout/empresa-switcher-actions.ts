@@ -25,6 +25,15 @@ export async function definirEmpresaAtiva(empresaId: string): Promise<Result<voi
     .maybeSingle()
   if (!vinculo) return err("Empresa não permitida para este usuário")
 
+  // Só empresas próprias podem ser ativadas como contexto operacional.
+  const { data: alvo } = await supabase
+    .from("empresas")
+    .select("id")
+    .eq("id", empresaId)
+    .eq("propria", true)
+    .maybeSingle()
+  if (!alvo) return err("Só é possível operar empresas próprias.")
+
   // Grava via service role (a permissão já foi confirmada acima).
   const admin = createAdminClient()
   const { error } = await admin

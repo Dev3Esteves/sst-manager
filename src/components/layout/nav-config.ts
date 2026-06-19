@@ -80,6 +80,7 @@ export const NAV_SECTIONS: NavSection[] = [
   {
     label: "Administração",
     items: [
+      { href: "/organizacao", label: "Minha Organização", icon: Landmark },
       { href: "/usuarios", label: "Usuários", icon: UserCog },
       { href: "/admin/treinamento", label: "Controle de treino", icon: GraduationCap },
       { href: "/jobs", label: "Fila de jobs", icon: ListTodo },

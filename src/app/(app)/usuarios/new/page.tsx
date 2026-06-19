@@ -23,7 +23,7 @@ export default async function NovoUsuarioPage() {
   const { supabase } = r.ctx
   const [{ data: perfis }, { data: empresas }, { data: colaboradores }] = await Promise.all([
     supabase.from("perfis_acesso").select("id, nome, descricao").order("nome"),
-    supabase.from("empresas").select("id, razao_social").eq("ativo", true).order("razao_social"),
+    supabase.from("empresas").select("id, razao_social").eq("ativo", true).eq("propria", true).order("razao_social"),
     supabase.from("colaboradores").select("id, nome_completo, email").eq("status", "ativo").order("nome_completo"),
   ])
 

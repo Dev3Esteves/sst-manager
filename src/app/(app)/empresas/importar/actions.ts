@@ -19,6 +19,7 @@ export async function importarEmpresas(rows: z.infer<typeof empresaImportZod>[])
       nome_fantasia: r.nome_fantasia || null,
       cnpj: `${cnpjDigits.slice(0, 2)}.${cnpjDigits.slice(2, 5)}.${cnpjDigits.slice(5, 8)}/${cnpjDigits.slice(8, 12)}-${cnpjDigits.slice(12)}`,
       tipo: r.tipo,
+      propria: r.tipo === "propria",
       inscricao_estadual: r.inscricao_estadual || null,
       ativo: true,
     }, { onConflict: "cnpj" }).select("id").single()
@@ -27,7 +28,7 @@ export async function importarEmpresas(rows: z.infer<typeof empresaImportZod>[])
       erros.push(`CNPJ ${r.cnpj}: ${error?.message ?? "falha"}`)
     } else {
       // Reflete o tipo importado como papel (modelo Parceiro de Negócio).
-      const papel = r.tipo === "propria" ? "dona" : r.tipo === "contratante" ? "cliente" : "prestadora"
+      const papel = r.tipo === "propria" ? "propria" : r.tipo === "contratante" ? "cliente" : "prestadora"
       await supabase
         .from("empresa_papeis")
         .upsert({ empresa_id: up.id, papel }, { onConflict: "empresa_id,papel", ignoreDuplicates: true })

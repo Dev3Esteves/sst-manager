@@ -14,17 +14,17 @@ describe("empresaSchema", () => {
     expect(parsed.success).toBe(true)
     if (parsed.success) {
       // defaults
-      expect(parsed.data.dona_sistema).toBe(false)
+      expect(parsed.data.propria).toBe(false)
       expect(parsed.data.ativo).toBe(true)
     }
   })
 
-  it("aceita empresa dona do sistema", () => {
+  it("aceita empresa própria", () => {
     const parsed = empresaSchema.safeParse({
       razao_social: "Empresa Demo Ltda",
       cnpj: CNPJ_VALIDO,
       tipo: "propria",
-      dona_sistema: true,
+      propria: true,
     })
     expect(parsed.success).toBe(true)
   })
@@ -80,8 +80,8 @@ describe("empresaSchema", () => {
 
 describe("TIPO_EMPRESA_LABEL", () => {
   it("mapeia os 3 tipos para labels legíveis", () => {
-    expect(TIPO_EMPRESA_LABEL.propria).toBe("Dona do sistema")
-    expect(TIPO_EMPRESA_LABEL.contratante).toBe("Contratante")
+    expect(TIPO_EMPRESA_LABEL.propria).toBe("Empresa própria")
+    expect(TIPO_EMPRESA_LABEL.contratante).toBe("Cliente")
     expect(TIPO_EMPRESA_LABEL.terceira).toBe("Prestadora")
   })
 })

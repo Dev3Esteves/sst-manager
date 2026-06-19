@@ -7,13 +7,13 @@ import { InativarButton } from "@/components/shared/inativar-button"
 export default async function EditEmpresaPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const supabase = await createClient()
-  const [{ data: empresa }, { data: donas }, { data: papeis }, { data: enderecos }, { data: contatos }, { data: fiscal }] =
+  const [{ data: empresa }, { data: proprias }, { data: papeis }, { data: enderecos }, { data: contatos }, { data: fiscal }] =
     await Promise.all([
       supabase.from("empresas").select("*").eq("id", id).single(),
       supabase
         .from("empresas")
         .select("id, razao_social")
-        .eq("dona_sistema", true)
+        .eq("propria", true)
         .neq("id", id) // nunca pode ser mãe de si mesma
         .order("razao_social"),
       supabase.from("empresa_papeis").select("papel").eq("empresa_id", id),
@@ -65,7 +65,7 @@ export default async function EditEmpresaPage({ params }: { params: Promise<{ id
       </div>
       <EmpresaForm
         empresa={empresaCompleta}
-        donasDisponiveis={donas ?? []}
+        propriasDisponiveis={proprias ?? []}
         action={updateEmpresa.bind(null, id)}
       />
     </div>

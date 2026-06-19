@@ -1,14 +1,25 @@
+import { redirect } from "next/navigation"
 import { Sidebar } from "@/components/layout/sidebar"
 import { Topbar } from "@/components/layout/topbar"
 import { BottomNav } from "@/components/layout/bottom-nav"
 import { Toaster } from "sonner"
 import { createClient } from "@/lib/supabase/server"
+import { getMarca } from "@/lib/branding/marca"
+import { getAuth } from "@/lib/auth/guards"
+import { precisaSetupOrganizacao } from "@/lib/organizacao/first-run"
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
-  // Logo da empresa ativa para o topo da sidebar (fallback: ícone neutro do produto).
+  // First-run guard: admin sem Organização configurada vai pro setup.
+  const auth = await getAuth()
+  if (auth?.perfil === "admin" && (await precisaSetupOrganizacao())) {
+    redirect("/organizacao")
+  }
+
+  // Topo da sidebar = MARCA da Organização (determinística). O nome da empresa
+  // própria ativa entra apenas como legenda/contexto.
+  const marca = await getMarca()
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  let empresaLogoUrl: string | null = null
   let empresaNome: string | null = null
   if (user) {
     const { data: u } = await supabase
@@ -21,17 +32,16 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     if (empId) {
       const { data: emp } = await supabase
         .from("empresas")
-        .select("razao_social, logo_url")
+        .select("razao_social")
         .eq("id", empId)
         .maybeSingle()
-      empresaLogoUrl = (emp as { logo_url?: string | null } | null)?.logo_url ?? null
       empresaNome = (emp as { razao_social?: string | null } | null)?.razao_social ?? null
     }
   }
 
   return (
     <div className="flex h-screen w-full">
-      <Sidebar empresaLogoUrl={empresaLogoUrl} empresaNome={empresaNome} />
+      <Sidebar marcaLogoUrl={marca.logoUrl} marcaNome={marca.nome} empresaNome={empresaNome} />
       <div className="flex flex-1 flex-col overflow-hidden lg:pl-[72px] 2xl:pl-64">
         <Topbar />
         <main className="flex-1 overflow-y-auto bg-muted/30 pb-20 lg:pb-0">{children}</main>

@@ -102,7 +102,7 @@ export function OsNr01Form({
       </CardHeader>
       <CardContent className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2 md:col-span-2">
-          <Label htmlFor="empresa-dona">Empresa dona *</Label>
+          <Label htmlFor="empresa-dona">Empresa própria *</Label>
           <Select
             value={empresaId}
             onValueChange={(v) => {

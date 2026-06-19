@@ -9,18 +9,18 @@ export const manuaisCadastros: Manual[] = [
     rota: "/empresas",
     perfis: ["Administrador", "RH"],
     resumo:
-      "Cadastro multi-tenant de empresas: a dona do sistema, as contratantes (clientes) e as prestadoras (terceiras). Define o isolamento de dados e a hierarquia entre elas.",
+      "Cadastro das empresas: as próprias (que a Organização opera) e os parceiros (clientes/contratantes e prestadoras). Define quais empresas são contextos operáveis e a relação entre elas.",
     secoes: [
       {
         titulo: "Para que serve",
         blocos: [
-          { tipo: "paragrafo", texto: "O sistema é multi-tenant: cada empresa dona tem seus próprios dados isolados. As demais empresas são as contratantes (onde a dona executa obras) e as prestadoras (que prestam serviço para a dona)." },
+          { tipo: "paragrafo", texto: "Cada empresa própria é um contexto operacional com dados isolados — é uma empresa que a Organização opera e pode ativar no seletor do topo. Os parceiros (contratantes onde se executa obras e prestadoras que prestam serviço) são registros de negócio gerenciados, nunca contextos operáveis." },
           {
             tipo: "campos",
             itens: [
-              { campo: "Dona do sistema (própria)", descricao: "Hospeda os próprios colaboradores, documentos e relatórios. É a sua organização." },
-              { campo: "Contratante", descricao: "Cliente onde a empresa dona executa obras." },
-              { campo: "Prestadora (terceira)", descricao: "Empresa que presta serviço para a dona; pode ser vinculada a uma dona (empresa-mãe)." },
+              { campo: "Empresa própria", descricao: "Empresa que a Organização opera. Hospeda colaboradores, documentos e relatórios, e pode ser ativada como contexto no seletor." },
+              { campo: "Contratante (parceiro)", descricao: "Cliente onde uma empresa própria executa obras." },
+              { campo: "Prestadora (parceiro)", descricao: "Empresa que presta serviço; pode ser vinculada a uma empresa própria responsável." },
             ],
           },
         ],
@@ -31,8 +31,8 @@ export const manuaisCadastros: Manual[] = [
           { tipo: "passos", itens: [
             "Acesse Empresas e clique em 'Nova empresa'.",
             "Informe razão social, CNPJ e a classificação (própria/contratante/prestadora).",
-            "Se for a sua organização, marque 'dona do sistema'.",
-            "Se for prestadora/contratante, vincule a empresa dona responsável (opcional).",
+            "Se for uma empresa que a Organização opera, marque-a como 'própria'.",
+            "Se for parceiro (prestadora/contratante), vincule a empresa própria responsável (opcional).",
             "Envie o logo (aparece nos certificados e documentos emitidos).",
             "Salve.",
           ] },
@@ -55,8 +55,8 @@ export const manuaisCadastros: Manual[] = [
         blocos: [
           { tipo: "atencao", texto: "Não cadastre a mesma empresa duas vezes com CNPJ diferente. Para corrigir dados, edite o registro existente." },
           { tipo: "faq", itens: [
-            { p: "Posso ter mais de uma empresa dona?", r: "Sim, mas cada uma terá seus dados isolados. O comum é uma dona por organização." },
-            { p: "O que muda ao marcar 'dona do sistema'?", r: "Ela passa a hospedar colaboradores, obras, documentos e a configuração (template de certificado) da organização." },
+            { p: "Posso ter mais de uma empresa própria?", r: "Sim, e cada uma terá seus dados isolados. Todas as próprias aparecem no seletor de empresa ativa para quem tiver vínculo." },
+            { p: "O que muda ao marcar uma empresa como 'própria'?", r: "Ela passa a hospedar colaboradores, obras e documentos, e pode ser ativada como contexto operacional no seletor do topo. Parceiros nunca podem." },
           ] },
         ],
       },
@@ -69,7 +69,7 @@ export const manuaisCadastros: Manual[] = [
     categoria: "Cadastros",
     rota: "/obras",
     perfis: ["Administrador", "Técnico de Segurança", "Engenheiro de Segurança"],
-    resumo: "Projetos/canteiros em andamento. A obra conecta empresa dona, contratante e os colaboradores alocados, e é a base do PGR e das emissões por obra.",
+    resumo: "Projetos/canteiros em andamento. A obra conecta a empresa própria, a contratante e os colaboradores alocados, e é a base do PGR e das emissões por obra.",
     secoes: [
       { titulo: "Para que serve", blocos: [
         { tipo: "paragrafo", texto: "A obra representa um canteiro/projeto. É referência para alocar colaboradores, emitir Ordem de Serviço NR-01 por função, montar o PGR e as campanhas psicossociais." },

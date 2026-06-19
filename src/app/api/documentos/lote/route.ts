@@ -4,6 +4,7 @@ import { renderToBuffer } from "@react-pdf/renderer"
 import JSZip from "jszip"
 import { z } from "zod"
 import { createClient } from "@/lib/supabase/server"
+import { getOrganizacao } from "@/lib/branding/marca"
 import { renderAutorizacaoNrPdf } from "@/lib/pdf/autorizacao-nr"
 import { renderCertificadoPdf } from "@/lib/pdf/certificado"
 import { formatCNPJ, formatCPF } from "@/lib/validations/shared"
@@ -258,6 +259,8 @@ async function gerarCertificados(
 ) {
   const { treinamento_id, colaborador_ids } = input
 
+  const org = await getOrganizacao()
+
   const { data: treinamento } = await supabase
     .from("treinamentos")
     .select("id, titulo, nr_referencia, carga_horaria_horas, conteudo_programatico, texto_certificado, cidade_emissao")
@@ -274,7 +277,7 @@ async function gerarCertificados(
 
   const { data: realizacoes } = await supabase
     .from("treinamentos_realizados")
-    .select("id, colaborador_id, data_realizacao, data_vencimento, instrutor, entidade, local, colaboradores(nome_completo, cpf, empresas(razao_social, cnpj, logo_url))")
+    .select("id, colaborador_id, data_realizacao, data_vencimento, instrutor, entidade, local, colaboradores(nome_completo, cpf, empresas(razao_social, cnpj, logo_url, template_certificado))")
     .eq("treinamento_id", treinamento_id)
     .in("colaborador_id", colaborador_ids)
     .order("data_realizacao", { ascending: false })
@@ -329,8 +332,9 @@ async function gerarCertificados(
         entidade: r.entidade,
         empresa_razao_social: empresa.razao_social,
         empresa_cnpj: formatCNPJ(empresa.cnpj),
-        empresa_logo_url: empresa.logo_url ?? null,
-        texto_certificado_template: treinamento.texto_certificado ?? null,
+        empresa_logo_url: empresa.logo_url ?? org?.logoUrl ?? null,
+        texto_certificado_template:
+          treinamento.texto_certificado || empresa.template_certificado || org?.templateCertificado || null,
         validacao_url: undefined,
       })
       const buffer = await renderToBuffer(element)

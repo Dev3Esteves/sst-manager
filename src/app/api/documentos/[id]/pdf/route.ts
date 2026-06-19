@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { renderToBuffer } from "@react-pdf/renderer"
 import { createClient } from "@/lib/supabase/server"
+import { getOrganizacao } from "@/lib/branding/marca"
 import { renderAprPdf, type AprConteudo } from "@/lib/pdf/apr"
 import { renderAutorizacaoNrPdf, type AutorizacaoNrConteudo } from "@/lib/pdf/autorizacao-nr"
 import { renderPtPdf, type PtConteudo } from "@/lib/pdf/pt"
@@ -72,6 +73,11 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
     })
     if (!built.ok) {
       return NextResponse.json({ error: built.error }, { status: built.status })
+    }
+    // Fallback de logo no caller: logo da empresa emissora ?? logo da Organização.
+    if (!built.data.empresa_logo_url) {
+      const org = await getOrganizacao()
+      built.data.empresa_logo_url = org?.logoUrl ?? null
     }
     pdfElement = await renderOsNr01Pdf(built.data)
   } else {

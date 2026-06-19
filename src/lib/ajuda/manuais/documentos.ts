@@ -133,7 +133,7 @@ export const manuaisDocumentos: Manual[] = [
       { titulo: "Passo a passo", blocos: [
         { tipo: "passos", itens: [
           "Documentos SST → OS NR-01.",
-          "Escolha a empresa dona, a função (cargo) e a obra.",
+          "Escolha a empresa própria, a função (cargo) e a obra.",
           "O sistema pré-preenche riscos e EPIs obrigatórios/eventuais do cargo.",
           "Revise e gere — o PDF traz uma página por colaborador da função alocado na obra.",
         ] },

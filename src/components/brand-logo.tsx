@@ -1,15 +1,14 @@
 import { cn } from "@/lib/utils"
 
 /**
- * Logo da marca (empresa dona do sistema / empresa ativa).
+ * Logo da marca da Organização (conta/marca dona desta instância).
  *
- * - Com `logoUrl` (logo cadastrada da empresa) → renderiza a imagem.
+ * - Com `logoUrl` (logo da Organização) → renderiza a imagem.
  * - Sem logo → fallback neutro: ícone genérico (`/icon.svg`) + o nome no modo
  *   `full`. Nunca usa artwork de cliente específico.
  *
  * Componente puramente apresentacional (client-safe): a fonte dos dados
- * (`nome`/`logoUrl`) vem por prop — em servidor, de `getMarca()`; no app, da
- * empresa ativa.
+ * (`nome`/`logoUrl`) vem por prop — em servidor, de `getMarca()`.
  */
 export function BrandLogo({
   logoUrl,

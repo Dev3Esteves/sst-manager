@@ -81,7 +81,7 @@ export default async function ObrasPage({
             <TableHeader>
               <TableRow>
                 <TableHead>Nome</TableHead>
-                <TableHead>Dona</TableHead>
+                <TableHead>Empresa própria</TableHead>
                 <TableHead>Contratante</TableHead>
                 <TableHead>Local</TableHead>
                 <TableHead>Período</TableHead>

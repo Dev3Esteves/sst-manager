@@ -36,7 +36,7 @@ export default async function EditarUsuarioPage({ params }: { params: Promise<{ 
   ] = await Promise.all([
     admin.from("usuarios").select("*").eq("id", id).single(),
     admin.from("perfis_acesso").select("id, nome, descricao").order("nome"),
-    admin.from("empresas").select("id, razao_social").eq("ativo", true).order("razao_social"),
+    admin.from("empresas").select("id, razao_social").eq("ativo", true).eq("propria", true).order("razao_social"),
     admin.from("colaboradores").select("id, nome_completo, email").eq("status", "ativo").order("nome_completo"),
     admin.from("usuario_empresas").select("empresa_id").eq("usuario_id", id),
     admin.auth.admin.getUserById(id),

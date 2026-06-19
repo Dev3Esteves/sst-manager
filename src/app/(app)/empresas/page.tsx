@@ -6,16 +6,17 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { formatCNPJ } from "@/lib/validations/shared"
 import { PAPEL_LABEL } from "@/lib/validations/empresa"
+import { ehPropria } from "@/lib/empresa/classificacao"
 import { EmpresaBadge } from "@/components/empresa-badge"
 import { ExportCsvButton } from "@/components/shared/export-csv-button"
 import { Plus, Pencil, Building2, Handshake, Wrench, ListFilter } from "lucide-react"
 import { cn } from "@/lib/utils"
 
-type TabKey = "todas" | "donas" | "contratantes" | "prestadoras"
+type TabKey = "todas" | "proprias" | "contratantes" | "prestadoras"
 
 const TABS: { key: TabKey; label: string; icon: React.ComponentType<{ className?: string }>; descricao: string }[] = [
   { key: "todas", label: "Todas", icon: ListFilter, descricao: "Todas as empresas cadastradas." },
-  { key: "donas", label: "Donas do sistema", icon: Building2, descricao: "Empresas que hospedam seus próprios dados (multi-tenant)." },
+  { key: "proprias", label: "Minhas empresas", icon: Building2, descricao: "Empresas próprias que você opera." },
   { key: "contratantes", label: "Clientes", icon: Handshake, descricao: "Empresas com o papel de cliente/contratante." },
   { key: "prestadoras", label: "Prestadoras", icon: Wrench, descricao: "Empresas com o papel de prestadora." },
 ]
@@ -26,7 +27,7 @@ type EmpresaRow = {
   nome_fantasia: string | null
   cnpj: string
   ativo: boolean
-  dona_sistema: boolean | null
+  propria: boolean | null
   empresa_mae_id: string | null
   empresa_papeis: { papel: string }[] | null
 }
@@ -43,15 +44,15 @@ export default async function EmpresasPage({
   const supabase = await createClient()
   const { data, error } = await supabase
     .from("empresas")
-    .select("id, razao_social, nome_fantasia, cnpj, ativo, dona_sistema, empresa_mae_id, empresa_papeis(papel)")
-    .order("dona_sistema", { ascending: false })
+    .select("id, razao_social, nome_fantasia, cnpj, ativo, propria, empresa_mae_id, empresa_papeis(papel)")
+    .order("propria", { ascending: false })
     .order("razao_social")
 
   const todas = (data ?? []) as EmpresaRow[]
   const papeisDe = (e: EmpresaRow) => (e.empresa_papeis ?? []).map((p) => p.papel)
 
   const empresas = todas.filter((e) => {
-    if (tab === "donas") return !!e.dona_sistema
+    if (tab === "proprias") return ehPropria(e)
     if (tab === "contratantes") return papeisDe(e).includes("cliente")
     if (tab === "prestadoras") return papeisDe(e).includes("prestadora")
     return true
@@ -70,7 +71,7 @@ export default async function EmpresasPage({
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Empresas</h1>
-          <p className="text-muted-foreground">Parceiros de negócio: donas, clientes e prestadoras.</p>
+          <p className="text-muted-foreground">Empresas próprias e parceiros: clientes e prestadoras.</p>
         </div>
         <div className="flex gap-2">
           <ExportCsvButton
@@ -155,15 +156,15 @@ export default async function EmpresasPage({
                   <TableCell className="font-mono text-sm">{formatCNPJ(e.cnpj)}</TableCell>
                   <TableCell>
                     <div className="flex flex-wrap gap-1">
-                      {e.dona_sistema && <Badge variant="default">Dona do sistema</Badge>}
+                      {e.propria && <Badge variant="default">Própria</Badge>}
                       {papeisDe(e)
-                        .filter((p) => !(p === "dona" && e.dona_sistema))
+                        .filter((p) => !((p === "propria" || p === "dona") && e.propria))
                         .map((p) => (
                           <Badge key={p} variant="outline">
                             {PAPEL_LABEL[p as keyof typeof PAPEL_LABEL] ?? p}
                           </Badge>
                         ))}
-                      {papeisDe(e).length === 0 && !e.dona_sistema && (
+                      {papeisDe(e).length === 0 && !e.propria && (
                         <span className="text-muted-foreground">—</span>
                       )}
                     </div>

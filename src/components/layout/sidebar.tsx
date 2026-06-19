@@ -10,10 +10,12 @@ import { APP_VERSION } from "@/lib/version"
 const sections = NAV_SECTIONS
 
 export function Sidebar({
-  empresaLogoUrl = null,
+  marcaLogoUrl = null,
+  marcaNome,
   empresaNome = null,
 }: {
-  empresaLogoUrl?: string | null
+  marcaLogoUrl?: string | null
+  marcaNome?: string
   empresaNome?: string | null
 } = {}) {
   const pathname = usePathname()
@@ -30,21 +32,17 @@ export function Sidebar({
       "
     >
       <div className="flex h-16 items-center border-b overflow-hidden">
-        {/* Recolhida: ícone neutro do produto no trilho de 72px */}
+        {/* Recolhida: ícone da marca da Organização no trilho de 72px */}
         <div className="flex w-[72px] shrink-0 items-center justify-center group-hover/sidebar:hidden 2xl:hidden">
-          <BrandLogo variant="icon" height={34} />
+          <BrandLogo logoUrl={marcaLogoUrl} nome={marcaNome} variant="icon" height={34} />
         </div>
-        {/* Expandida: logo da empresa ativa; fallback ícone + nome */}
-        <div className="hidden min-w-0 items-center px-[22px] group-hover/sidebar:flex 2xl:flex">
-          {empresaLogoUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={empresaLogoUrl}
-              alt={empresaNome ?? "Empresa"}
-              className="h-9 w-auto max-w-[200px] object-contain"
-            />
-          ) : (
-            <BrandLogo nome={empresaNome ?? undefined} variant="full" height={26} />
+        {/* Expandida: logo da marca da Organização + nome da empresa própria ativa como legenda */}
+        <div className="hidden min-w-0 flex-col justify-center px-[22px] group-hover/sidebar:flex 2xl:flex">
+          <BrandLogo logoUrl={marcaLogoUrl} nome={marcaNome} variant="full" height={26} />
+          {empresaNome && (
+            <span className="mt-0.5 truncate text-[11px] leading-tight text-muted-foreground" title={empresaNome}>
+              {empresaNome}
+            </span>
           )}
         </div>
       </div>
@@ -98,7 +96,7 @@ export function Sidebar({
           </kbd>
         </div>
         <div className="text-center text-muted-foreground/70">
-          SST Manager · v{APP_VERSION}
+          {marcaNome ?? "SST Manager"} · v{APP_VERSION}
         </div>
       </div>
     </aside>

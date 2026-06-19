@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { renderToBuffer } from "@react-pdf/renderer"
 import { createClient } from "@/lib/supabase/server"
+import { getOrganizacao } from "@/lib/branding/marca"
 import { renderFichaEpiPdf, type EntregaEpiItem } from "@/lib/pdf/ficha-epi"
 import { formatCNPJ } from "@/lib/validations/shared"
 import { withRouteLogging } from "@/lib/logger"
@@ -57,11 +58,13 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
     const cargo = Array.isArray(colab.cargo) ? colab.cargo[0] : colab.cargo
     const obra = Array.isArray(colab.obra) ? colab.obra[0] : colab.obra
 
+    const org = await getOrganizacao()
+
     const endPdf = scoped.time("render-ficha-epi")
     const pdfElement = await renderFichaEpiPdf({
       empresa_razao_social: empresa?.razao_social ?? "—",
       empresa_cnpj: empresa?.cnpj ? formatCNPJ(empresa.cnpj) : "—",
-      empresa_logo_url: empresa?.logo_url ?? null,
+      empresa_logo_url: empresa?.logo_url ?? org?.logoUrl ?? null,
       colaborador_nome: colab.nome_completo,
       colaborador_cpf: colab.cpf,
       colaborador_matricula: colab.matricula,

@@ -37,7 +37,7 @@ type Empresa = {
   nome_fantasia?: string | null
   cnpj: string
   inscricao_estadual?: string | null
-  dona_sistema?: boolean | null
+  propria?: boolean | null
   empresa_mae_id?: string | null
   ativo: boolean
   logo_url?: string | null
@@ -73,11 +73,11 @@ const contatoVazio = (): ContatoRow => ({
 
 export function EmpresaForm({
   empresa,
-  donasDisponiveis = [],
+  propriasDisponiveis = [],
   action,
 }: {
   empresa?: Empresa
-  donasDisponiveis?: EmpresaOpcao[]
+  propriasDisponiveis?: EmpresaOpcao[]
   action: (formData: FormData) => Promise<{ error?: FormErrors } | void>
 }) {
   const [errors, setErrors] = useState<FormErrors>({})
@@ -117,8 +117,11 @@ export function EmpresaForm({
   const [cepLoading, setCepLoading] = useState<number | null>(null)
 
   // Papéis & vínculos
-  const [papeis, setPapeis] = useState<string[]>(empresa?.papeis ?? [])
-  const [donaSistema, setDonaSistema] = useState<boolean>(empresa?.dona_sistema ?? false)
+  const [papeis, setPapeis] = useState<string[]>(
+    // Normaliza papel legado 'dona' → 'propria'.
+    (empresa?.papeis ?? []).map((p) => (p === "dona" ? "propria" : p)),
+  )
+  const [propria, setPropria] = useState<boolean>(empresa?.propria ?? false)
   const [empresaMaeId, setEmpresaMaeId] = useState<string>(empresa?.empresa_mae_id ?? "")
 
   // Logo
@@ -163,9 +166,9 @@ export function EmpresaForm({
   function togglePapel(p: string) {
     setPapeis((prev) => (prev.includes(p) ? prev.filter((x) => x !== p) : [...prev, p]))
   }
-  function toggleDona(checked: boolean) {
-    setDonaSistema(checked)
-    if (checked) setPapeis((prev) => (prev.includes("dona") ? prev : [...prev, "dona"]))
+  function togglePropria(checked: boolean) {
+    setPropria(checked)
+    if (checked) setPapeis((prev) => (prev.includes("propria") ? prev : [...prev, "propria"]))
   }
 
   // -- BrasilAPI --------------------------------------------------------------
@@ -287,9 +290,9 @@ export function EmpresaForm({
       nome_fantasia: nomeFantasia || null,
       cnpj,
       inscricao_estadual: inscricaoEstadual || null,
-      dona_sistema: donaSistema,
+      propria,
       ativo,
-      empresa_mae_id: donaSistema ? null : empresaMaeId || null,
+      empresa_mae_id: propria ? null : empresaMaeId || null,
       papeis,
       enderecos: ends,
       contatos,
@@ -576,30 +579,29 @@ export function EmpresaForm({
 
             <div className="rounded-md border bg-muted/30 p-3 space-y-2">
               <label className="flex items-start gap-2">
-                <input type="checkbox" checked={donaSistema} onChange={(e) => toggleDona(e.target.checked)}
-                  className="h-4 w-4 mt-0.5 rounded border-input" />
+                <input type="checkbox" checked={propria} onChange={(e) => togglePropria(e.target.checked)}
+                  className="h-4 w-4 mt-0.5 rounded border-input" role="switch" aria-checked={propria} />
                 <span>
-                  <span className="font-semibold text-sm">Empresa dona do sistema (multi-tenant)</span>
+                  <span className="font-semibold text-sm">Empresa própria</span>
                   <span className="block text-xs text-muted-foreground">
-                    Hospeda seus próprios colaboradores, documentos e relatórios. É a unidade
-                    organizacional — distinto do papel de negócio.
+                    Empresas que você opera. Aparecem no seletor de empresa ativa.
                   </span>
                 </span>
               </label>
             </div>
 
-            {!donaSistema && donasDisponiveis.length > 0 && (
+            {!propria && propriasDisponiveis.length > 0 && (
               <div className="space-y-2">
-                <Label htmlFor="empresa_mae">Empresa dona responsável (vínculo de grupo)</Label>
+                <Label htmlFor="empresa_mae">Empresa própria responsável</Label>
                 <select id="empresa_mae" className={selectCls} value={empresaMaeId}
                   onChange={(e) => setEmpresaMaeId(e.target.value)}>
                   <option value="">Sem vínculo</option>
-                  {donasDisponiveis.map((d) => (
+                  {propriasDisponiveis.map((d) => (
                     <option key={d.id} value={d.id}>{d.razao_social}</option>
                   ))}
                 </select>
                 <p className="text-xs text-muted-foreground">
-                  Opcional. A qual empresa dona este parceiro pertence.
+                  Opcional. A qual empresa própria este parceiro pertence.
                 </p>
               </div>
             )}

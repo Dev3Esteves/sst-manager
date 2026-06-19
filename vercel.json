@@ -3,7 +3,7 @@
   "crons": [
     {
       "path": "/api/cron/process-jobs",
-      "schedule": "* * * * *"
+      "schedule": "5 11 * * *"
     },
     {
       "path": "/api/cron/notificar-vencimentos",
